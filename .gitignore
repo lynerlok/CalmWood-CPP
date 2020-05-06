@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Build directory
+build/*
+
+# Cutter file config
+rc
+
+# Kdevelop directory
+.kdev4/*
+*.kdev4
+
+CMakeLists.txt
+
