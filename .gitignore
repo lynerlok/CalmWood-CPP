@@ -34,6 +34,9 @@
 # Build directory
 build/*
 
+# Bin directory
+bin/*
+
 # Cutter file config
 rc
 
