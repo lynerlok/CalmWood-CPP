@@ -167,9 +167,8 @@ protected :
 };
 
 class Leucorrhinia: public Animals {
-    int run(){
-        
-    }
+public :
+    int run(){std::cout << "Running leucorrhinia life cycle !" << std::endl; return 0;};
 };
     
 class Hyla: public Animals {};

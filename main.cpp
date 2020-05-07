@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "mas.h"
+#include "include/mas.h"
 //#include "randomUtils.h"
 #include <unistd.h>
 
