@@ -7,11 +7,11 @@
 #include "randomUtils.h"
 
 // Perlin noise to choose the agent !
-
-struct MAP {
-    int LevelNumber;
-    std::string mapPath;
-} map;
+ 
+// struct MAP {
+//     int LevelNumber;
+//     std::vector<std::vector<int>> mapArray;
+// } map;
 
 class Environment {
 public :
@@ -81,12 +81,17 @@ protected :
 };
 
 class Animals {
+private :
+    static unsigned int count;
 public :
-    Animals(void){};
+    Animals(void){count++;};
     ~Animals(void){};
     
+    static unsigned int totalAnimals(void){
+        return count;
+    }
+    
     int run(){
-        std::cout << name << std::endl;
         return 0;
     }
     
@@ -161,7 +166,11 @@ protected :
 
 };
 
-class Leucorrhinia: public Animals {};
+class Leucorrhinia: public Animals {
+    int run(){
+        
+    }
+};
     
 class Hyla: public Animals {};
     

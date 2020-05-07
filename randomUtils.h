@@ -24,8 +24,7 @@ int runRNG(int lower, int upper){
     // Choose a random mean between lower and upper
     std::uniform_int_distribution<int> uniform_dist(lower, upper);
     int number = uniform_dist(rng);
-    std::cout << "[DEBUG] Generated number : " << number << std::endl;
-    
+
     return number;
 }
 #endif // __RANDOMUTILS_H_INCLUDED__ 
