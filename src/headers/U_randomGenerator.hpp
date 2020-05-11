@@ -9,8 +9,6 @@
 //#include <cmath>
 
 #include <random>
-
-
 #include "pcg_random.hpp"
 
 int runRNG(int lower, int upper){
@@ -27,4 +25,5 @@ int runRNG(int lower, int upper){
 
     return number;
 }
+
 #endif // __RANDOMUTILS_H_INCLUDED__ 
