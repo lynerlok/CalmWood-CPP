@@ -40,9 +40,11 @@ bin/*
 # Cutter file config
 rc
 
+# Ghidra specific files
+MAS.rep/*
+MAS.gpr
+
 # Kdevelop directory
 .kdev4/*
 *.kdev4
-
-CMakeLists.txt
 
