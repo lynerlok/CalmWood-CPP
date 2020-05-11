@@ -5,15 +5,13 @@
 #include <vector>
 
 class Animals {
-private :
-    static unsigned int count;
 public :
-    Animals(void){count++;};
+    Animals(int id = 0){idSaved = id;};
     ~Animals(void){};
     
-    static unsigned int totalAnimals(void){return count;};
+    virtual int run() = 0;
     
-    int run();
+    int getID(){return idSaved;}
     
     int setLocation(std::vector<float> newLocation);
         
@@ -35,6 +33,8 @@ public :
     int alterAgent(std::string alterationType);
 
 protected : 
+    
+    int idSaved = 0;
     
     std::vector <float> location{0,0,0};
 
@@ -61,23 +61,35 @@ protected :
 };
 
 class Leucorrhinia: public Animals {
-    int id = 0;
+public :
+    Leucorrhinia(int id = 0):Animals(id) {}
+    int run();
 };
     
 class Hyla: public Animals {
-    int id = 1;
+public :
+    Hyla(int id = 1):Animals(id) {}
+    int run();
 };
     
 class Phengaris: public Animals {
-    int id = 2;
+public :
+    Phengaris(int id = 2):Animals(id) {}
+    int run();
 };
     
 class Zootoca: public Animals {
-    int id = 3;
+public :
+    Zootoca(int id = 3):Animals(id) {}
+    
+    int run();
 };
     
 class Vipera: public Animals {
-    int id = 4;
+public :
+    Vipera(int id = 4):Animals(id) {}
+    
+    int run();
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__

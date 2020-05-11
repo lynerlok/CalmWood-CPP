@@ -2,14 +2,6 @@
 
 #include <iostream>
 
-//static unsigned int Animals::totalAnimals(void){
-//    return count;
-//}
-    
-int Animals::run(){
-    return 0;
-}
-    
 int Animals::setLocation(std::vector<float> newLocation) {
     if (newLocation.size() != 3) {
         return -1;
@@ -62,3 +54,29 @@ int Animals::alterAgent(std::string alterationType) {
   //  std::cout << "Alterate agent ? : " << applyAlteration << std::endl;
     return 0;
 }
+
+int Leucorrhinia::run(){
+    std::cout << "Leucorrhinia" << std::endl;
+    return 0;
+}
+
+int Hyla::run(){
+    std::cout << "Hyla" << std::endl;
+    return 0;
+}
+
+int Phengaris::run(){
+    std::cout << "Phengaris" << std::endl;
+    return 0;
+}
+
+int Zootoca::run(){
+    std::cout << "Zootoca" << std::endl;
+    return 0;
+}
+
+int Vipera::run(){
+    std::cout << "Vipera" << std::endl;
+    return 0;
+}
+
