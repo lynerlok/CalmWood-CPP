@@ -1,36 +1,39 @@
 #ifndef __C_ANIMALS_H_INCLUDED__
 #define __C_ANIMALS_H_INCLUDED__
 
+#include "U_randomGenerator.hpp"
+
 #include <string>
 #include <vector>
+#include <iostream>
 
 class Animals {
 public :
     Animals(int id = 0){idSaved = id;};
     ~Animals(void){};
     
-    virtual int run() = 0;
+    //virtual int run() = 0;
+    int run();
     
     int getID(){return idSaved;}
-    
-    int setLocation(std::vector<float> newLocation);
-        
-    std::vector <float> getLocation();
-    
+
     int setName(std::string newName);
     std::string getName();
     
-    int setParameters(float newLength,
-             float newActionRadius,
-             float newDetectionRadius,
+    int setParameters(int newLength,
+             int newActionRadius,
+             int newDetectionRadius,
              int newGrowthState);
     
-    int setProbabilities(float newAriseProbability,
-                     float newDeadProbability,
-                     float newGrowthProbability,
-                     float newMoveProbability);
+    int setProbabilities(int newAriseProbability, 
+                         int newMoveProbability, 
+                         int newEatProbability, 
+                         int newGrowthProbability, 
+                         int newDeadProbability);
     
-    int alterAgent(std::string alterationType);
+    std::vector<int> getProbabilities();
+    
+    int triggerAgent(int alterationType, int associatedProbability);
 
 protected : 
     
@@ -41,23 +44,33 @@ protected :
     std::string name;
     std::string form;
 
-    float length = 0.0;
-    float actionRadius = 0.0;
-    float detectionRadius = 0.0;
+    int length = 0;
+    int actionRadius = 0;
+    int detectionRadius = 0;
     int growthState = 0;
-
+    
+    // Detection step
     int detection();
-    int move();
-    int predation();
-    int growth(int targetState);
+    
+    // Action step
     int arise();
+    int move();
+    int eat();
+    int growth();
     int dead();
+    
+    int satietyIndex = 100; // MAX 100 MIN 0
 
+    // Utilities
+    int setLocation(std::vector<float> newLocation);
+    std::vector <float> getLocation();
+    
     int ariseProbability = 0;
-    int deadProbability = 0;
-    int growthProbability = 0;
     int moveProbability = 0;
-
+    int eatProbability = 0;
+    int growthProbability = 0;
+    int deadProbability = 0;
+    
 };
 
 class Leucorrhinia: public Animals {

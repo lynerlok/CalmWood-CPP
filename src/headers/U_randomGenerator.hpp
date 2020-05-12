@@ -11,7 +11,7 @@
 #include <random>
 #include "pcg_random.hpp"
 
-int runRNG(int lower, int upper){
+inline int runRNG(int lower, int upper){
     
     // Seed with a real random value, if available
     pcg_extras::seed_seq_from<std::random_device> seed_source;

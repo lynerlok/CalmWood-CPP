@@ -1,11 +1,13 @@
 #include <iostream>
+
+#include "headers/U_randomGenerator.hpp"
 #include "headers/C_animals.hpp"
 #include "headers/C_environment.hpp"
 #include "headers/C_plants.hpp"
-#include "headers/U_randomGenerator.hpp"
 #include <unistd.h>
 
 using namespace std;
+
 
 int MASrun(Environment environment, vector<Animals*> animals){
     
@@ -14,8 +16,10 @@ int MASrun(Environment environment, vector<Animals*> animals){
     
     bool runError = false;
     int agent = 0;
+    vector<int> probabilities;
+    
     int agentNumber = animals.size();
-
+    
     /* DEV PART */
     for (int run=1; run != (MAXRUN + 1); ++run){
         agent = runRNG(0,agentNumber-1);
@@ -42,25 +46,34 @@ int MASinitialize() {
     uint16_t MaxNumberAgent = 20;
     uint8_t NumberSpecies = 5;
     
-   for(int agent=0; agent < MaxNumberAgent; agent+=NumberSpecies){
+     int setParameters(int newLength,
+             int newActionRadius,
+             int newDetectionRadius,
+             int newGrowthState);
+     
+     for(int agent=0; agent < MaxNumberAgent; agent+=NumberSpecies){
        animals.push_back(new Leucorrhinia());
+       animals[agent]->setProbabilities(0,100,0,0,0);
+       animals[agent]->setParameters(1,5,5,0);
        animals.push_back(new Hyla());
+       animals[agent+1]->setProbabilities(0,100,0,0,0);
+       animals[agent+1]->setParameters(1,5,5,0);
        animals.push_back(new Phengaris());
+       animals[agent+2]->setProbabilities(0,100,0,0,0);
+       animals[agent+2]->setParameters(1,5,5,0);
        animals.push_back(new Zootoca());
+       animals[agent+3]->setProbabilities(0,100,0,0,0);
+       animals[agent+3]->setParameters(1,5,5,0);
        animals.push_back(new Vipera());
+       animals[agent+4]->setProbabilities(0,100,0,0,0);
+       animals[agent+4]->setParameters(1,5,5,0);
     }
     
     environment.setEnvironmentParameters(25,0.5,0.7);
 
     int LevelNumber = 1;
     std::vector<std::vector<int>> mapArray(10,std::vector<int>(10,0));
-    
-    vector<float> loc2 {1,2,3}; // X,Y,Z ?
-    
-    if (animals[0]->setLocation(loc2) == -1) {
-        cout << "ERROR while setting location" << endl;
-        return -1;
-    }
+
     
     MASrun(environment,animals);
     

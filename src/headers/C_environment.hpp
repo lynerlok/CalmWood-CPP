@@ -22,6 +22,13 @@ protected :
     float temperature = 0.0;
     float hygrometry = 0.0 ;
     float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
+    
+    // map, action field
+    
+    // u_int8_t map[][]
+    // u_int8_t  viability zone[][]
+    // u_int8_t map[][]
+    
 
 };
 
