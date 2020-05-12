@@ -18,7 +18,7 @@ int MASrun(Environment environment, vector<Animals*> animals){
 
     /* DEV PART */
     for (int run=1; run != (MAXRUN + 1); ++run){
-        agent = runRNG(0,agentNumber);
+        agent = runRNG(0,agentNumber-1);
         animals[agent]->run();
     }
 
