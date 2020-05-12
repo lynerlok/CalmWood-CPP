@@ -48,3 +48,5 @@ MAS.gpr
 .kdev4/*
 *.kdev4
 
+#Ignore bak file
+*.bak
