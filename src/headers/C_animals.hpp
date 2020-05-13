@@ -2,6 +2,7 @@
 #define __C_ANIMALS_H_INCLUDED__
 
 #include "U_randomGenerator.hpp"
+#include "C_environment.hpp"
 
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@ public :
     ~Animals(void){};
     
     //virtual int run() = 0;
-    int run();
+    int run(Environment * environment);
     
     int getID(){return idSaved;}
 
@@ -33,7 +34,7 @@ public :
     
     std::vector<int> getProbabilities();
     
-    int triggerAgent(int alterationType, int associatedProbability);
+    int triggerAgent(Environment * environment, int alterationType, int associatedProbability);
 
 protected : 
     
@@ -50,11 +51,11 @@ protected :
     int growthState = 0;
     
     // Detection step
-    int detection();
+    int detection(Environment * environment);
     
     // Action step
     int arise();
-    int move();
+    int move(Environment * environment);
     int eat();
     int growth();
     int dead();
@@ -76,33 +77,26 @@ protected :
 class Leucorrhinia: public Animals {
 public :
     Leucorrhinia(int id = 0):Animals(id) {}
-    int run();
 };
     
 class Hyla: public Animals {
 public :
     Hyla(int id = 1):Animals(id) {}
-    int run();
 };
     
 class Phengaris: public Animals {
 public :
     Phengaris(int id = 2):Animals(id) {}
-    int run();
 };
     
 class Zootoca: public Animals {
 public :
     Zootoca(int id = 3):Animals(id) {}
-    
-    int run();
 };
     
 class Vipera: public Animals {
 public :
     Vipera(int id = 4):Animals(id) {}
-    
-    int run();
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__

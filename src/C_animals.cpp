@@ -1,22 +1,24 @@
-#include "C_animals.hpp"
+#include "headers/C_animals.hpp"
 
-int Animals::run()
+int Animals::run(Environment * environment)
 {
     std::cout << "ID : " << getID() << std::endl;
-    
-    std::vector<int> probabilities = getProbabilities();
 
-    for (int alteration = 0; alteration < 5; ++alteration){
-        triggerAgent(alteration,probabilities[alteration]);
-    }
+    std::vector<int> probabilities = getProbabilities();
     
+    detection(environment);
+    
+    for (int alteration = 0; alteration < 5; ++alteration) {
+        triggerAgent(environment,alteration,probabilities[alteration]);
+    }
+
     return 0;
 }
 
 int Animals::setLocation(std::vector<float> newLocation) {
     if (newLocation.size() != 3)
         return -1;
-        
+
     location = newLocation;
     return 0;
 }
@@ -35,9 +37,9 @@ std::string Animals::getName() {
 }
 
 int Animals::setParameters(int newLength,
-                  int newActionRadius,
-                  int newDetectionRadius,
-                  int newGrowthState) {
+                           int newActionRadius,
+                           int newDetectionRadius,
+                           int newGrowthState) {
 
     length = newLength;
     actionRadius = newActionRadius;
@@ -47,18 +49,18 @@ int Animals::setParameters(int newLength,
     return 0;
 }
 
-int Animals::setProbabilities(int newAriseProbability, 
-                         int newMoveProbability, 
-                         int newEatProbability, 
-                         int newGrowthProbability, 
-                         int newDeadProbability) {
+int Animals::setProbabilities(int newAriseProbability,
+                              int newMoveProbability,
+                              int newEatProbability,
+                              int newGrowthProbability,
+                              int newDeadProbability) {
 
     ariseProbability = newAriseProbability;
     moveProbability = newMoveProbability;
     eatProbability = newEatProbability;
     growthProbability = newGrowthProbability;
     deadProbability = newDeadProbability;
-    
+
 
     return 0;
 }
@@ -66,69 +68,91 @@ int Animals::setProbabilities(int newAriseProbability,
 std::vector<int> Animals::getProbabilities() {
 
     std::vector<int> probabilities = {ariseProbability, moveProbability, eatProbability, growthProbability, deadProbability};
-   
+
     return probabilities;
 }
 
-int Animals::triggerAgent(int alterationType, int associatedProbability) {
-    if ((runRNG(0,100)) < associatedProbability){
-        
+int Animals::triggerAgent(Environment * environment, int alterationType, int associatedProbability) {
+    if ((runRNG(0,100)) < associatedProbability) {
+
         switch(alterationType) {
-            case 0 : // arise
-                std::cout << "ARISE" << std::endl;
-                arise();
-                return 1;
-                break;
-            case 1 : // move
-                std::cout << "MOVE" << std::endl;
-                move();
-                return 1;
-                break;
-            case 2 : // eat
-                std::cout << "EAT" << std::endl;
-                eat();
-                return 1;
-                break;
-            case 3 : // growth
-                std::cout << "GROWTH" << std::endl;
-                growth();
-                return 1;
-                break;
-            case 4 : // dead
-                std::cout << "DEAD" << std::endl;
-                dead();
-                return 1;
-                break;
+        case 0 : // arise
+            std::cout << "ARISE" << std::endl;
+            arise();
+            return 1;
+            break;
+        case 1 : // move
+            std::cout << "MOVE" << std::endl;
+            move(environment);
+            return 1;
+            break;
+        case 2 : // eat
+            std::cout << "EAT" << std::endl;
+            eat();
+            return 1;
+            break;
+        case 3 : // growth
+            std::cout << "GROWTH" << std::endl;
+            growth();
+            return 1;
+            break;
+        case 4 : // dead
+            std::cout << "DEAD" << std::endl;
+            dead();
+            return 1;
+            break;
         }
     }
     return 0;
 }
+
+int Animals::detection(Environment * environment)
+{
+   int x = getLocation()[0];
+   int y = getLocation()[1];
+   
+   std::vector<bool> environmentInfos(10);
+   environmentInfos = environment->getCell(x,y).getInfoBoolean();
+   
+   if (environmentInfos[0]){}
+   
+   return 0;
+}
+
 
 int Animals::arise()
 {
     return 0;
 }
 
-int Animals::move()
+int Animals::move(Environment * environment)
 {
     std::vector<float> location;
     int locationOffset = 0;
-    location = getLocation();
+    Cell cell;
 
-    for(int i=0; i<3; ++i){
-        locationOffset = runRNG(0,actionRadius);
-        satietyIndex -= locationOffset;
-        
-        if(satietyIndex <= 0){
-            if(triggerAgent(2,eatProbability) == 0)
-                dead();
+
+    location = getLocation();
+    
+    do {
+        location = getLocation();
+
+        for(int i=0; i<3; ++i) {
+            locationOffset = runRNG(0,actionRadius);
+            satietyIndex -= locationOffset;
+
+            if(satietyIndex <= 0) {
+                if(triggerAgent(environment,2,eatProbability) == 0)
+                    dead();
+            }
+
+            location[i] += locationOffset;
         }
-        
-        location[i] += locationOffset;
     }
-    
+    while(! environment->getCell(location[0],location[1]).getViabilityBoolean());
+
     setLocation(location);
-    
+
     return 0;
 }
 
@@ -136,18 +160,20 @@ int Animals::eat()
 {
     int eatAmount = runRNG(1,25);
     satietyIndex = (satietyIndex + eatAmount) % 100;
-   
+
     return 0;
 }
 
 int Animals::growth()
 {
-    
-    if(satietyIndex > 80){
+
+    if(satietyIndex > 80) {
         growthState += 1;
-        if(growthState >= 3){dead();}
+        if(growthState >= 3) {
+            dead();
+        }
     }
-    
+
     return 0;
 }
 
@@ -157,33 +183,33 @@ int Animals::dead()
     return 0;
 }
 
-int Leucorrhinia::run(){
-    std::cout << "Leucorrhinia" << std::endl;
-    
-    std::vector<int> probabilities = getProbabilities();
-     
-    for (int alteration = 0; alteration < 5; ++alteration){
-        triggerAgent(alteration,probabilities[alteration]);
-    }
-    
-    return 0;
-}
+// int Leucorrhinia::run(Environment environment){
+//     std::cout << "Leucorrhinia" << std::endl;
+//
+//     std::vector<int> probabilities = getProbabilities();
+//
+//     for (int alteration = 0; alteration < 5; ++alteration){
+//         triggerAgent(environment,alteration,probabilities[alteration]);
+//     }
+//
+//     return 0;
+// }
 
 // int Hyla::run(){
 //     std::cout << "Hyla" << std::endl;
 //     return 0;
 // }
-// 
+//
 // int Phengaris::run(){
 //     std::cout << "Phengaris" << std::endl;
 //     return 0;
 // }
-// 
+//
 // int Zootoca::run(){
 //     std::cout << "Zootoca" << std::endl;
 //     return 0;
 // }
-// 
+//
 // int Vipera::run(){
 //     std::cout << "Vipera" << std::endl;
 //     return 0;

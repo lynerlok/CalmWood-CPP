@@ -1,13 +1,58 @@
-#include "C_environment.hpp"
+#include "headers/C_environment.hpp"
 
 #include <iostream>
+
+int Cell::setViability(bool newViability)
+{
+    viability = newViability;
+    return 0;
+    
+}
+
+bool Cell::getViabilityBoolean()
+{
+    return viability;
+}
+
+std::vector<bool> Cell::getInfoBoolean()
+{
+    return std::vector<bool> {
+        containGentiana,
+        containTrees,
+        containAnthropization,
+        containWetland};
+}
+
+int Cell::toggleGentiana()
+{
+    containGentiana = ! containGentiana;
+    return 0;
+}
+
+int Cell::toggleTrees()
+{
+    containTrees = ! containTrees;
+    return 0;
+}
+
+int Cell::toggleAnthropization()
+{
+    containAnthropization = ! containAnthropization;
+    return 0;
+}
+
+int Cell::toggleWetland()
+{
+    containWetland = ! containWetland;
+    return 0;
+}
 
 int Environment::setTemperature(float newTemperature) {
     temperature = newTemperature;
     return 0;
 }
 
-int Environment::setHygtometry(float newHygrometry) {
+int Environment::setHygrometry(float newHygrometry) {
     if( newHygrometry < 0 || newHygrometry > 1.0 ) {
         std::cout << "[DEBUG] hygrometry percentage value between 0 and 1" << std::endl;
         return -1;
@@ -55,4 +100,9 @@ std::vector<float> Environment::getEnvironmentParameters() {
         std::cout << x << std::endl;
 
     return parameters;
+}
+
+Cell Environment::getCell(int x, int y)
+{
+    return map[x][y];
 }

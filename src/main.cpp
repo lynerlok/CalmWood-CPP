@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "headers/U_randomGenerator.hpp"
+#include "headers/U_loadLevel.hpp"
 #include "headers/C_animals.hpp"
 #include "headers/C_environment.hpp"
 #include "headers/C_plants.hpp"
@@ -8,8 +9,7 @@
 
 using namespace std;
 
-
-int MASrun(Environment environment, vector<Animals*> animals){
+int MASrun(Environment * environment, vector<Animals*> animals){
     
     const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and minus for prod.
     const unsigned int MAXRUN = 10;
@@ -18,13 +18,13 @@ int MASrun(Environment environment, vector<Animals*> animals){
     int agent = 0;
     vector<int> probabilities;
     
-    int agentNumber = animals.size();
+     int agentNumber = animals.size();
     
-    /* DEV PART */
-    for (int run=1; run != (MAXRUN + 1); ++run){
-        agent = runRNG(0,agentNumber-1);
-        animals[agent]->run();
-    }
+     /* DEV PART */
+     for (int run=1; run != (MAXRUN + 1); ++run){
+         agent = runRNG(0,agentNumber-1);
+         animals[agent]->run(environment);
+     }
 
     
     /* PROD PART */
@@ -73,9 +73,8 @@ int MASinitialize() {
 
     int LevelNumber = 1;
     std::vector<std::vector<int>> mapArray(10,std::vector<int>(10,0));
-
     
-    MASrun(environment,animals);
+    MASrun(&environment,animals);
     
     return 0;
 }
