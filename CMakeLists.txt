@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
-
+project(Test C CXX)
 project(multiagentsystem)
-
 
 file(GLOB_RECURSE multiagentsystem_SOURCES "src/*.cpp")
 file(GLOB_RECURSE multiagentsystem_HEADERS "src/headers/*.h")
