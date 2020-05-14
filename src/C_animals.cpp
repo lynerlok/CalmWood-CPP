@@ -111,10 +111,10 @@ int Animals::detection(Environment * environment)
    int x = getLocation()[0];
    int y = getLocation()[1];
    
-   std::vector<bool> environmentInfos(10);
-   environmentInfos = environment->getCell(x,y).getInfoBoolean();
+   environment->getCell(x,y).getCellContent();
    
-   if (environmentInfos[0]){}
+   //std::vector<bool> environmentInfos(10);
+   //environmentInfos = environment->getCell(x,y).getInfoBoolean();
    
    return 0;
 }
@@ -125,15 +125,15 @@ int Animals::arise()
     return 0;
 }
 
+// ADD a test to check if animal doesn't move outside the map !
 int Animals::move(Environment * environment)
 {
     std::vector<float> location;
     int locationOffset = 0;
-    Cell cell;
-
 
     location = getLocation();
-    
+    environment->getCell(location[0],location[1]).removeAnimal(idSaved, this);
+
     do {
         location = getLocation();
 
@@ -152,7 +152,10 @@ int Animals::move(Environment * environment)
     while(! environment->getCell(location[0],location[1]).getViabilityBoolean());
 
     setLocation(location);
-
+    environment->getCell(location[0],location[1]).addAnimal(idSaved, this);
+    
+    detection(environment);
+    
     return 0;
 }
 
@@ -182,36 +185,3 @@ int Animals::dead()
     std::cout << "DEAD" << std::endl;
     return 0;
 }
-
-// int Leucorrhinia::run(Environment environment){
-//     std::cout << "Leucorrhinia" << std::endl;
-//
-//     std::vector<int> probabilities = getProbabilities();
-//
-//     for (int alteration = 0; alteration < 5; ++alteration){
-//         triggerAgent(environment,alteration,probabilities[alteration]);
-//     }
-//
-//     return 0;
-// }
-
-// int Hyla::run(){
-//     std::cout << "Hyla" << std::endl;
-//     return 0;
-// }
-//
-// int Phengaris::run(){
-//     std::cout << "Phengaris" << std::endl;
-//     return 0;
-// }
-//
-// int Zootoca::run(){
-//     std::cout << "Zootoca" << std::endl;
-//     return 0;
-// }
-//
-// int Vipera::run(){
-//     std::cout << "Vipera" << std::endl;
-//     return 0;
-// }
-

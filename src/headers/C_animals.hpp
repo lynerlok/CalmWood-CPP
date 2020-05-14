@@ -8,6 +8,8 @@
 #include <vector>
 #include <iostream>
 
+class Environment;
+
 class Animals {
 public :
     Animals(int id = 0){idSaved = id;};

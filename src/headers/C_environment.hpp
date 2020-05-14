@@ -4,6 +4,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
+
+#include "C_animals.hpp"
+
+class Animals;
+
+typedef std::unordered_multimap<int, Animals *>::iterator umit; 
 
 class Cell {
 public :
@@ -14,7 +21,12 @@ public :
 
     bool getViabilityBoolean();
     std::vector<bool> getInfoBoolean();
-
+    
+    int addAnimal(int ID, Animals * animal);
+    int removeAnimal(int ID, Animals * animal);
+    
+    int getCellContent();
+    
     int toggleGentiana();
     int toggleTrees();
     int toggleAnthropization();
@@ -27,6 +39,7 @@ protected :
     bool containAnthropization = false;
     bool containWetland = false;
     
+    std::unordered_multimap<int, Animals *> CellContent;
 };
 
 class Environment {
@@ -55,8 +68,8 @@ protected :
 
     // map, action field
 
-    Cell map[1000][1000];
-
+    Cell map[100][100];
+    
     // u_int8_t  viability zone[][]
     // u_int8_t map[][]
 

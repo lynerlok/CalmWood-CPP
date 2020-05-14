@@ -1,12 +1,10 @@
 #include "headers/C_environment.hpp"
 
-#include <iostream>
-
 int Cell::setViability(bool newViability)
 {
     viability = newViability;
     return 0;
-    
+
 }
 
 bool Cell::getViabilityBoolean()
@@ -20,8 +18,48 @@ std::vector<bool> Cell::getInfoBoolean()
         containGentiana,
         containTrees,
         containAnthropization,
-        containWetland};
+        containWetland
+    };
 }
+
+int Cell::addAnimal(int ID, Animals * animal)
+{
+    CellContent.emplace(ID,animal);
+
+    return 0;
+}
+
+int Cell::removeAnimal(int ID, Animals * animal)
+{
+    umit it = CellContent.begin();
+
+    for(it ; it != CellContent.end(); it++)
+    {
+        if((it->second) == animal)
+        {
+            CellContent.erase(it);
+            break;
+        }
+    }
+
+    return 0;
+}
+
+// Just a test to get cell content : REWORK NEEDED !
+int Cell::getCellContent()
+{
+    std::cout << "Viability : " << viability << std::endl;
+    std::cout << "Gentiana : " << containGentiana << std::endl;
+    std::cout << "Trees : " << containTrees << std::endl;
+    std::cout << "Anthropization : " << containAnthropization << std::endl;
+    std::cout << "Wetland : " << containWetland << std::endl;
+    
+    for (int i = 0; i < 4; ++i){
+        std::cout << "Number of " << i << " : " << CellContent.count(i) << std::endl;
+    }
+    return 0;
+}
+
 
 int Cell::toggleGentiana()
 {
