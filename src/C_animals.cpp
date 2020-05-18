@@ -1,5 +1,10 @@
 #include "headers/C_animals.hpp"
 
+int Animals::getID()
+{
+    return id;
+}
+
 int Animals::run(Environment * environment)
 {
     std::cout << "ID : " << getID() << std::endl;
@@ -132,7 +137,7 @@ int Animals::move(Environment * environment)
     int locationOffset = 0;
 
     location = getLocation();
-    environment->getCell(location[0],location[1]).removeAnimal(idSaved, this);
+    environment->getCell(location[0],location[1]).removeAnimal(id, this);
 
     do {
         location = getLocation();
@@ -152,7 +157,7 @@ int Animals::move(Environment * environment)
     while(! environment->getCell(location[0],location[1]).getViabilityBoolean());
 
     setLocation(location);
-    environment->getCell(location[0],location[1]).addAnimal(idSaved, this);
+    environment->getCell(location[0],location[1]).addAnimal(id, this);
     
     detection(environment);
     

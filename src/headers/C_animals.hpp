@@ -12,13 +12,13 @@ class Environment;
 
 class Animals {
 public :
-    Animals(int id = 0){idSaved = id;};
+    Animals(int newId = 0){id = newId;};
     ~Animals(void){};
     
     //virtual int run() = 0;
     int run(Environment * environment);
     
-    int getID(){return idSaved;}
+    int getID();
 
     int setName(std::string newName);
     std::string getName();
@@ -40,7 +40,7 @@ public :
 
 protected : 
     
-    int idSaved = 0;
+    int id = 0;
     
     std::vector <float> location{0,0,0};
 
