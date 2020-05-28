@@ -25,6 +25,7 @@ int Animals::setLocation(std::vector<float> newLocation) {
         return -1;
 
     location = newLocation;
+    
     return 0;
 }
 
@@ -84,30 +85,27 @@ int Animals::triggerAgent(Environment * environment, int alterationType, int ass
         case 0 : // arise
             std::cout << "ARISE" << std::endl;
             arise();
-            return 1;
             break;
         case 1 : // move
             std::cout << "MOVE" << std::endl;
             move(environment);
-            return 1;
             break;
         case 2 : // eat
             std::cout << "EAT" << std::endl;
-            eat();
-            return 1;
+            eat(environment);
             break;
         case 3 : // growth
             std::cout << "GROWTH" << std::endl;
             growth();
-            return 1;
             break;
         case 4 : // dead
             std::cout << "DEAD" << std::endl;
             dead();
-            return 1;
             break;
         }
     }
+    
+    
     return 0;
 }
 
@@ -116,10 +114,9 @@ int Animals::detection(Environment * environment)
    int x = getLocation()[0];
    int y = getLocation()[1];
    
-   environment->getCell(x,y).getCellContent();
+   std::cout << x << " | " << y << std::endl;
    
-   //std::vector<bool> environmentInfos(10);
-   //environmentInfos = environment->getCell(x,y).getInfoBoolean();
+   environment->getCell(x,y)->getCellContent();
    
    return 0;
 }
@@ -130,42 +127,64 @@ int Animals::arise()
     return 0;
 }
 
-// ADD a test to check if animal doesn't move outside the map !
 int Animals::move(Environment * environment)
 {
-    std::vector<float> location;
+    std::vector<float> location(3);
+    std::vector<float> newLocation(3);
+    
     int locationOffset = 0;
+    int orientation = 0;
+    
+    const unsigned int mapLength = environment->getMapLength();
 
     location = getLocation();
-    environment->getCell(location[0],location[1]).removeAnimal(id, this);
+    environment->getCell(location[0],location[1])->removeAnimal(id, this);
 
     do {
         location = getLocation();
 
-        for(int i=0; i<3; ++i) {
+        for(int i=0; i<2; ++i) {
             locationOffset = runRNG(0,actionRadius);
+            orientation = runRNG(0,1);
+            
             satietyIndex -= locationOffset;
 
             if(satietyIndex <= 0) {
                 if(triggerAgent(environment,2,eatProbability) == 0)
                     dead();
             }
-
-            location[i] += locationOffset;
+            
+            if ( orientation ) {
+                newLocation[i] = location[i] + locationOffset;
+                if (newLocation[i] < mapLength ){
+                    location[i] = newLocation[i];
+                }
+                
+            }
+            
+            if ( ! orientation ) {
+                newLocation[i] = location[i] - locationOffset;
+                if (newLocation[i] > 0 ){
+                    location[i] = newLocation[i];
+                }
+            }
         }
     }
-    while(! environment->getCell(location[0],location[1]).getViabilityBoolean());
+    while(! environment->getCell(location[0],location[1])->getViabilityBoolean());
 
     setLocation(location);
-    environment->getCell(location[0],location[1]).addAnimal(id, this);
+    environment->getCell(location[0],location[1])->addAnimal(id, this);
     
     detection(environment);
     
     return 0;
 }
 
-int Animals::eat()
+int Animals::eat(Environment * environment)
 {
+    
+    detection(environment);
+    
     int eatAmount = runRNG(1,25);
     satietyIndex = (satietyIndex + eatAmount) % 100;
 

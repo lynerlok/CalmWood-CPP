@@ -6,14 +6,23 @@
 
 class Plants {
 public:
-    Plants(void){};
-    ~Plants(void){};
+    Plants(int newId = 0) {
+        id = newId;
+    };
+    ~Plants(void) {};
     std::string name;
-    
+
     int growth(int targetState);
     int damage();
-}; 
 
-class Gentiania: public Plants {};
+protected :
+    int id=0;
+
+};
+
+class Gentiania: public Plants {
+public :
+    Gentiania(int id = 0):Plants(id) {}
+};
 
 #endif // __C_PLANTS_H_INCLUDED__

@@ -36,6 +36,9 @@ public :
     
     std::vector<int> getProbabilities();
     
+    int setLocation(std::vector<float> newLocation);
+    std::vector <float> getLocation();
+    
     int triggerAgent(Environment * environment, int alterationType, int associatedProbability);
 
 protected : 
@@ -47,10 +50,18 @@ protected :
     std::string name;
     std::string form;
 
-    int length = 0;
-    int actionRadius = 0;
-    int detectionRadius = 0;
+    int length = 1;
+    int actionRadius = 1;
+    int detectionRadius = 1;
     int growthState = 0;
+    
+    int satietyIndex = 100; // MAX 100 MIN 0
+    
+    int ariseProbability = 0;
+    int moveProbability = 50;
+    int eatProbability = 0;
+    int growthProbability = 0;
+    int deadProbability = 0;
     
     // Detection step
     int detection(Environment * environment);
@@ -58,22 +69,10 @@ protected :
     // Action step
     int arise();
     int move(Environment * environment);
-    int eat();
+    int eat(Environment * environment);
     int growth();
     int dead();
-    
-    int satietyIndex = 100; // MAX 100 MIN 0
-
-    // Utilities
-    int setLocation(std::vector<float> newLocation);
-    std::vector <float> getLocation();
-    
-    int ariseProbability = 0;
-    int moveProbability = 0;
-    int eatProbability = 0;
-    int growthProbability = 0;
-    int deadProbability = 0;
-    
+        
 };
 
 class Leucorrhinia: public Animals {

@@ -15,7 +15,6 @@ bool Cell::getViabilityBoolean()
 std::vector<bool> Cell::getInfoBoolean()
 {
     return std::vector<bool> {
-        containGentiana,
         containTrees,
         containAnthropization,
         containWetland
@@ -24,20 +23,44 @@ std::vector<bool> Cell::getInfoBoolean()
 
 int Cell::addAnimal(int ID, Animals * animal)
 {
-    CellContent.emplace(ID,animal);
+
+    AnimalCellContent.emplace(ID,animal);
+    
+    return 0;
+}
+
+int Cell::addPlant(int ID, Plants * plant)
+{
+    PlantCellContent.emplace(std::make_pair(ID,plant));
 
     return 0;
 }
 
 int Cell::removeAnimal(int ID, Animals * animal)
 {
-    umit it = CellContent.begin();
+    Aumit it = AnimalCellContent.begin();
 
-    for(it ; it != CellContent.end(); it++)
+    for(it ; it != AnimalCellContent.end(); it++)
     {
         if((it->second) == animal)
         {
-            CellContent.erase(it);
+            AnimalCellContent.erase(it);
+            break;
+        }
+    }
+
+    return 0;
+}
+
+int Cell::removePlant(int ID, Plants * plant)
+{
+    Pumit it = PlantCellContent.begin();
+
+    for(it ; it != PlantCellContent.end(); it++)
+    {
+        if((it->second) == plant)
+        {
+            PlantCellContent.erase(it);
             break;
         }
     }
@@ -49,21 +72,19 @@ int Cell::removeAnimal(int ID, Animals * animal)
 int Cell::getCellContent()
 {
     std::cout << "Viability : " << viability << std::endl;
-    std::cout << "Gentiana : " << containGentiana << std::endl;
     std::cout << "Trees : " << containTrees << std::endl;
     std::cout << "Anthropization : " << containAnthropization << std::endl;
     std::cout << "Wetland : " << containWetland << std::endl;
     
-    for (int i = 0; i < 4; ++i){
-        std::cout << "Number of " << i << " : " << CellContent.count(i) << std::endl;
+    std::cout << "Size of Animals : " << AnimalCellContent.size() << std::endl;
+    std::cout << "Size of Plants : " << PlantCellContent.size() << std::endl;
+    
+    for (int i = 0; i < 4; ++i){ // NUMBER OF SPECIES
+        std::cout << "Number of " << i << " : " << AnimalCellContent.count(i) << std::endl;
     }
-    return 0;
-}
-
-
-int Cell::toggleGentiana()
-{
-    containGentiana = ! containGentiana;
+    
+    std::cout << "Number of Gentiana : " << PlantCellContent.count(0) << std::endl;
+    
     return 0;
 }
 
@@ -140,7 +161,13 @@ std::vector<float> Environment::getEnvironmentParameters() {
     return parameters;
 }
 
-Cell Environment::getCell(int x, int y)
+const unsigned int Environment::getMapLength()
+{
+    return mapLength;
+}
+
+Cell * Environment::getCell(int x, int y)
 {
     return map[x][y];
 }
+
