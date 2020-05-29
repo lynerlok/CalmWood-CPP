@@ -26,7 +26,8 @@ public :
     int setParameters(int newLength,
              int newActionRadius,
              int newDetectionRadius,
-             int newGrowthState);
+             int newGrowthState,
+             int sex );
     
     int setProbabilities(int newAriseProbability, 
                          int newMoveProbability, 
@@ -49,6 +50,8 @@ protected :
 
     std::string name;
     std::string form;
+    
+    int sex = 0; // 0 = male 1 = female
 
     int length = 1;
     int actionRadius = 1;
@@ -63,6 +66,8 @@ protected :
     int growthProbability = 0;
     int deadProbability = 0;
     
+    bool hidden = false;
+    
     // Detection step
     int detection(Environment * environment);
     
@@ -70,6 +75,11 @@ protected :
     int arise();
     int move(Environment * environment);
     int eat(Environment * environment);
+    int reproduction(Environment * environment);
+    int attack(Environment * environment);
+    int toggleHide();
+    int spawn(Environment * environment);
+    
     int growth();
     int dead();
         

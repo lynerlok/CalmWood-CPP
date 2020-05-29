@@ -43,14 +43,17 @@ std::string Animals::getName() {
 }
 
 int Animals::setParameters(int newLength,
-                           int newActionRadius,
-                           int newDetectionRadius,
-                           int newGrowthState) {
+             int newActionRadius,
+             int newDetectionRadius,
+             int newGrowthState,
+             int newSex ) {
 
     length = newLength;
     actionRadius = newActionRadius;
     detectionRadius = newDetectionRadius;
     growthState = newGrowthState;
+    sex = newSex;
+    
 
     return 0;
 }
@@ -188,6 +191,16 @@ int Animals::eat(Environment * environment)
     int eatAmount = runRNG(1,25);
     satietyIndex = (satietyIndex + eatAmount) % 100;
 
+    return 0;
+}
+
+int Animals::reproduction ( Environment* environment )
+{
+    return 0;
+}
+
+int attack(Environment * environment)
+{
     return 0;
 }
 

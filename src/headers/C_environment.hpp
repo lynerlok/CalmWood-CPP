@@ -36,7 +36,6 @@ public :
 
     int getCellContent();
 
-    int toggleGentiana();
     int toggleTrees();
     int toggleAnthropization();
     int toggleWetland();
@@ -46,6 +45,10 @@ protected :
     bool containTrees = false;
     bool containAnthropization = false;
     bool containWetland = false;
+    bool isWater = false;
+    
+    int waterEutrophisationRate = 0;
+    int waterPlantClosedRate = 0;
 
     std::unordered_multimap<int, Animals *> AnimalCellContent;
     std::unordered_multimap<int, Plants *> PlantCellContent;
@@ -77,6 +80,20 @@ public :
     int initializeEnvironmentMAP();
 
     int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
+    
+    int getTimeOfDay(){
+        return timeOfDay;
+    }
+    
+    int setTimeOfDay(int newTimeOfDay){
+        timeOfDay = newTimeOfDay;
+        return 0;
+    }
+    
+    int getMonth(int newMonthOfYear){
+        monthOfYear = newMonthOfYear;
+        return 0;
+    }
 
     std::vector<float> getEnvironmentParameters();
 
@@ -93,6 +110,9 @@ protected :
     const unsigned int mapLength = 5;
 
     std::vector<std::vector<Cell*>> map{mapLength};
+    
+    int timeOfDay = 12; // In hours
+    int monthOfYear = 05;
 
 };
 
