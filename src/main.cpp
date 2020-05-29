@@ -10,9 +10,7 @@
 
 using namespace std;
 
-int addNewAgent ( Animals animal );
-
-int MASrun ( Environment * environment, vector<Animals*> * animals )
+int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plants*> * plants )
 {
 
     const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and minus for prod.
@@ -33,7 +31,6 @@ int MASrun ( Environment * environment, vector<Animals*> * animals )
             ( * ( *animals ) [agent] ).run ( environment );
         }
     }
-
 
     /* PROD PART */
 
@@ -68,9 +65,9 @@ int MASinitialize()
         {
             location[i] = runRNG ( 0,mapLength-1 );
         }
-   
+
         ( *animal ).setLocation ( location );
-        (*environment).getCell(location[0],location[1])->addAnimal((*animal).getID(), animal);
+        ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *animal ).getID(), animal );
 
         ( *animals ).push_back ( animal );
 
@@ -79,10 +76,10 @@ int MASinitialize()
     for ( int agent=0; agent < MaxNumberAgent*NumberSpecies; agent+=NumberSpecies ) // ***May be optimized !***
     {
 
-        initAnimals ( &environment,&animals, new Leucorrhinia() );
-        initAnimals ( &environment,&animals,new Hyla() );
-        initAnimals ( &environment,&animals,new Phengaris() );
-        initAnimals ( &environment,&animals,new Zootoca() );
+        initAnimals ( &environment, &animals, new Leucorrhinia() );
+        initAnimals ( &environment, &animals, new Hyla() );
+        initAnimals ( &environment, &animals, new Phengaris() );
+        initAnimals ( &environment, &animals, new Zootoca() );
     }
 
     for ( int agent=0; agent < PlantDensity; agent+=1 )
@@ -94,7 +91,22 @@ int MASinitialize()
 
     int LevelNumber = 1;
 
-    MASrun ( &environment,&animals );
+    MASrun ( &environment, &animals, &plants );
+
+    for ( int i=0; i<animals.size(); ++i )
+    {
+        delete ( animals[i] );
+    }
+
+    animals.clear();
+
+    for ( int i=0; i<plants.size(); ++i )
+    {
+        delete ( plants[i] );
+    }
+
+    plants.clear();
+
 
     return 0;
 }
