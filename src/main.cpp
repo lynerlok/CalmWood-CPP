@@ -13,12 +13,14 @@ using namespace std;
 int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plants*> * plants )
 {
 
-    const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and minus for prod.
+    const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and less for prod.
     const unsigned int MAXRUN = 10;
 
     bool runError = false;
     int agent = 0;
-    vector<int> probabilities;
+
+    int timeOfDay = ( * environment ).getTimeOfDay();
+    int monthOfYear = ( * environment ).getMonth();
 
     int agentNumber = ( *animals ).size();
 
@@ -29,9 +31,15 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
         for ( int agent = 0; agent < agentNumber; ++agent )
         {
             ( * ( *animals ) [agent] ).run ( environment );
+
+            if ( ( * ( *animals ) [agent] ).isDead() )
+            {
+                delete ( *animals ) [agent];
+                ( *animals ).erase ( ( * animals ).begin()+agent );
+            }
         }
-        
-        
+
+        ( * environment ).setTimeOfDay ( timeOfDay+1 );
     }
 
     /* PROD PART */
@@ -61,27 +69,29 @@ int MASinitialize()
 
     uint16_t PlantDensity = 1;
 
-    auto initAnimals = [&] ( Environment * environment, vector<Animals*> * animals, Animals * animal )
+    auto initAnimals = [&] ( Environment * environment, vector<Animals*> * animals )
     {
-        for ( int i = 0; i < 3; ++i )
+        vector<Animals *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca() };
+
+        for ( int animal = 0; animal < newAnimals.size(); ++animal )
         {
-            location[i] = runRNG ( 0,mapLength-1 );
+
+            for ( int i = 0; i < 3; ++i )
+            {
+                location[i] = runRNG ( 0,mapLength-1 );
+            }
+
+            ( *newAnimals[animal] ).setLocation ( location );
+            ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
+
+            ( *animals ).push_back ( newAnimals[animal] );
         }
-
-        ( *animal ).setLocation ( location );
-        ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *animal ).getID(), animal );
-
-        ( *animals ).push_back ( animal );
 
     };
 
-    for ( int agent=0; agent < MaxNumberAgent*NumberSpecies; agent+=NumberSpecies ) // ***May be optimized !***
+    for ( int agent=0; agent < MaxNumberAgent*NumberSpecies; agent+=NumberSpecies )
     {
-
-        initAnimals ( &environment, &animals, new Leucorrhinia() );
-        initAnimals ( &environment, &animals, new Hyla() );
-        initAnimals ( &environment, &animals, new Phengaris() );
-        initAnimals ( &environment, &animals, new Zootoca() );
+        initAnimals ( &environment, &animals );
     }
 
     for ( int agent=0; agent < PlantDensity; agent+=1 )
@@ -90,8 +100,6 @@ int MASinitialize()
     }
 
     environment.setEnvironmentParameters ( 25,0.5,0.7 );
-
-    int LevelNumber = 1;
 
     MASrun ( &environment, &animals, &plants );
 

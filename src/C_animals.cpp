@@ -5,66 +5,71 @@ int Animals::getID()
     return id;
 }
 
-int Animals::run(Environment * environment)
+int Animals::run ( Environment * environment )
 {
     std::cout << "ID : " << getID() << std::endl;
 
     std::vector<int> probabilities = getProbabilities();
-    
-    detection(environment);
-    
-    for (int alteration = 0; alteration < 5; ++alteration) {
-        triggerAgent(environment,alteration,probabilities[alteration]);
+
+    detection ( environment );
+
+    for ( int alteration = 0; alteration < 4; ++alteration )
+    {
+        triggerAgent ( environment,alteration,probabilities[alteration] );
     }
 
     return 0;
 }
 
-int Animals::setLocation(std::vector<float> newLocation) {
-    if (newLocation.size() != 3)
+int Animals::setLocation ( std::vector<float> newLocation )
+{
+    if ( newLocation.size() != 3 )
         return -1;
 
     location = newLocation;
-    
+
     return 0;
 }
 
-std::vector <float> Animals::getLocation() {
+std::vector <float> Animals::getLocation()
+{
     return location;
 }
 
-int Animals::setName(std::string newName) {
+int Animals::setName ( std::string newName )
+{
     name = newName;
     return 0;
 }
 
-std::string Animals::getName() {
+std::string Animals::getName()
+{
     return name;
 }
 
-int Animals::setParameters(int newLength,
-             int newActionRadius,
-             int newDetectionRadius,
-             int newGrowthState,
-             int newSex ) {
+int Animals::setParameters ( int newLength,
+                             int newActionRadius,
+                             int newDetectionRadius,
+                             int newGrowthState,
+                             int newSex )
+{
 
     length = newLength;
     actionRadius = newActionRadius;
     detectionRadius = newDetectionRadius;
     growthState = newGrowthState;
     sex = newSex;
-    
+
 
     return 0;
 }
 
-int Animals::setProbabilities(int newAriseProbability,
-                              int newMoveProbability,
-                              int newEatProbability,
-                              int newGrowthProbability,
-                              int newDeadProbability) {
+int Animals::setProbabilities ( int newMoveProbability,
+                                int newEatProbability,
+                                int newGrowthProbability,
+                                int newDeadProbability )
+{
 
-    ariseProbability = newAriseProbability;
     moveProbability = newMoveProbability;
     eatProbability = newEatProbability;
     growthProbability = newGrowthProbability;
@@ -74,142 +79,194 @@ int Animals::setProbabilities(int newAriseProbability,
     return 0;
 }
 
-std::vector<int> Animals::getProbabilities() {
+std::vector<int> Animals::getProbabilities()
+{
 
-    std::vector<int> probabilities = {ariseProbability, moveProbability, eatProbability, growthProbability, deadProbability};
+    std::vector<int> probabilities = {moveProbability, eatProbability, growthProbability, deadProbability};
 
     return probabilities;
 }
 
-int Animals::triggerAgent(Environment * environment, int alterationType, int associatedProbability) {
-    if ((runRNG(0,100)) < associatedProbability) {
+int Animals::triggerAgent ( Environment * environment, int alterationType, int associatedProbability )
+{
+    if ( ( runRNG ( 0,100 ) ) < associatedProbability )
+    {
 
-        switch(alterationType) {
-        case 0 : // arise
-            std::cout << "ARISE" << std::endl;
-            arise();
-            break;
-        case 1 : // move
+        switch ( alterationType )
+        {
+        case 0 : // move
             std::cout << "MOVE" << std::endl;
-            move(environment);
+            move ( environment );
             break;
-        case 2 : // eat
+        case 1 : // eat
             std::cout << "EAT" << std::endl;
-            eat(environment);
+            eat ( environment );
             break;
-        case 3 : // growth
+        case 2 : // growth
             std::cout << "GROWTH" << std::endl;
             growth();
             break;
-        case 4 : // dead
+        case 3 : // dead
             std::cout << "DEAD" << std::endl;
             dead();
             break;
         }
     }
-    
-    
+
+
     return 0;
 }
 
-int Animals::detection(Environment * environment)
+bool Animals::isDead()
 {
-   int x = getLocation()[0];
-   int y = getLocation()[1];
-   
-   std::cout << x << " | " << y << std::endl;
-   
-   environment->getCell(x,y)->getCellContent();
-   
-   return 0;
+    return death;
 }
 
+int Animals::detection ( Environment * environment )
+{
+    int x = getLocation() [0];
+    int y = getLocation() [1];
 
-int Animals::arise()
+    std::unordered_map<int,int> VisibleAnimals;
+    std::unordered_map<int,int> VisiblePlants;
+    std::vector<int> CellSpecs;
+
+    VisibleAnimals = environment->getCell ( x,y )->getCellContentAnimals();
+    VisiblePlants = environment->getCell ( x,y )->getCellContentPlants();
+    CellSpecs = environment->getCell ( x,y )->getCellContentSpecs();
+
+    decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
+
+    return 0;
+}
+
+int Leucorrhinia::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+{
+
+    // {viability,containTrees,containAnthropization,containWetland};
+
+    int timeOfDay = environment->getTimeOfDay();
+    int month = environment->getMonth();
+    int viability = CellSpecs->at ( 0 );
+
+    if ( CellSpecs->at ( 0 ) == 0 )
+        move ( environment );
+
+    if ( month < 5 && month >= 9 )
+    {
+        setHiddenState ( true );
+        deadProbability = 0.2;
+    }
+
+    return 0;
+}
+
+int Hyla::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
     return 0;
 }
 
-int Animals::move(Environment * environment)
+
+int Phengaris::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
-    std::vector<float> location(3);
-    std::vector<float> newLocation(3);
-    
+    return 0;
+}
+
+int Zootoca::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+{
+    return 0;
+}
+
+int Vipera::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+{
+    return 0;
+}
+
+int Animals::move ( Environment * environment )
+{
+    std::vector<float> location ( 3 );
+    std::vector<float> newLocation ( 3 );
+
     int locationOffset = 0;
     int orientation = 0;
-    
+
     const unsigned int mapLength = environment->getMapLength();
 
     location = getLocation();
-    environment->getCell(location[0],location[1])->removeAnimal(id, this);
+    environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
 
-    do {
+    do
+    {
         location = getLocation();
 
-        for(int i=0; i<2; ++i) {
-            locationOffset = runRNG(0,actionRadius);
-            orientation = runRNG(0,1);
-            
+        for ( int i=0; i<2; ++i )
+        {
+            locationOffset = runRNG ( 0,actionRadius );
+            orientation = runRNG ( 0,1 );
+
             satietyIndex -= locationOffset;
 
-            if(satietyIndex <= 0) {
-                if(triggerAgent(environment,2,eatProbability) == 0)
+            if ( satietyIndex <= 0 )
+            {
+                if ( triggerAgent ( environment,2,eatProbability ) == 0 )
                     dead();
             }
-            
-            if ( orientation ) {
+
+            if ( orientation )
+            {
                 newLocation[i] = location[i] + locationOffset;
-                if (newLocation[i] < mapLength ){
+                if ( newLocation[i] < mapLength )
+                {
                     location[i] = newLocation[i];
                 }
-                
+
             }
-            
-            if ( ! orientation ) {
+
+            if ( ! orientation )
+            {
                 newLocation[i] = location[i] - locationOffset;
-                if (newLocation[i] > 0 ){
+                if ( newLocation[i] > 0 )
+                {
                     location[i] = newLocation[i];
                 }
             }
         }
     }
-    while(! environment->getCell(location[0],location[1])->getViabilityBoolean());
+    while ( ! environment->getCell ( location[0],location[1] )->getViabilityBoolean() );
 
-    setLocation(location);
-    environment->getCell(location[0],location[1])->addAnimal(id, this);
-    
-    detection(environment);
-    
-    return 0;
-}
+    setLocation ( location );
+    environment->getCell ( location[0],location[1] )->addAnimal ( id, this );
 
-int Animals::eat(Environment * environment)
-{
-    
-    detection(environment);
-    
-    int eatAmount = runRNG(1,25);
-    satietyIndex = (satietyIndex + eatAmount) % 100;
+    detection ( environment );
 
     return 0;
 }
 
-int Animals::reproduction ( Environment* environment )
+int Animals::eat ( Environment * environment )
 {
+
+   // detection ( environment );
+
+    int eatAmount = runRNG ( 1,25 );
+    satietyIndex = ( satietyIndex + eatAmount ) % 100;
+
     return 0;
 }
 
-int attack(Environment * environment)
+int Animals::setHiddenState ( bool state )
 {
+    hidden = state;
     return 0;
 }
 
 int Animals::growth()
 {
 
-    if(satietyIndex > 80) {
+    if ( satietyIndex > 80 )
+    {
         growthState += 1;
-        if(growthState >= 3) {
+        if ( growthState >= 3 )
+        {
             dead();
         }
     }
@@ -219,6 +276,6 @@ int Animals::growth()
 
 int Animals::dead()
 {
-    std::cout << "DEAD" << std::endl;
+    death = true;
     return 0;
 }

@@ -27,28 +27,30 @@ public :
     int setViability ( bool newViability );
 
     bool getViabilityBoolean();
-    std::vector<bool> getInfoBoolean();
 
     int addAnimal ( int ID, Animals * animal );
     int removePlant ( int ID, Plants * plant );
     int removeAnimal ( int ID, Animals * animal );
     int addPlant ( int ID, Plants * plant );
 
-    int getCellContent();
+    std::unordered_map<int,int> getCellContentAnimals();
+    std::unordered_map<int,int> getCellContentPlants();
+    std::vector<int> getCellContentSpecs();
 
     int toggleTrees();
     int toggleAnthropization();
     int toggleWetland();
 
 protected :
-    bool viability = true;
-    bool containTrees = false;
-    bool containAnthropization = false;
-    bool containWetland = false;
-    bool isWater = false;
+    int viability = 1;
+    int containTrees = 0;
+    int containAnthropization = 0;
+    int containWetland = 0;
+    int isWater = 0;
     
     int waterEutrophisationRate = 0;
     int waterPlantClosedRate = 0;
+    int sunExpositionRate = 60;
 
     std::unordered_multimap<int, Animals *> AnimalCellContent;
     std::unordered_multimap<int, Plants *> PlantCellContent;
@@ -81,19 +83,13 @@ public :
 
     int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
     
-    int getTimeOfDay(){
-        return timeOfDay;
-    }
+    int getTimeOfDay();
     
-    int setTimeOfDay(int newTimeOfDay){
-        timeOfDay = newTimeOfDay;
-        return 0;
-    }
+    int setTimeOfDay(int newTimeOfDay);
     
-    int getMonth(int newMonthOfYear){
-        monthOfYear = newMonthOfYear;
-        return 0;
-    }
+    int setMonth(int newMonthOfYear);
+    
+    int getMonth();
 
     std::vector<float> getEnvironmentParameters();
 
@@ -105,14 +101,15 @@ protected :
     float temperature = 0.0;
     float hygrometry = 0.0 ;
     float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
-
+    int numberSpecies = 5;
+    
     // map, action field
     const unsigned int mapLength = 5;
 
     std::vector<std::vector<Cell*>> map{mapLength};
     
-    int timeOfDay = 12; // In hours
-    int monthOfYear = 05;
+    int timeOfDay = 12; // In hours always % 24
+    int monthOfYear = 05; // Always % 12
 
 };
 
