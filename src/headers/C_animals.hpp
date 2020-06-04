@@ -19,7 +19,6 @@ public :
     };
     ~Animals ( void ) {};
 
-    //virtual int run() = 0;
     int run ( Environment * environment );
 
     int getID();
@@ -60,14 +59,14 @@ protected :
 
     int length = 1;
     int actionRadius = 1;
-    int detectionRadius = 1;
+    int detectionRadius = 2;
     int growthState = 0;
 
     int satietyIndex = 100; // MAX 100 MIN 0
 
-    int moveProbability = 50;
-    int eatProbability = 0;
-    int growthProbability = 0;
+    int moveProbability = 60;
+    int eatProbability = 0; // 70;
+    int growthProbability = 0; // 30;
     int deadProbability = 0;
 
     bool hidden = false;
@@ -80,8 +79,9 @@ protected :
     virtual int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
 //     virtual int reproduction ( Environment * environment ) = 0;
 //     virtual int attack ( Environment * environment ) = 0;
-    
+
     int move ( Environment * environment );
+    int moveTowards ( Environment * environment, int X, int Y );
     int eat ( Environment * environment );
     int setHiddenState ( bool state );
     int spawn ( Environment * environment );
@@ -95,7 +95,7 @@ class Leucorrhinia: public Animals
 {
 public :
     Leucorrhinia ( int id = 0 ) :Animals ( id ) {}
-protected : 
+protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
@@ -135,11 +135,14 @@ class Vipera: public Animals
 {
 public :
     Vipera ( int id = 4 ) :Animals ( id ) {}
-protected : 
+protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__
+
+
+
 

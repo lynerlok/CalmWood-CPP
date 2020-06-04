@@ -89,6 +89,26 @@ int MASinitialize()
 
     };
 
+    auto initPlants = [&] ( Environment * environment, vector<Plants*> * plants )
+    {
+        vector<Plants *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
+
+        for ( int plant = 0; plant < newPlants.size(); ++plant )
+        {
+
+            for ( int i = 0; i < 3; ++i )
+            {
+                location[i] = runRNG ( 0,mapLength-1 );
+            }
+
+            ( *newPlants[plant] ).setLocation ( location );
+            ( *environment ).getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
+
+            ( *plants ).push_back ( newPlants[plant] );
+        }
+
+    };
+
     for ( int agent=0; agent < MaxNumberAgent*NumberSpecies; agent+=NumberSpecies )
     {
         initAnimals ( &environment, &animals );
@@ -96,7 +116,7 @@ int MASinitialize()
 
     for ( int agent=0; agent < PlantDensity; agent+=1 )
     {
-        plants.push_back ( new Gentiania() );
+        initPlants ( &environment, &plants );
     }
 
     environment.setEnvironmentParameters ( 25,0.5,0.7 );

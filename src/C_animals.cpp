@@ -124,18 +124,44 @@ bool Animals::isDead()
 
 int Animals::detection ( Environment * environment )
 {
-    int x = getLocation() [0];
-    int y = getLocation() [1];
+    int currentX = getLocation() [0];
+    int currentY = getLocation() [1];
+    int newX = 0;
+    int newY = 0;
+
+    int mapLength = environment->getMapLength();
+    int detectionRangeSize = 0;
 
     std::unordered_map<int,int> VisibleAnimals;
     std::unordered_map<int,int> VisiblePlants;
     std::vector<int> CellSpecs;
+    std::vector<std::vector<int>> detectionRange;
 
-    VisibleAnimals = environment->getCell ( x,y )->getCellContentAnimals();
-    VisiblePlants = environment->getCell ( x,y )->getCellContentPlants();
-    CellSpecs = environment->getCell ( x,y )->getCellContentSpecs();
+    for ( int i = ( 0 - detectionRadius ); i <= detectionRadius; ++i )
+    {
+        for ( int j = ( 0 - detectionRadius ); j <= detectionRadius; ++j )
+        {
+            newX = currentX+i;
+            newY = currentY+j;
 
-    decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
+            if ( ( newX >= 0 && newX < mapLength ) && ( newY >= 0 && newY < mapLength ) )
+                detectionRange.push_back ( {currentX+i,currentY+j} );
+        }
+    }
+
+    detectionRangeSize = detectionRange.size();
+
+    runShuffle ( &detectionRange );
+
+    for ( int i = 0; i < detectionRangeSize; ++i )
+    {
+
+        VisibleAnimals = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentAnimals();
+        VisiblePlants = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentPlants();
+        CellSpecs = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentSpecs();
+
+        decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
+    }
 
     return 0;
 }
@@ -157,6 +183,8 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_map<int,i
         setHiddenState ( true );
         deadProbability = 0.2;
     }
+
+
 
     return 0;
 }
@@ -197,18 +225,16 @@ int Animals::move ( Environment * environment )
 
     do
     {
-        location = getLocation();
-
         for ( int i=0; i<2; ++i )
         {
-            locationOffset = runRNG ( 0,actionRadius );
+            locationOffset = runRNG ( 0, actionRadius );
             orientation = runRNG ( 0,1 );
 
             satietyIndex -= locationOffset;
 
             if ( satietyIndex <= 0 )
             {
-                if ( triggerAgent ( environment,2,eatProbability ) == 0 )
+                if ( triggerAgent ( environment,2, eatProbability ) == 0 )
                     dead();
             }
 
@@ -242,10 +268,29 @@ int Animals::move ( Environment * environment )
     return 0;
 }
 
+int Animals::moveTowards ( Environment * environment, int X, int Y )
+{
+
+    int mapLength = environment->getMapLength();
+
+    if ( ( X < 0 && X >= mapLength ) && ( Y < 0 && Y >= mapLength ) )
+        return -1;
+
+    std::vector<float> location ( 3 );
+
+    location = getLocation();
+    environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
+
+    setLocation ( location );
+    environment->getCell ( X,Y )->addAnimal ( id, this );
+
+    return 0;
+}
+
 int Animals::eat ( Environment * environment )
 {
 
-   // detection ( environment );
+    // detection ( environment );
 
     int eatAmount = runRNG ( 1,25 );
     satietyIndex = ( satietyIndex + eatAmount ) % 100;

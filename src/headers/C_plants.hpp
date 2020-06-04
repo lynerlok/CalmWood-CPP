@@ -4,45 +4,59 @@
 #include <string>
 #include <vector>
 
-class Plants {
+class Plants
+{
 public:
-    Plants(int newId = 0) {
+    Plants ( int newId = 0 )
+    {
         id = newId;
     };
-    ~Plants(void) {};
+    ~Plants ( void ) {};
     std::string name;
 
-    int growth(int targetState);
+    int getID();
+
+    int growth ( int targetState );
     int damage();
+
+    int setLocation ( std::vector<float> newLocation );
+    std::vector <float> getLocation();
 
 protected :
     int id=0;
 
+    std::vector <float> location{0,0,0};
+
 };
 
-class Gentiania: public Plants {
+class Gentiania: public Plants
+{
 public :
-    Gentiania(int id = 0):Plants(id) {}
+    Gentiania ( int id = 0 ) :Plants ( id ) {}
 };
 
-class Juncus: public Plants {
+class Juncus: public Plants
+{
 public :
-    Juncus(int id = 1):Plants(id) {}
+    Juncus ( int id = 1 ) :Plants ( id ) {}
 };
 
-class Glyceria: public Plants {
+class Glyceria: public Plants
+{
 public :
-    Glyceria(int id = 2):Plants(id) {}
+    Glyceria ( int id = 2 ) :Plants ( id ) {}
 };
 
-class Carex: public Plants {
+class Carex: public Plants
+{
 public :
-    Carex(int id = 3):Plants(id) {}
+    Carex ( int id = 3 ) :Plants ( id ) {}
 };
 
-class Iris: public Plants {
+class Iris: public Plants
+{
 public :
-    Iris(int id = 4):Plants(id) {}
+    Iris ( int id = 4 ) :Plants ( id ) {}
 };
 
 

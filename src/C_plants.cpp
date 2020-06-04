@@ -2,10 +2,33 @@
 
 #include <iostream>
 
-int Plants::growth(int targetState){
+int Plants::getID()
+{
+    return id;
+}
+
+int Plants::growth ( int targetState )
+{
     return 0;
 }
 
-int Plants::damage(){
+int Plants::damage()
+{
     return 0;
+}
+
+
+int Plants::setLocation ( std::vector<float> newLocation )
+{
+    if ( newLocation.size() != 3 )
+        return -1;
+
+    location = newLocation;
+
+    return 0;
+}
+
+std::vector<float> Plants::getLocation()
+{
+    return location;
 }

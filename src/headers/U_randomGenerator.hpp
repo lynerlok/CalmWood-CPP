@@ -26,4 +26,15 @@ inline int runRNG(int lower, int upper){
     return number;
 }
 
+inline int runShuffle(std::vector<std::vector<int>> * vectorToSfuffle){
+    // Seed with a real random value, if available
+    pcg_extras::seed_seq_from<std::random_device> seed_source;
+
+    // Make a random number engine
+    pcg32 rng(seed_source);
+    
+    pcg_extras::shuffle(begin((*vectorToSfuffle)), end((*vectorToSfuffle)), rng);
+    
+    return 0;
+}
 #endif // __RANDOMUTILS_H_INCLUDED__ 
