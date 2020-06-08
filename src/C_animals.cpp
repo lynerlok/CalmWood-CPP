@@ -36,38 +36,6 @@ std::vector <float> Animals::getLocation()
     return location;
 }
 
-int Animals::setParameters ( int newLength,
-                             int newActionRadius,
-                             int newDetectionRadius,
-                             int newGrowthState,
-                             int newSex )
-{
-
-    length = newLength;
-    actionRadius = newActionRadius;
-    detectionRadius = newDetectionRadius;
-    growthState = newGrowthState;
-    sex = newSex;
-
-
-    return 0;
-}
-
-int Animals::setProbabilities ( int newMoveProbability,
-                                int newEatProbability,
-                                int newGrowthProbability,
-                                int newDeadProbability )
-{
-
-    moveProbability = newMoveProbability;
-    eatProbability = newEatProbability;
-    growthProbability = newGrowthProbability;
-    deadProbability = newDeadProbability;
-
-
-    return 0;
-}
-
 std::vector<int> Animals::getProbabilities()
 {
 
@@ -157,7 +125,6 @@ int Animals::detection ( Environment * environment )
 
 int Animals::move ( Environment * environment )
 {
-    std::vector<float> location ( 3 );
     std::vector<float> newLocation ( 3 );
 
     int locationOffset = 0;
@@ -165,7 +132,6 @@ int Animals::move ( Environment * environment )
 
     const unsigned int mapLength = environment->getMapLength();
 
-    location = getLocation();
     environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
 
     do
@@ -205,7 +171,6 @@ int Animals::move ( Environment * environment )
     }
     while ( ! environment->getCell ( location[0],location[1] )->getViabilityBoolean() );
 
-    setLocation ( location );
     environment->getCell ( location[0],location[1] )->addAnimal ( id, this );
 
     detection ( environment );
@@ -221,12 +186,11 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
     if ( ( X < 0 && X >= mapLength ) && ( Y < 0 && Y >= mapLength ) )
         return -1;
 
-    std::vector<float> location ( 3 );
-
-    location = getLocation();
     environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
-
-    setLocation ( location );
+    
+    location[0] = X;
+    location[1] = Y;
+    
     environment->getCell ( X,Y )->addAnimal ( id, this );
 
     return 0;
@@ -254,29 +218,34 @@ int Animals::growth ( Environment * environment )
 
     unsigned int elapsedTime = environment->getMonth() - environment->getOriginMonth();
 
-//     timeLifeCycle += elapsedTime;
-//     
-//     if ( satietyIndex > 80 )
-//     {
-//         if ( timeLifeCycle >= lifeCycle[growthState] )
-//         {
-//             growthState += 1;
-//             timeLifeCycle = 0;
-//         }
-// 
-//         if ( growthState >= 3 )
-//             dead();
-// 
-//         return 0;
-//     }
+    timeLifeCycle += elapsedTime;
+    
+    std::cout << "Grow state : " << growthState << std::endl;
+    
+    if( growthState >= 3)
+        return -1;
+    
+    if ( timeLifeCycle >= lifeCycle[growthState] )
+    {
+        if ( satietyIndex < 80 ){
+            dead();
+            return 0;
+        }
+        
+        growthState += 1;
+        timeLifeCycle = 0;
 
-//  dead();
+    }
+
+    if ( growthState == 3 )
+        dead();
 
     return 0;
 }
 
 int Animals::dead()
 {
+    std::cout << "Unfortunaly i'm dead : " << id << std::endl;
     death = true;
     return 0;
 }

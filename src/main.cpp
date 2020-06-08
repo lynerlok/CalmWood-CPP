@@ -38,7 +38,6 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
             for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
             {
-                // agent = runRNG(0,agentNumber);
                 for ( int agent = 0; agent < agentNumber; ++agent )
                 {
                     ( * ( *animals ) [agent] ).run ( environment );
@@ -46,7 +45,7 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
                     if ( ( * ( *animals ) [agent] ).isDead() )
                     {
                         delete ( *animals ) [agent];
-                        ( *animals ).erase ( ( * animals ).begin()+agent);
+                        ( *animals ).erase ( ( * animals ).begin()+agent );
                     }
                 }
 
@@ -55,10 +54,10 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
             }
         }
-        
+
         monthOfYear = ( monthOfYear + 1 ) % 12;
         ( * environment ).setMonth ( monthOfYear );
-        
+
     }
 
     /* PROD PART */
@@ -104,6 +103,7 @@ int MASinitialize()
             ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
 
             ( *animals ).push_back ( newAnimals[animal] );
+
         }
 
     };
@@ -128,15 +128,18 @@ int MASinitialize()
 
     };
 
-    for ( int agent=0; agent < MaxNumberAgent*NumberSpecies; agent+=NumberSpecies )
+    for ( int agent=0; agent < MaxNumberAgent; ++agent )
     {
         initAnimals ( &environment, &animals );
     }
 
-    for ( int agent=0; agent < PlantDensity; agent+=1 )
+    for ( int agent=0; agent < PlantDensity; ++agent )
     {
         initPlants ( &environment, &plants );
     }
+
+    runShuffle ( &animals );
+    runShuffle ( &plants );
 
     environment.setEnvironmentParameters ( 25,0.5,0.7 );
 

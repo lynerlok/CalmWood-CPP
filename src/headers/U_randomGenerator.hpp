@@ -26,7 +26,9 @@ inline int runRNG(int lower, int upper){
     return number;
 }
 
-inline int runShuffle(std::vector<std::vector<int>> * vectorToSfuffle){
+template<typename T>
+
+inline int runShuffle(std::vector<T> * vectorToSfuffle){
     // Seed with a real random value, if available
     pcg_extras::seed_seq_from<std::random_device> seed_source;
 
