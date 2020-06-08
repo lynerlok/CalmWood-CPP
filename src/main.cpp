@@ -78,7 +78,7 @@ int MASinitialize()
     vector<Animals*> animals;
     vector<Plants*> plants;
 
-    std::vector<float> location = {0,0,0};
+    std::vector<int> location = {0,0,0};
 
     const unsigned int mapLength = environment.getMapLength();
 

@@ -41,13 +41,9 @@ public :
     int run ( Environment * environment );
 
     int getID();
-
-    std::vector<int> getProbabilities();
-
-    int setLocation ( std::vector<float> newLocation );
-    std::vector <float> getLocation();
-
-    int triggerAgent ( Environment * environment, int alterationType, int associatedProbability );
+    
+    int setLocation ( std::vector<int> newLocation );
+    std::vector <int> getLocation();
 
     bool isDead();
 
@@ -55,7 +51,7 @@ protected :
 
     int id = 0;
 
-    std::vector <float> location{0,0,0};
+    std::vector <int> location{0,0,0};
 
     int sex = 0; // 0 = male 1 = female
 
@@ -83,13 +79,13 @@ protected :
 
     // Action step
     virtual int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
-//    virtual int reproduction ( Environment * environment ) = 0;
-//    virtual int attack ( Environment * environment ) = 0;
 
     int move ( Environment * environment );
     int moveTowards ( Environment * environment, int X, int Y );
-    int eat ( Environment * environment );
+    int eat ();
     int setHiddenState ( bool state );
+    int reproduction ( Environment * environment );
+    int attack ( Environment * environment );
     int spawn ( Environment * environment );
 
     int growth ( Environment * environment );

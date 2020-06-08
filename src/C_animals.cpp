@@ -7,21 +7,14 @@ int Animals::getID()
 
 int Animals::run ( Environment * environment )
 {
-    std::cout << "ID : " << getID() << std::endl;
-
-    std::vector<int> probabilities = getProbabilities();
+   // std::cout << "ID : " << getID() << std::endl;
 
     detection ( environment );
-
-    for ( int alteration = 0; alteration < 4; ++alteration )
-    {
-        triggerAgent ( environment,alteration,probabilities[alteration] );
-    }
 
     return 0;
 }
 
-int Animals::setLocation ( std::vector<float> newLocation )
+int Animals::setLocation ( std::vector<int> newLocation )
 {
     if ( newLocation.size() != 3 )
         return -1;
@@ -31,47 +24,9 @@ int Animals::setLocation ( std::vector<float> newLocation )
     return 0;
 }
 
-std::vector <float> Animals::getLocation()
+std::vector <int> Animals::getLocation()
 {
     return location;
-}
-
-std::vector<int> Animals::getProbabilities()
-{
-
-    std::vector<int> probabilities = {moveProbability, eatProbability, growthProbability, deadProbability};
-
-    return probabilities;
-}
-
-int Animals::triggerAgent ( Environment * environment, int alterationType, int associatedProbability )
-{
-    if ( ( runRNG ( 0,100 ) ) < associatedProbability )
-    {
-
-        switch ( alterationType )
-        {
-        case 0 : // move
-            std::cout << "MOVE" << std::endl;
-            move ( environment );
-            break;
-        case 1 : // eat
-            std::cout << "EAT" << std::endl;
-            eat ( environment );
-            break;
-        case 2 : // growth
-            std::cout << "GROWTH" << std::endl;
-            growth ( environment );
-            break;
-        case 3 : // dead
-            std::cout << "DEAD" << std::endl;
-            dead();
-            break;
-        }
-    }
-
-
-    return 0;
 }
 
 bool Animals::isDead()
@@ -81,8 +36,8 @@ bool Animals::isDead()
 
 int Animals::detection ( Environment * environment )
 {
-    int currentX = getLocation() [0];
-    int currentY = getLocation() [1];
+    int currentX = location[0];
+    int currentY = location[1];
     int newX = 0;
     int newY = 0;
 
@@ -125,51 +80,35 @@ int Animals::detection ( Environment * environment )
 
 int Animals::move ( Environment * environment )
 {
-    std::vector<float> newLocation ( 3 );
-
-    int locationOffset = 0;
-    int orientation = 0;
+    std::vector<int> locationOffset ( 2 );
+    std::vector<int> savedLocation = {location[0],location[1]};
 
     const unsigned int mapLength = environment->getMapLength();
 
     environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
 
-    do
+    locationOffset = { runRNG ( 0-actionRadius, actionRadius ), runRNG ( 0-actionRadius, actionRadius ) };
+
+    for ( int coord=0; coord < 2; ++coord )
     {
-        for ( int i=0; i<2; ++i )
-        {
-            locationOffset = runRNG ( 0, actionRadius );
-            orientation = runRNG ( 0,1 );
-
-            satietyIndex -= locationOffset;
-
-            if ( satietyIndex <= 0 )
-            {
-                if ( triggerAgent ( environment,2, eatProbability ) == 0 )
-                    dead();
-            }
-
-            if ( orientation )
-            {
-                newLocation[i] = location[i] + locationOffset;
-                if ( newLocation[i] < mapLength )
-                {
-                    location[i] = newLocation[i];
-                }
-
-            }
-
-            if ( ! orientation )
-            {
-                newLocation[i] = location[i] - locationOffset;
-                if ( newLocation[i] > 0 )
-                {
-                    location[i] = newLocation[i];
-                }
-            }
-        }
+        location[coord] = location[coord]+locationOffset[coord] < 0 ? 0 : location[coord]+locationOffset[coord];
+        location[coord] = location[coord]+locationOffset[coord] >= mapLength ? mapLength-1 : location[coord]+locationOffset[coord];
     }
-    while ( ! environment->getCell ( location[0],location[1] )->getViabilityBoolean() );
+
+    satietyIndex -= ( abs ( savedLocation[0]-location[0] ) + abs ( savedLocation[1]-location[1] ) );
+
+    if ( satietyIndex <= 0 )
+    {
+        int TestEatProbability = runRNG ( 0,100 );
+
+        if ( TestEatProbability < eatProbability )
+        {
+            dead();
+            return 0;
+        }
+
+        eat();
+    }
 
     environment->getCell ( location[0],location[1] )->addAnimal ( id, this );
 
@@ -182,24 +121,39 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
 {
 
     int mapLength = environment->getMapLength();
-
-    if ( ( X < 0 && X >= mapLength ) && ( Y < 0 && Y >= mapLength ) )
-        return -1;
+    std::vector<int> newLocation = {X,Y};
+    std::vector<int> savedLocation = {location[0],location[1]};
 
     environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
-    
-    location[0] = X;
-    location[1] = Y;
-    
-    environment->getCell ( X,Y )->addAnimal ( id, this );
+
+    for ( int coord=0; coord < 2; ++coord )
+    {
+        location[coord] = newLocation[coord] < 0 ? 0 : newLocation[coord];
+        location[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
+    }
+
+    environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
+
+    satietyIndex -= ( abs ( savedLocation[0]-location[0] ) + abs ( savedLocation[1]-location[1] ) );
+
+    if ( satietyIndex <= 0 )
+    {
+        int TestEatProbability = runRNG ( 0,100 );
+
+        if ( TestEatProbability < eatProbability )
+        {
+            dead();
+            return 0;
+        }
+
+        eat();
+    }
 
     return 0;
 }
 
-int Animals::eat ( Environment * environment )
+int Animals::eat ()
 {
-
-    // detection ( environment );
 
     int eatAmount = runRNG ( 1,25 );
     satietyIndex = ( satietyIndex + eatAmount ) % 100;
@@ -219,19 +173,18 @@ int Animals::growth ( Environment * environment )
     unsigned int elapsedTime = environment->getMonth() - environment->getOriginMonth();
 
     timeLifeCycle += elapsedTime;
-    
-    std::cout << "Grow state : " << growthState << std::endl;
-    
-    if( growthState >= 3)
+
+    if ( growthState >= 3 )
         return -1;
-    
+
     if ( timeLifeCycle >= lifeCycle[growthState] )
     {
-        if ( satietyIndex < 80 ){
+        if ( satietyIndex < 80 )
+        {
             dead();
             return 0;
         }
-        
+
         growthState += 1;
         timeLifeCycle = 0;
 

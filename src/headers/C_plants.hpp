@@ -19,13 +19,13 @@ public:
     int growth ( int targetState );
     int damage();
 
-    int setLocation ( std::vector<float> newLocation );
-    std::vector <float> getLocation();
+    int setLocation ( std::vector<int> newLocation );
+    std::vector <int> getLocation();
 
 protected :
     int id=0;
 
-    std::vector <float> location{0,0,0};
+    std::vector <int> location{0,0,0};
 
 };
 

@@ -18,7 +18,7 @@ int Plants::damage()
 }
 
 
-int Plants::setLocation ( std::vector<float> newLocation )
+int Plants::setLocation ( std::vector<int> newLocation )
 {
     if ( newLocation.size() != 3 )
         return -1;
@@ -28,7 +28,7 @@ int Plants::setLocation ( std::vector<float> newLocation )
     return 0;
 }
 
-std::vector<float> Plants::getLocation()
+std::vector<int> Plants::getLocation()
 {
     return location;
 }
