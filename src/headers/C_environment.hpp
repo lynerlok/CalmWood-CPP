@@ -83,19 +83,26 @@ public :
 
     int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
     
-    int getTimeOfDay();
     
-    int setTimeOfDay(int newTimeOfDay);
+    unsigned int getTimeOfDay();
     
-    int setMonth(int newMonthOfYear);
+    unsigned int setTimeOfDay(int newTimeOfDay);
     
-    int getMonth();
-
+    unsigned int setMonth(int newMonthOfYear);
+    
+    unsigned int getMonth();
+    
+    unsigned int getOriginDayTime();
+    
+    unsigned int getOriginMonth();
+    
     std::vector<float> getEnvironmentParameters();
 
     const unsigned int getMapLength();
 
     Cell * getCell ( int x, int y );
+    
+    const unsigned int DAYSMONTH = 4;
 
 protected :
     float temperature = 0.0;
@@ -108,8 +115,11 @@ protected :
 
     std::vector<std::vector<Cell*>> map{mapLength};
     
-    int timeOfDay = 12; // In hours always % 24
-    int monthOfYear = 05; // Always % 12
+    const unsigned int originTimeOfDay = 12;
+    const unsigned int originMonth = 5;
+    
+    unsigned int timeOfDay = 12; // In hours always % 24
+    unsigned int monthOfYear = 5; // Always % 12
 
 };
 

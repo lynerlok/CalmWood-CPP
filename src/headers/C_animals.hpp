@@ -13,9 +13,18 @@ class Environment;
 class Animals
 {
 public :
-    Animals ( int newId = 0 )
+    Animals ( int newId = 0, 
+              std::vector<unsigned int> newlifeCycle = {1,1,1}, 
+              std::vector<int> newprobabilities = {60,0,100,0,0} )
     {
         id = newId;
+        lifeCycle = newlifeCycle;
+        moveProbability = newprobabilities[0];
+        eatProbability = newprobabilities[1]; // 70;
+        growthProbability = newprobabilities[2]; // 30;
+        spawnProbability = newprobabilities[3];
+        deadProbability = newprobabilities[4];
+        
     };
     ~Animals ( void ) {};
 
@@ -52,9 +61,6 @@ protected :
 
     std::vector <float> location{0,0,0};
 
-    std::string name;
-    std::string form;
-
     int sex = 0; // 0 = male 1 = female
 
     int length = 1;
@@ -64,10 +70,14 @@ protected :
 
     int satietyIndex = 100; // MAX 100 MIN 0
 
-    int moveProbability = 60;
-    int eatProbability = 0; // 70;
-    int growthProbability = 0; // 30;
-    int deadProbability = 0;
+    int moveProbability;
+    int eatProbability;
+    int growthProbability;
+    int spawnProbability;
+    int deadProbability;
+
+    unsigned int timeLifeCycle = 1;
+    std::vector<unsigned int> lifeCycle;
 
     bool hidden = false;
     bool death = false;
@@ -86,7 +96,7 @@ protected :
     int setHiddenState ( bool state );
     int spawn ( Environment * environment );
 
-    int growth();
+    int growth ( Environment * environment );
     int dead();
 
 };
@@ -94,7 +104,8 @@ protected :
 class Leucorrhinia: public Animals
 {
 public :
-    Leucorrhinia ( int id = 0 ) :Animals ( id ) {}
+    Leucorrhinia ( int id = 0, std::vector<unsigned int> lifeCycle = {1,24,1}, 
+    std::vector<int> probabilities = {60,0,100,0,0} ) :Animals ( id, lifeCycle, probabilities ) {}
 protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
@@ -107,6 +118,7 @@ public :
     Hyla ( int id = 1 ) :Animals ( id ) {}
 protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    std::vector<unsigned int> lifeCycle = {1,24,1};
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -117,6 +129,7 @@ public :
     Phengaris ( int id = 2 ) :Animals ( id ) {}
 protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    std::vector<unsigned int> lifeCycle = {1,24,1};
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -127,6 +140,7 @@ public :
     Zootoca ( int id = 3 ) :Animals ( id ) {}
 protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    std::vector<unsigned int> lifeCycle = {1,24,1};
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -137,6 +151,7 @@ public :
     Vipera ( int id = 4 ) :Animals ( id ) {}
 protected :
     int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    std::vector<unsigned int> lifeCycle = {1,24,1};
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };

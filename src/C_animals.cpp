@@ -36,17 +36,6 @@ std::vector <float> Animals::getLocation()
     return location;
 }
 
-int Animals::setName ( std::string newName )
-{
-    name = newName;
-    return 0;
-}
-
-std::string Animals::getName()
-{
-    return name;
-}
-
 int Animals::setParameters ( int newLength,
                              int newActionRadius,
                              int newDetectionRadius,
@@ -104,7 +93,7 @@ int Animals::triggerAgent ( Environment * environment, int alterationType, int a
             break;
         case 2 : // growth
             std::cout << "GROWTH" << std::endl;
-            growth();
+            growth ( environment );
             break;
         case 3 : // dead
             std::cout << "DEAD" << std::endl;
@@ -163,50 +152,6 @@ int Animals::detection ( Environment * environment )
         decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
     }
 
-    return 0;
-}
-
-int Leucorrhinia::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
-{
-
-    // {viability,containTrees,containAnthropization,containWetland};
-
-    int timeOfDay = environment->getTimeOfDay();
-    int month = environment->getMonth();
-    int viability = CellSpecs->at ( 0 );
-
-    if ( CellSpecs->at ( 0 ) == 0 )
-        move ( environment );
-
-    if ( month < 5 && month >= 9 )
-    {
-        setHiddenState ( true );
-        deadProbability = 0.2;
-    }
-
-
-
-    return 0;
-}
-
-int Hyla::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
-{
-    return 0;
-}
-
-
-int Phengaris::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
-{
-    return 0;
-}
-
-int Zootoca::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
-{
-    return 0;
-}
-
-int Vipera::decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
-{
     return 0;
 }
 
@@ -304,17 +249,28 @@ int Animals::setHiddenState ( bool state )
     return 0;
 }
 
-int Animals::growth()
+int Animals::growth ( Environment * environment )
 {
 
-    if ( satietyIndex > 80 )
-    {
-        growthState += 1;
-        if ( growthState >= 3 )
-        {
-            dead();
-        }
-    }
+    unsigned int elapsedTime = environment->getMonth() - environment->getOriginMonth();
+
+//     timeLifeCycle += elapsedTime;
+//     
+//     if ( satietyIndex > 80 )
+//     {
+//         if ( timeLifeCycle >= lifeCycle[growthState] )
+//         {
+//             growthState += 1;
+//             timeLifeCycle = 0;
+//         }
+// 
+//         if ( growthState >= 3 )
+//             dead();
+// 
+//         return 0;
+//     }
+
+//  dead();
 
     return 0;
 }

@@ -14,32 +14,51 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 {
 
     const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and less for prod.
-    const unsigned int MAXRUN = 10;
+    const unsigned int MAXDAILYRUN = 1; // Number of run in a day
+    const unsigned int MAXDAYMONTH = environment->DAYSMONTH; // Number of day in a month
+    const unsigned int MAXTIME = 2; // Number of month in the sim
+
+    int addDayTime = 24 / MAXDAILYRUN;
 
     bool runError = false;
     int agent = 0;
 
-    int timeOfDay = ( * environment ).getTimeOfDay();
-    int monthOfYear = ( * environment ).getMonth();
+    unsigned int timeOfDay = ( * environment ).getTimeOfDay();
+    unsigned int monthOfYear = ( * environment ).getMonth();
 
     int agentNumber = ( *animals ).size();
 
     /* DEV PART */
-    for ( int run=1; run != ( MAXRUN + 1 ); ++run )
-    {
-        // agent = runRNG(0,agentNumber);
-        for ( int agent = 0; agent < agentNumber; ++agent )
-        {
-            ( * ( *animals ) [agent] ).run ( environment );
 
-            if ( ( * ( *animals ) [agent] ).isDead() )
+    for ( int simulationTime=0; simulationTime < MAXTIME; ++simulationTime )
+    {
+
+        for ( int MonthlyRun=0; MonthlyRun < MAXDAYMONTH; ++MonthlyRun )
+        {
+
+            for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
             {
-                delete ( *animals ) [agent];
-                ( *animals ).erase ( ( * animals ).begin()+agent );
+                // agent = runRNG(0,agentNumber);
+                for ( int agent = 0; agent < agentNumber; ++agent )
+                {
+                    ( * ( *animals ) [agent] ).run ( environment );
+
+                    if ( ( * ( *animals ) [agent] ).isDead() )
+                    {
+                        delete ( *animals ) [agent];
+                        ( *animals ).erase ( ( * animals ).begin()+agent);
+                    }
+                }
+
+                timeOfDay = ( timeOfDay + addDayTime ) % 24;
+                ( * environment ).setTimeOfDay ( timeOfDay );
+
             }
         }
-
-        ( * environment ).setTimeOfDay ( timeOfDay+1 );
+        
+        monthOfYear = ( monthOfYear + 1 ) % 12;
+        ( * environment ).setMonth ( monthOfYear );
+        
     }
 
     /* PROD PART */
@@ -71,7 +90,7 @@ int MASinitialize()
 
     auto initAnimals = [&] ( Environment * environment, vector<Animals*> * animals )
     {
-        vector<Animals *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca() };
+        vector<Animals *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
 
         for ( int animal = 0; animal < newAnimals.size(); ++animal )
         {

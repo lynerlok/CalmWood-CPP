@@ -166,26 +166,36 @@ int Environment::setEnvironmentParameters ( float newTemperature,
     return 0;
 }
 
-int Environment::getTimeOfDay()
+unsigned int Environment::getTimeOfDay()
 {
     return timeOfDay;
 }
 
-int Environment::setTimeOfDay ( int newTimeOfDay )
+unsigned int Environment::setTimeOfDay ( int newTimeOfDay )
 {
     timeOfDay = newTimeOfDay;
     return 0;
 }
 
-int Environment::setMonth ( int newMonthOfYear )
+unsigned int Environment::setMonth ( int newMonthOfYear )
 {
     monthOfYear = newMonthOfYear;
     return 0;
 }
 
-int Environment::getMonth()
+unsigned int Environment::getMonth()
 {
     return monthOfYear;
+}
+
+unsigned int Environment::getOriginDayTime()
+{
+    return originTimeOfDay;
+}
+
+unsigned int Environment::getOriginMonth()
+{
+    return originMonth;
 }
 
 std::vector<float> Environment::getEnvironmentParameters()
