@@ -42,11 +42,6 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
                 {
                     ( * ( *animals ) [agent] ).run ( environment );
 
-                    if ( ( * ( *animals ) [agent] ).isDead() )
-                    {
-                        delete ( *animals ) [agent];
-                        ( *animals ).erase ( ( * animals ).begin()+agent );
-                    }
                 }
 
                 timeOfDay = ( timeOfDay + addDayTime ) % 24;

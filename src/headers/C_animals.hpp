@@ -15,9 +15,9 @@ class Animals
 public :
     Animals ( int newId = 99,
               std::vector<unsigned int> newlifeCycle = {1,1,1},
-              std::vector<int> newprobabilities = {0,0,0,0,0},
-              int newDetectionRadius = 2,
-              int newActionRadius = 1
+              std::vector<int> newprobabilities = {0,0,0,0,0,0},
+              std::vector<int> newDetectionRadius = {2,2,2},
+              std::vector<int> newActionRadius = {1,1,1}
             )
     {
         id = newId;
@@ -27,6 +27,7 @@ public :
         growthProbability = newprobabilities[2];
         spawnProbability = newprobabilities[3];
         deadProbability = newprobabilities[4];
+        reproductionProbability = newprobabilities[5];
 
         actionRadius = newActionRadius;
         detectionRadius = newDetectionRadius;
@@ -41,50 +42,58 @@ public :
     int run ( Environment * environment );
 
     int getID();
-    
+
     int setLocation ( std::vector<int> newLocation );
     std::vector <int> getLocation();
 
     bool isDead();
+
+    int getSex();
+
+    int setSpawnAbility ( bool newSpawnAbility );
+    
+    int spawn();
 
 protected :
 
     int id = 0;
 
     std::vector <int> location{0,0,0};
-
+    std::vector<int> actionRadius{0,0,0};
+    std::vector<int>  detectionRadius{0,0,0};
+    
     int sex = 0; // 0 = male 1 = female
 
     int length = 0;
-    int actionRadius = 1;
-    int detectionRadius = 2;
     int growthState = 0;
 
     int satietyIndex = 100; // MAX 100 MIN 0
 
-    int moveProbability;
-    int eatProbability;
-    int growthProbability;
-    int spawnProbability;
-    int deadProbability;
+    int moveProbability = 0;
+    int eatProbability = 0;
+    int growthProbability = 0;
+    int spawnProbability = 0;
+    int deadProbability = 0 ;
+    int reproductionProbability = 0;
 
     unsigned int timeLifeCycle = 0;
-    std::vector<unsigned int> lifeCycle;
+    std::vector<unsigned int> lifeCycle{0,0,0};
 
     bool hidden = false;
     bool death = false;
+    bool spawnAbility = false;
 
     // Detection step
     int detection ( Environment * environment );
 
     // Action step
-    virtual int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
+    virtual int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
 
     int move ( Environment * environment );
     int moveTowards ( Environment * environment, int X, int Y );
     int eat ();
     int setHiddenState ( bool state );
-    int reproduction ( Environment * environment );
+    int reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals );
     int attack ( Environment * environment );
     int spawn ( Environment * environment );
 
@@ -98,11 +107,11 @@ class Leucorrhinia: public Animals
 public :
     Leucorrhinia ( int id = 0,
                    std::vector<unsigned int> lifeCycle = {1,24,1},
-                   std::vector<int> probabilities = {100,0,100,0,0},
-                   int detectionRadius = 2,
-                   int actionRadius = 1 ) :Animals ( id, lifeCycle, probabilities, detectionRadius, actionRadius ) {}
+                   std::vector<int> probabilities = {100,0,100,100,0,100},
+                   std::vector<int> detectionRadius = {1,1,2},
+                   std::vector<int> actionRadius = {1,1,1} ) :Animals ( id, lifeCycle, probabilities, detectionRadius, actionRadius ) {}
 protected :
-    int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -112,7 +121,7 @@ class Hyla: public Animals
 public :
     Hyla ( int id = 1 ) :Animals ( id ) {}
 protected :
-    int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -122,7 +131,7 @@ class Phengaris: public Animals
 public :
     Phengaris ( int id = 2 ) :Animals ( id ) {}
 protected :
-    int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -132,7 +141,7 @@ class Zootoca: public Animals
 public :
     Zootoca ( int id = 3 ) :Animals ( id ) {}
 protected :
-    int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };
@@ -142,7 +151,7 @@ class Vipera: public Animals
 public :
     Vipera ( int id = 4 ) :Animals ( id ) {}
 protected :
-    int decision ( Environment * environment, std::unordered_map<int,int> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 //     int reproduction ( Environment * environment );
 //     int attack ( Environment * environment );
 };

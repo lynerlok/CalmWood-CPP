@@ -1,5 +1,7 @@
 #include "headers/C_animals.hpp"
 
+typedef std::unordered_multimap<int, Animals *>::iterator MMAnimalIterator;
+
 int Animals::getID()
 {
     return id;
@@ -7,7 +9,7 @@ int Animals::getID()
 
 int Animals::run ( Environment * environment )
 {
-   // std::cout << "ID : " << getID() << std::endl;
+    // std::cout << "ID : " << getID() << std::endl;
 
     detection ( environment );
 
@@ -34,6 +36,18 @@ bool Animals::isDead()
     return death;
 }
 
+int Animals::getSex()
+{
+    return sex;
+}
+
+int Animals::setSpawnAbility ( bool newSpawnAbility )
+{
+    spawnAbility = newSpawnAbility;
+    return 0;
+
+}
+
 int Animals::detection ( Environment * environment )
 {
     int currentX = location[0];
@@ -44,14 +58,14 @@ int Animals::detection ( Environment * environment )
     int mapLength = environment->getMapLength();
     int detectionRangeSize = 0;
 
-    std::unordered_map<int,int> VisibleAnimals;
+    std::unordered_multimap<int, Animals *> VisibleAnimals;
     std::unordered_map<int,int> VisiblePlants;
     std::vector<int> CellSpecs;
     std::vector<std::vector<int>> detectionRange;
 
-    for ( int i = ( 0 - detectionRadius ); i <= detectionRadius; ++i )
+    for ( int i = ( 0 - detectionRadius[growthState] ); i <= detectionRadius[growthState]; ++i )
     {
-        for ( int j = ( 0 - detectionRadius ); j <= detectionRadius; ++j )
+        for ( int j = ( 0 - detectionRadius[growthState] ); j <= detectionRadius[growthState]; ++j )
         {
             newX = currentX+i;
             newY = currentY+j;
@@ -87,7 +101,7 @@ int Animals::move ( Environment * environment )
 
     environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
 
-    locationOffset = { runRNG ( 0-actionRadius, actionRadius ), runRNG ( 0-actionRadius, actionRadius ) };
+    locationOffset = { runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ), runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ) };
 
     for ( int coord=0; coord < 2; ++coord )
     {
@@ -132,8 +146,6 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
         location[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
     }
 
-    environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
-
     satietyIndex -= ( abs ( savedLocation[0]-location[0] ) + abs ( savedLocation[1]-location[1] ) );
 
     if ( satietyIndex <= 0 )
@@ -149,6 +161,10 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
         eat();
     }
 
+    environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
+
+    detection ( environment );
+
     return 0;
 }
 
@@ -156,7 +172,7 @@ int Animals::eat ()
 {
 
     int eatAmount = runRNG ( 1,25 );
-    satietyIndex = ( satietyIndex + eatAmount ) % 100;
+    satietyIndex = satietyIndex + eatAmount > 100 ? 100 : satietyIndex + eatAmount;
 
     return 0;
 }
@@ -174,9 +190,6 @@ int Animals::growth ( Environment * environment )
 
     timeLifeCycle += elapsedTime;
 
-    if ( growthState >= 3 )
-        return -1;
-
     if ( timeLifeCycle >= lifeCycle[growthState] )
     {
         if ( satietyIndex < 80 )
@@ -185,7 +198,7 @@ int Animals::growth ( Environment * environment )
             return 0;
         }
 
-        growthState += 1;
+        growthState = growthState+1 >= 3 ? 2 : growthState+1; // HERE REMOVE THAT WHEN DEAD WILL BE IMPLEMENTED
         timeLifeCycle = 0;
 
     }
@@ -196,9 +209,36 @@ int Animals::growth ( Environment * environment )
     return 0;
 }
 
+int Animals::reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals )
+{
+    std::pair<MMAnimalIterator, MMAnimalIterator> LeucoFound = VisibleAnimals->equal_range ( 0 );
+    for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it )
+    {
+        if ( it->second->getSex() == 1 )
+        {
+            if ( reproductionProbability <= runRNG ( 0,100 ) )
+            {
+                it->second->setSpawnAbility ( true );
+            }
+        }
+    }
+    
+    return 0;
+}
+
+int Animals::spawn ( Environment* environment )
+{
+    std::cout << "Spawning" << std::endl;
+    spawnAbility = false;
+    
+    return 0;
+}
+
+
 int Animals::dead()
 {
     std::cout << "Unfortunaly i'm dead : " << id << std::endl;
+
     death = true;
     return 0;
 }

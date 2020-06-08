@@ -17,7 +17,11 @@ typedef std::unordered_multimap<int, Plants *>::iterator Pumit;
 class Cell
 {
 public :
-    Cell() {};
+    Cell ( int newX = 0, int newY = 0 )
+    {
+        X = newX;
+        Y = newY;
+    };
     ~Cell()
     {
         AnimalCellContent.clear();
@@ -33,7 +37,7 @@ public :
     int removeAnimal ( int ID, Animals * animal );
     int addPlant ( int ID, Plants * plant );
 
-    std::unordered_map<int,int> getCellContentAnimals();
+    std::unordered_multimap<int, Animals *> getCellContentAnimals();
     std::unordered_map<int,int> getCellContentPlants();
     std::vector<int> getCellContentSpecs();
 
@@ -42,12 +46,16 @@ public :
     int toggleWetland();
 
 protected :
+
+    int X = 0;
+    int Y = 0;
+
     int viability = 1;
     int containTrees = 0;
     int containAnthropization = 0;
     int containWetland = 0;
     int isWater = 0;
-    
+
     int waterEutrophisationRate = 0;
     int waterPlantClosedRate = 0;
     int sunExpositionRate = 60;
@@ -64,7 +72,7 @@ public :
     {
         for ( int x=0; x<mapLength; ++x )
             for ( int y=0; y<mapLength; ++y )
-                map[x].push_back ( new Cell() );
+                map[x].push_back ( new Cell(x,y) );
     };
     ~Environment ( void )
     {
@@ -82,26 +90,26 @@ public :
     int initializeEnvironmentMAP();
 
     int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
-    
-    
+
+
     unsigned int getTimeOfDay();
-    
-    unsigned int setTimeOfDay(int newTimeOfDay);
-    
-    unsigned int setMonth(int newMonthOfYear);
-    
+
+    unsigned int setTimeOfDay ( int newTimeOfDay );
+
+    unsigned int setMonth ( int newMonthOfYear );
+
     unsigned int getMonth();
-    
+
     unsigned int getOriginDayTime();
-    
+
     unsigned int getOriginMonth();
-    
+
     std::vector<float> getEnvironmentParameters();
 
     const unsigned int getMapLength();
 
     Cell * getCell ( int x, int y );
-    
+
     const unsigned int DAYSMONTH = 4;
 
 protected :
@@ -109,15 +117,15 @@ protected :
     float hygrometry = 0.0 ;
     float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
     int numberSpecies = 5;
-    
+
     // map, action field
     const unsigned int mapLength = 5;
 
     std::vector<std::vector<Cell*>> map{mapLength};
-    
+
     const unsigned int originTimeOfDay = 12;
     const unsigned int originMonth = 5;
-    
+
     unsigned int timeOfDay = 12; // In hours always % 24
     unsigned int monthOfYear = 5; // Always % 12
 

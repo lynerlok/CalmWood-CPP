@@ -65,18 +65,10 @@ int Cell::removePlant ( int ID, Plants * plant )
     return 0;
 }
 
-std::unordered_map<int,int> Cell::getCellContentAnimals()
+std::unordered_multimap<int, Animals *> Cell::getCellContentAnimals()
 {
 
-    std::unordered_map<int,int> ContentAnimals;
-
-    for ( int i = 0; i < constants::numberOfSpeciesAnimal; ++i )
-    {
-        ContentAnimals.emplace ( i,AnimalCellContent.count ( i ) );
-    }
-
-    return ContentAnimals;
-
+    return AnimalCellContent;
 }
 
 std::unordered_map<int,int> Cell::getCellContentPlants()
@@ -95,7 +87,7 @@ std::unordered_map<int,int> Cell::getCellContentPlants()
 
 std::vector<int> Cell::getCellContentSpecs()
 {
-    return {viability,containTrees,containAnthropization,containWetland};
+    return {viability,containTrees,containAnthropization,containWetland,X,Y};
 }
 
 int Cell::toggleTrees()
