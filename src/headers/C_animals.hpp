@@ -41,6 +41,8 @@ public :
 
     int getSpawnProbability();
 
+    int killed ( Environment * environment );
+
 protected :
 
     int id = 0;
@@ -70,6 +72,9 @@ protected :
     bool hidden = false;
     bool death = false;
     bool spawnAbility = false;
+    bool protectTerritory = false;
+
+    std::vector<int> territoryCoordinates{0,0};
 
     // Detection step
     int detection ( Environment * environment );
@@ -82,9 +87,8 @@ protected :
     int eat ();
     int setHiddenState ( bool state );
     int reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals, int specie );
-    int attack ( Environment * environment );
+    int attack ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, int intruderX, int intruderY, int specie );
     int spawn ( Environment * environment );
-
     int growth ( Environment * environment );
     int dead ( Environment * environment );
 
@@ -95,7 +99,7 @@ class Leucorrhinia: public Animals
 public :
     Leucorrhinia ( int id = 0,
                    std::vector<unsigned int> lifeCycle = {1,24,1},
-                   std::vector<int> probabilities = {0,0,0,100,1,20,100},
+                   std::vector<int> probabilities = {0,0,0,100,1,20,50},
                    std::vector<int> detectionRadius = {1,1,2},
                    std::vector<int> actionRadius = {1,1,1},
                    bool isBorn = false ) : Animals ( id, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn ) {}

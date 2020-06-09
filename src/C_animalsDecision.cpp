@@ -10,14 +10,9 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     int X = CellSpecs->at ( 4 );
     int Y = CellSpecs->at ( 5 );
 
-    // {viability,containTrees,containAnthropization,containWetland,X,Y};
-
     int actionProbability = runRNG ( 0,100 );
 
-    if ( ( actionProbability < moveProbability && ( month >= 5 && month < 9 && growthState > 0 ) ) || viability == 0 )
-        move ( environment );
-
-    if ( month < 5 && month >= 9 )
+    if ( month < 5 && month >= 9 && sex == 1 )
     {
         hidden = true;
         deadProbability = 0;
@@ -44,19 +39,27 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     {
         if ( sex == 0 )
         {
-            if ( actionProbability < reproductionProbability )
+
+            if ( viability == 1 && month >= 4 && month < 7 )
+            {
+                protectTerritory = true;
+                territoryCoordinates = {location[0],location[1]};
+                detectionRadius[2] = 1;
+            }
+
+            if ( actionProbability < reproductionProbability && protectTerritory )
                 reproduction ( VisibleAnimals,0 );
-            
-            if ( actionProbability < attackProbability )
-                attack(environment);
-                
+
+            if ( actionProbability < attackProbability && protectTerritory )
+                attack ( environment, VisibleAnimals, X, Y, 0 );
+
+            if ( month < 4 && month >= 7 )
+                protectTerritory = false;
         }
 
+        if ( ( actionProbability < moveProbability && month >= 5 && month < 9 && growthState > 0 && ! protectTerritory ) || viability == 0 )
+            move ( environment );
     }
-
-
-    // Adult
-    // attack();
 
     return 0;
 }

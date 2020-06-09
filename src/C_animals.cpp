@@ -33,7 +33,7 @@ Animals::Animals ( int newId,
 
 }
 
-Animals::~Animals(){}
+Animals::~Animals() {}
 
 int Animals::getID()
 {
@@ -213,8 +213,8 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
 
     environment->getCell ( savedLocation[0], savedLocation[1] )->removeAnimal ( id, this );
     environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
-
-    detection ( environment );
+    
+    detection(environment);
 
     return 0;
 }
@@ -278,9 +278,38 @@ int Animals::reproduction ( std::unordered_multimap<int, Animals *> * VisibleAni
     return 0;
 }
 
-int Animals::attack ( Environment* environment )
+int Animals::attack ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, int intruderX, int intruderY, int specie )
 {
-    std::cout << "Attacking..." << std::endl;
+    std::pair<MMAnimalIterator, MMAnimalIterator> LeucoFound = VisibleAnimals->equal_range ( 0 );
+    int X, Y = location[0],location[1];
+
+    int trigger = 0;
+
+    for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it )
+    {
+        if ( it->second->getSex() == 0 )
+        {
+            trigger = runRNG ( 0,100 );
+
+            if ( trigger < deadProbability )
+            {
+                dead ( environment );
+                return 0;
+            }
+            else if ( trigger > deadProbability )
+            {
+                it->second->killed ( environment );
+            }
+        }
+    }
+    
+    return 0;
+}
+
+int Animals::killed ( Environment * environment )
+{
+    environment->getCell ( location[0], location[1] )->removeAnimal ( id, this );
+    death = true;
     return 0;
 }
 
