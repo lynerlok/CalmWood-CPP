@@ -84,6 +84,11 @@ bool Animals::getHiddenState()
 
 int Animals::setSpawnAbility ( bool newSpawnAbility )
 {
+    if ( newSpawnAbility ) 
+        deadProbability = deadProbability - 30 < 0 ? 0 : deadProbability - 30; 
+    if ( ! newSpawnAbility )
+        deadProbability += 30;
+    
     spawnAbility = newSpawnAbility;
     return 0;
 
