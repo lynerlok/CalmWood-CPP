@@ -2,6 +2,39 @@
 
 typedef std::unordered_multimap<int, Animals *>::iterator MMAnimalIterator;
 
+Animals::Animals ( int newId,
+                   std::vector<unsigned int> newlifeCycle,
+                   std::vector<int> newprobabilities,
+                   std::vector<int> newDetectionRadius,
+                   std::vector<int> newActionRadius,
+                   bool isBorn )
+{
+
+    id = newId;
+    lifeCycle = newlifeCycle;
+    moveProbability = newprobabilities[0];
+    eatProbability = newprobabilities[1];
+    growthProbability = newprobabilities[2];
+    spawnProbability = newprobabilities[3];
+    deadProbability = newprobabilities[4];
+    reproductionProbability = newprobabilities[5];
+    attackProbability = newprobabilities[6];
+
+    actionRadius = newActionRadius;
+    detectionRadius = newDetectionRadius;
+
+    length = runRNG ( 0,10 );
+    sex = runRNG ( 0,1 );
+
+    if ( ! isBorn )
+        growthState = runRNG ( 0,2 );
+    else if ( isBorn )
+        growthState = 0;
+
+}
+
+Animals::~Animals(){}
+
 int Animals::getID()
 {
     return id;
@@ -9,8 +42,6 @@ int Animals::getID()
 
 int Animals::run ( Environment * environment )
 {
-    // std::cout << "ID : " << getID() << std::endl;
-
     detection ( environment );
 
     return 0;
@@ -36,9 +67,19 @@ bool Animals::isDead()
     return death;
 }
 
+bool Animals::isSpawn ()
+{
+    return spawnAbility;
+}
+
 int Animals::getSex()
 {
     return sex;
+}
+
+bool Animals::getHiddenState()
+{
+    return hidden;
 }
 
 int Animals::setSpawnAbility ( bool newSpawnAbility )
@@ -47,6 +88,12 @@ int Animals::setSpawnAbility ( bool newSpawnAbility )
     return 0;
 
 }
+
+int Animals::getSpawnProbability()
+{
+    return spawnProbability;
+}
+
 
 int Animals::detection ( Environment * environment )
 {
@@ -94,37 +141,39 @@ int Animals::detection ( Environment * environment )
 
 int Animals::move ( Environment * environment )
 {
+    const unsigned int mapLength = environment->getMapLength();
     std::vector<int> locationOffset ( 2 );
     std::vector<int> savedLocation = {location[0],location[1]};
-
-    const unsigned int mapLength = environment->getMapLength();
-
-    environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
+    std::vector<int> newLocation ( 2 );
 
     locationOffset = { runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ), runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ) };
 
     for ( int coord=0; coord < 2; ++coord )
     {
-        location[coord] = location[coord]+locationOffset[coord] < 0 ? 0 : location[coord]+locationOffset[coord];
-        location[coord] = location[coord]+locationOffset[coord] >= mapLength ? mapLength-1 : location[coord]+locationOffset[coord];
+        newLocation[coord] = location[coord]+locationOffset[coord] < 0 ? 0 : location[coord]+locationOffset[coord];
+        newLocation[coord] = location[coord]+locationOffset[coord] >= mapLength ? mapLength-1 : location[coord]+locationOffset[coord];
     }
 
-    satietyIndex -= ( abs ( savedLocation[0]-location[0] ) + abs ( savedLocation[1]-location[1] ) );
+    satietyIndex -= ( abs ( savedLocation[0]-newLocation[0] ) + abs ( savedLocation[1]-newLocation[1] ) );
 
     if ( satietyIndex <= 0 )
     {
+        satietyIndex = 0;
         int TestEatProbability = runRNG ( 0,100 );
 
         if ( TestEatProbability < eatProbability )
         {
-            dead();
+            dead ( environment );
             return 0;
         }
 
         eat();
     }
 
-    environment->getCell ( location[0],location[1] )->addAnimal ( id, this );
+    location[0], location[1] = newLocation[0], newLocation[1];
+
+    environment->getCell ( savedLocation[0],savedLocation[1] )->removeAnimal ( id, this );
+    environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
 
     detection ( environment );
 
@@ -134,19 +183,18 @@ int Animals::move ( Environment * environment )
 int Animals::moveTowards ( Environment * environment, int X, int Y )
 {
 
-    int mapLength = environment->getMapLength();
+    const unsigned int mapLength = environment->getMapLength();
     std::vector<int> newLocation = {X,Y};
     std::vector<int> savedLocation = {location[0],location[1]};
 
-    environment->getCell ( location[0],location[1] )->removeAnimal ( id, this );
-
     for ( int coord=0; coord < 2; ++coord )
     {
-        location[coord] = newLocation[coord] < 0 ? 0 : newLocation[coord];
-        location[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
+        newLocation[coord] = newLocation[coord] < 0 ? 0 : newLocation[coord];
+        newLocation[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
     }
 
-    satietyIndex -= ( abs ( savedLocation[0]-location[0] ) + abs ( savedLocation[1]-location[1] ) );
+
+    satietyIndex -= ( abs ( savedLocation[0]-newLocation[0] ) + abs ( savedLocation[1]-newLocation[1] ) );
 
     if ( satietyIndex <= 0 )
     {
@@ -154,13 +202,16 @@ int Animals::moveTowards ( Environment * environment, int X, int Y )
 
         if ( TestEatProbability < eatProbability )
         {
-            dead();
+            dead ( environment );
             return 0;
         }
 
         eat();
     }
 
+    location[0], location[1] = newLocation[0], newLocation[1];
+
+    environment->getCell ( savedLocation[0], savedLocation[1] )->removeAnimal ( id, this );
     environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
 
     detection ( environment );
@@ -192,53 +243,50 @@ int Animals::growth ( Environment * environment )
 
     if ( timeLifeCycle >= lifeCycle[growthState] )
     {
-        if ( satietyIndex < 80 )
+        if ( satietyIndex < 80 || growthState+1 >= 3 )
         {
-            dead();
+            dead ( environment );
             return 0;
         }
 
-        growthState = growthState+1 >= 3 ? 2 : growthState+1; // HERE REMOVE THAT WHEN DEAD WILL BE IMPLEMENTED
+        growthState += 1;
         timeLifeCycle = 0;
 
     }
 
-    if ( growthState == 3 )
-        dead();
-
     return 0;
 }
 
-int Animals::reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals )
+int Animals::reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals, int specie )
 {
     std::pair<MMAnimalIterator, MMAnimalIterator> LeucoFound = VisibleAnimals->equal_range ( 0 );
+
+    int trigger = 0;
+
     for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it )
     {
-        if ( it->second->getSex() == 1 )
+        if ( it->second->getSex() == 1 && ! it->second->getHiddenState() )
         {
-            if ( reproductionProbability <= runRNG ( 0,100 ) )
+            trigger = runRNG ( 0,100 );
+            if ( trigger < reproductionProbability )
             {
                 it->second->setSpawnAbility ( true );
             }
         }
     }
-    
+
     return 0;
 }
 
-int Animals::spawn ( Environment* environment )
+int Animals::attack ( Environment* environment )
 {
-    std::cout << "Spawning" << std::endl;
-    spawnAbility = false;
-    
+    std::cout << "Attacking..." << std::endl;
     return 0;
 }
 
-
-int Animals::dead()
+int Animals::dead ( Environment * environment )
 {
-    std::cout << "Unfortunaly i'm dead : " << id << std::endl;
-
+    environment->getCell ( location[0], location[1] )->removeAnimal ( id, this );
     death = true;
     return 0;
 }

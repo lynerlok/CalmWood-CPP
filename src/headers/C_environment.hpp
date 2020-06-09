@@ -123,11 +123,11 @@ protected :
 
     std::vector<std::vector<Cell*>> map{mapLength};
 
-    const unsigned int originTimeOfDay = 12;
-    const unsigned int originMonth = 5;
-
     unsigned int timeOfDay = 12; // In hours always % 24
-    unsigned int monthOfYear = 5; // Always % 12
+    unsigned int monthOfYear = 6; // Always % 12
+
+    const unsigned int originTimeOfDay = timeOfDay;
+    const unsigned int originMonth = monthOfYear;
 
 };
 

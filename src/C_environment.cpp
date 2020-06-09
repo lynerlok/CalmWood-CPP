@@ -67,7 +67,6 @@ int Cell::removePlant ( int ID, Plants * plant )
 
 std::unordered_multimap<int, Animals *> Cell::getCellContentAnimals()
 {
-
     return AnimalCellContent;
 }
 

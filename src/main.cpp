@@ -17,19 +17,54 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
     const unsigned int MAXDAILYRUN = 1; // Number of run in a day
     const unsigned int MAXDAYMONTH = environment->DAYSMONTH; // Number of day in a month
     const unsigned int MAXTIME = 2; // Number of month in the sim
-
+    vector<Animals*>::iterator agent;
+    
     int addDayTime = 24 / MAXDAILYRUN;
 
     bool runError = false;
-    int agent = 0;
-
+  
     unsigned int timeOfDay = ( * environment ).getTimeOfDay();
     unsigned int monthOfYear = ( * environment ).getMonth();
 
-    int agentNumber = ( *animals ).size();
+    Animals * newAnimal;
+    vector<int> spawnLocation{0,0,0};
+
+    auto spawn = [&] ( Animals * animal )
+    {
+        spawnLocation = animal->getLocation();
+
+        switch ( animal->getID() )
+        {
+        case 0 :
+            newAnimal = new Leucorrhinia ( 0, {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
+            break;
+        case 1 :
+            newAnimal = new Hyla();
+            break;
+        case 2 :
+            newAnimal = new Phengaris();
+            break;
+        case 3 :
+            newAnimal = new Zootoca();
+            break;
+        case 4 :
+            newAnimal = new Vipera();
+            break;
+        }
+
+        newAnimal->setLocation ( spawnLocation );
+        ( *environment ).getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
+
+        ( *animals ).push_back ( newAnimal );
+
+        animal->setSpawnAbility ( false );
+
+        runShuffle ( animals );
+    };
 
     /* DEV PART */
 
+    
     for ( int simulationTime=0; simulationTime < MAXTIME; ++simulationTime )
     {
 
@@ -38,9 +73,21 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
             for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
             {
-                for ( int agent = 0; agent < agentNumber; ++agent )
+                for ( agent = (*animals).begin() ; agent != (*animals).end(); ++agent )
                 {
-                    ( * ( *animals ) [agent] ).run ( environment );
+                    (*agent)->run ( environment );
+
+                    if ( (*agent)->isDead() )
+                    {
+                        delete (*agent);
+                        agent = (*animals).erase(agent);
+                        --agent;
+                        
+                    }
+                    else if ( (*agent)->isSpawn() && runRNG ( 0,100 ) < ( *agent)->getSpawnProbability() )
+                    {
+                        spawn ( (*agent) );
+                    }
 
                 }
 

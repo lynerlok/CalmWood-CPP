@@ -14,20 +14,29 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
 
     int actionProbability = runRNG ( 0,100 );
 
-    if ( deadProbability > actionProbability )
-        dead();
+    if ( ( actionProbability < moveProbability && ( month >= 5 && month < 9 && growthState > 0 ) ) || viability == 0 )
+        move ( environment );
 
-    if ( growthProbability <= actionProbability )
+    if ( month < 5 && month >= 9 )
+    {
+        hidden = true;
+        deadProbability = 0;
+    }
+
+    if ( actionProbability < deadProbability )
+        dead ( environment );
+
+    if ( actionProbability < growthProbability )
         growth ( environment );
 
-    if ( eatProbability <= actionProbability )
+    if ( actionProbability < eatProbability )
         eat();
 
     if ( growthState == 1 )
     {
-        if ( moveProbability <= actionProbability && wetLand == 1 )
+        if ( actionProbability < moveProbability && wetLand == 1 )
         {
-            moveTowards ( environment,X,Y );
+            moveTowards ( environment, X, Y );
         }
     }
 
@@ -35,35 +44,19 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     {
         if ( sex == 0 )
         {
-            if ( reproductionProbability <= actionProbability )
-            {
-                reproduction(VisibleAnimals);
-            }
+            if ( actionProbability < reproductionProbability )
+                reproduction ( VisibleAnimals,0 );
+            
+            if ( actionProbability < attackProbability )
+                attack(environment);
+                
         }
-        
-        if ( sex == 1 ){
-            if ( spawnAbility && spawnProbability <= actionProbability ) {
-                spawn(environment);
-            }
-        }
+
     }
 
 
     // Adult
-    // reproduction();
     // attack();
-
-//         if ( sex == 1 && reproduction == true )
-//             //spawn();
-//
-//         if (( moveProbability <= actionProbability && ( month >= 5 && month < 9 ) ) || viability == 0)
-//            // move ( environment );
-
-//                     if ( month < 5 && month >= 9 )
-//             {
-//                 hidden = true;
-//                 deadProbability = 0;
-//             }
 
     return 0;
 }
