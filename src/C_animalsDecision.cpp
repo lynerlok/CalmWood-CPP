@@ -20,17 +20,21 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     int X = CellSpecs->at ( 4 );
     int Y = CellSpecs->at ( 5 );
     
-    int temperature = environment->getEnvironmentParameters()[0];
-    int hygrometry = environment->getEnvironmentParameters()[1];
-    int antropizationRate = environment->getEnvironmentParameters()[2];
+    float temperature = environment->getEnvironmentParameters()[0];
+    float hygrometry = environment->getEnvironmentParameters()[1];
+    float antropizationRate = environment->getEnvironmentParameters()[2];
 
     int actionProbability = runRNG ( 0,100 );
 
-    if ( temperature > 30 || temperature < 15 )
+    if ( temperature < 15.0 || temperature > 30.0 )
         dead(environment);
     
     if ( antropizationRate > 0.8 )
         dead(environment);
+    
+    if ( hygrometry < 0.2 || hygrometry > 0.95 ){
+        dead(environment);
+    }
     
     if ( month < 5 && month >= 9 && sex == 1 )
     {

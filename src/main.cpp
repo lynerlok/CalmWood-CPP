@@ -14,103 +14,6 @@
 using namespace std;
 using namespace constants;
 
-int MASrun ( Environment * environment, vector<Animal*> * animals, vector<Plant*> * plants )
-{
-
-    vector<Animal*>::iterator agent;
-
-    unsigned int timeOfDay = ( * environment ).getTimeOfDay();
-    unsigned int monthOfYear = ( * environment ).getMonth();
-
-    Animal * newAnimal;
-    vector<int> spawnLocation{0,0,0};
-
-    auto spawn = [&] ( Animal * animal )
-    {
-        spawnLocation = animal->getLocation();
-
-        switch ( animal->getID() )
-        {
-        case 0 :
-            newAnimal = new Leucorrhinia ( 0, {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
-            break;
-        case 1 :
-            newAnimal = new Hyla();
-            break;
-        case 2 :
-            newAnimal = new Phengaris();
-            break;
-        case 3 :
-            newAnimal = new Zootoca();
-            break;
-        case 4 :
-            newAnimal = new Vipera();
-            break;
-        }
-
-        newAnimal->setLocation ( spawnLocation );
-        ( *environment ).getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
-
-        ( *animals ).push_back ( newAnimal );
-
-        animal->setSpawnAbility ( false );
-
-        runShuffle ( animals );
-    };
-
-    /* DEV PART */
-
-
-    for ( int simulationTime=0; simulationTime < MAXTIME; ++simulationTime )
-    {
-
-        for ( int MonthlyRun=0; MonthlyRun < MAXDAYMONTH; ++MonthlyRun )
-        {
-
-            for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
-            {
-                for ( agent = ( *animals ).begin() ; agent != ( *animals ).end(); ++agent )
-                {
-                    ( *agent )->run ( environment );
-
-                    if ( ( *agent )->isDead() )
-                    {
-                        delete ( *agent );
-                        agent = ( *animals ).erase ( agent );
-                        --agent;
-
-                    }
-                    else if ( ( *agent )->isSpawn() && runRNG ( 0,100 ) < ( *agent )->getSpawnProbability() )
-                    {
-                        spawn ( ( *agent ) );
-                    }
-
-                }
-
-                timeOfDay = ( timeOfDay + ADDDAYTIME ) % 24;
-                ( * environment ).setTimeOfDay ( timeOfDay );
-
-            }
-        }
-
-        monthOfYear = ( monthOfYear + 1 ) % 12;
-        ( * environment ).setMonth ( monthOfYear );
-
-    }
-
-    /* END DEV PART */
-    
-    /* PROD PART */
-
-//     while (runError == false){
-//         usleep(SLEEPTIME);
-//     }
-
-    /* END PROD PART */
-
-    return 0;
-}
-
 int MASinitialize ( Environment * environment,
                     vector<Animal*> * animals,
                     vector<Plant*> * plants )
@@ -179,9 +82,133 @@ int MASinitialize ( Environment * environment,
     return 0;
 }
 
-int MAScollector()
+int MASrun ( Environment * environment, vector<Animal*> * animals, vector<Plant*> * plants, int * deadCount, int * spawnCount )
 {
 
+    vector<Animal*>::iterator agent;
+
+    unsigned int timeOfDay = ( * environment ).getTimeOfDay();
+    unsigned int monthOfYear = ( * environment ).getMonth();
+
+    Animal * newAnimal;
+    vector<int> spawnLocation{0,0,0};
+
+    auto spawn = [&] ( Animal * animal )
+    {
+        spawnLocation = animal->getLocation();
+
+        switch ( animal->getID() )
+        {
+        case 0 :
+            newAnimal = new Leucorrhinia ( 0, {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
+            break;
+        case 1 :
+            newAnimal = new Hyla();
+            break;
+        case 2 :
+            newAnimal = new Phengaris();
+            break;
+        case 3 :
+            newAnimal = new Zootoca();
+            break;
+        case 4 :
+            newAnimal = new Vipera();
+            break;
+        }
+
+        newAnimal->setLocation ( spawnLocation );
+        ( *environment ).getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
+
+        ( *animals ).push_back ( newAnimal );
+
+        animal->setSpawnAbility ( false );
+
+        runShuffle ( animals );
+    };
+
+    /* DEV PART */
+
+
+    for ( int simulationTime=0; simulationTime < MAXTIME; ++simulationTime )
+    {
+
+        for ( int MonthlyRun=0; MonthlyRun < MAXDAYMONTH; ++MonthlyRun )
+        {
+
+            for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
+            {
+                for ( agent = ( *animals ).begin() ; agent != ( *animals ).end(); ++agent )
+                {
+                    ( *agent )->run ( environment );
+
+                    if ( ( *agent )->isDead() )
+                    {
+                        *deadCount += 1;
+                        delete ( *agent );
+                        agent = ( *animals ).erase ( agent );
+                        --agent;
+
+                    }
+                    else if ( ( *agent )->isSpawn() && runRNG ( 0,100 ) < ( *agent )->getSpawnProbability() )
+                    {
+                        *spawnCount += 1;
+                        spawn ( ( *agent ) );
+                    }
+
+                }
+
+                timeOfDay = ( timeOfDay + ADDDAYTIME ) % 24;
+                ( * environment ).setTimeOfDay ( timeOfDay );
+
+            }
+        }
+
+        monthOfYear = ( monthOfYear + 1 ) % 12;
+        ( * environment ).setMonth ( monthOfYear );
+
+    }
+
+    /* END DEV PART */
+
+    /* PROD PART */
+
+//     while (runError == false){
+//         usleep(SLEEPTIME);
+//     }
+
+    /* END PROD PART */
+
+    return 0;
+}
+
+int MAScollector ( Environment * environment,
+                   vector<Animal*> * animals,
+                   vector<Plant*> * plants,
+                   int * deadCount,
+                   int * spawnCout )
+{
+
+    cout << "Some statistics on the simulation" << endl;
+
+    cout << "Number of death ( animals ) : " << *deadCount << endl;
+    cout << "Number of birth ( animals ) : " << *spawnCout << endl;
+    
+    cout << "Number of Leucorrhinia at simulation start : " << MAXNUMBERAGENT << endl;
+    
+    int LeucorrhiniaCount = 0;
+    
+    for ( int animal = 0; animal < animals->size(); ++animal )
+        if ( (*animals)[animal]->getID() == 0 )
+            LeucorrhiniaCount++;
+        
+    cout << "Number of Leucorrhinia at the end : " << LeucorrhiniaCount << endl;
+    
+    cout << "Temperature at the end of the simulation : " << environment->getEnvironmentParameters()[0] << endl;
+    
+    cout << "Hygrometry at the end of the simulation : " << environment->getEnvironmentParameters()[1] << endl;
+    
+    cout << "Antrhopization at the end of the simulation : " << environment->getEnvironmentParameters()[2] << endl;
+    
     return 0;
 }
 
@@ -192,9 +219,14 @@ int main ( int argc, char **argv )
     vector<Animal*> animals;
     vector<Plant*> plants;
 
+    int deadCount = 0;
+    int spawnCount = 0;
+
     MASinitialize ( &environment, &animals, &plants );
 
-    MASrun ( &environment, &animals, &plants );
+    MASrun ( &environment, &animals, &plants, &deadCount, &spawnCount );
+
+    MAScollector ( &environment, &animals, &plants, &deadCount, &spawnCount );
 
     for ( int i=0; i<animals.size(); ++i )
     {
@@ -209,8 +241,7 @@ int main ( int argc, char **argv )
     }
 
     plants.clear();
-    
-    //MAScollector();
+
 
     return 0;
 }

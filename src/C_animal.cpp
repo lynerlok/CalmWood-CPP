@@ -195,11 +195,7 @@ int Animal::move ( Environment * environment )
 
 int Animal::moveTowards ( Environment * environment, int X, int Y )
 {
-#include <unistd.h>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unordered_map>
+
     const unsigned int mapLength = environment->getMapLength();
     std::vector<int> newLocation = {X,Y};
     std::vector<int> savedLocation = {location[0],location[1]};
