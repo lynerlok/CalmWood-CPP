@@ -1,35 +1,31 @@
+#include <unistd.h>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
 #include "headers/U_randomGenerator.hpp"
 #include "headers/U_loadLevel.hpp"
-#include "headers/C_animals.hpp"
-#include "headers/C_plants.hpp"
+#include "headers/C_animal.hpp"
+#include "headers/C_plant.hpp"
 #include "headers/C_environment.hpp"
-#include "headers/C_plants.hpp"
-#include <unistd.h>
+#include "headers/main.hpp"
 
 using namespace std;
+using namespace constants;
 
-int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plants*> * plants )
+int MASrun ( Environment * environment, vector<Animal*> * animals, vector<Plant*> * plants )
 {
 
-    const unsigned int SLEEPTIME = 0.5 * 1000000; // µsecs ! Use 1 multiplicator for test and less for prod.
-    const unsigned int MAXDAILYRUN = 1; // Number of run in a day
-    const unsigned int MAXDAYMONTH = environment->DAYSMONTH; // Number of day in a month
-    const unsigned int MAXTIME = 2; // Number of month in the sim
-    vector<Animals*>::iterator agent;
-    
-    int addDayTime = 24 / MAXDAILYRUN;
+    vector<Animal*>::iterator agent;
 
-    bool runError = false;
-  
     unsigned int timeOfDay = ( * environment ).getTimeOfDay();
     unsigned int monthOfYear = ( * environment ).getMonth();
 
-    Animals * newAnimal;
+    Animal * newAnimal;
     vector<int> spawnLocation{0,0,0};
 
-    auto spawn = [&] ( Animals * animal )
+    auto spawn = [&] ( Animal * animal )
     {
         spawnLocation = animal->getLocation();
 
@@ -64,7 +60,7 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
     /* DEV PART */
 
-    
+
     for ( int simulationTime=0; simulationTime < MAXTIME; ++simulationTime )
     {
 
@@ -73,25 +69,25 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
             for ( int DailyRun=0; DailyRun < MAXDAILYRUN; ++DailyRun )
             {
-                for ( agent = (*animals).begin() ; agent != (*animals).end(); ++agent )
+                for ( agent = ( *animals ).begin() ; agent != ( *animals ).end(); ++agent )
                 {
-                    (*agent)->run ( environment );
+                    ( *agent )->run ( environment );
 
-                    if ( (*agent)->isDead() )
+                    if ( ( *agent )->isDead() )
                     {
-                        delete (*agent);
-                        agent = (*animals).erase(agent);
+                        delete ( *agent );
+                        agent = ( *animals ).erase ( agent );
                         --agent;
-                        
+
                     }
-                    else if ( (*agent)->isSpawn() && runRNG ( 0,100 ) < ( *agent)->getSpawnProbability() )
+                    else if ( ( *agent )->isSpawn() && runRNG ( 0,100 ) < ( *agent )->getSpawnProbability() )
                     {
-                        spawn ( (*agent) );
+                        spawn ( ( *agent ) );
                     }
 
                 }
 
-                timeOfDay = ( timeOfDay + addDayTime ) % 24;
+                timeOfDay = ( timeOfDay + ADDDAYTIME ) % 24;
                 ( * environment ).setTimeOfDay ( timeOfDay );
 
             }
@@ -102,6 +98,8 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
 
     }
 
+    /* END DEV PART */
+    
     /* PROD PART */
 
 //     while (runError == false){
@@ -113,25 +111,18 @@ int MASrun ( Environment * environment, vector<Animals*> * animals, vector<Plant
     return 0;
 }
 
-int MASinitialize()
+int MASinitialize ( Environment * environment,
+                    vector<Animal*> * animals,
+                    vector<Plant*> * plants )
 {
-
-    Environment environment;
-    vector<Animals*> animals;
-    vector<Plants*> plants;
 
     std::vector<int> location = {0,0,0};
 
-    const unsigned int mapLength = environment.getMapLength();
+    const unsigned int mapLength = environment->getMapLength();
 
-    uint16_t MaxNumberAgent = 10;
-    uint8_t NumberSpecies = 5;
-
-    uint16_t PlantDensity = 1;
-
-    auto initAnimals = [&] ( Environment * environment, vector<Animals*> * animals )
+    auto initAnimals = [&] ( Environment * environment, vector<Animal*> * animals )
     {
-        vector<Animals *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
+        vector<Animal *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
 
         for ( int animal = 0; animal < newAnimals.size(); ++animal )
         {
@@ -150,9 +141,9 @@ int MASinitialize()
 
     };
 
-    auto initPlants = [&] ( Environment * environment, vector<Plants*> * plants )
+    auto initPlants = [&] ( Environment * environment, vector<Plant*> * plants )
     {
-        vector<Plants *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
+        vector<Plant *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
 
         for ( int plant = 0; plant < newPlants.size(); ++plant )
         {
@@ -170,20 +161,38 @@ int MASinitialize()
 
     };
 
-    for ( int agent=0; agent < MaxNumberAgent; ++agent )
+    for ( int agent=0; agent < MAXNUMBERAGENT; ++agent )
     {
-        initAnimals ( &environment, &animals );
+        initAnimals ( environment, animals );
     }
 
-    for ( int agent=0; agent < PlantDensity; ++agent )
+    for ( int agent=0; agent < PLANTDENSITY; ++agent )
     {
-        initPlants ( &environment, &plants );
+        initPlants ( environment, plants );
     }
 
-    runShuffle ( &animals );
-    runShuffle ( &plants );
+    runShuffle ( animals );
+    runShuffle ( plants );
 
-    environment.setEnvironmentParameters ( 25,0.5,0.7 );
+    environment->setEnvironmentParameters ( 25,0.5,0.7 );
+
+    return 0;
+}
+
+int MAScollector()
+{
+
+    return 0;
+}
+
+int main ( int argc, char **argv )
+{
+
+    Environment environment;
+    vector<Animal*> animals;
+    vector<Plant*> plants;
+
+    MASinitialize ( &environment, &animals, &plants );
 
     MASrun ( &environment, &animals, &plants );
 
@@ -200,28 +209,8 @@ int MASinitialize()
     }
 
     plants.clear();
-
-
-    return 0;
-}
-
-int MAScollector()
-{
+    
+    //MAScollector();
 
     return 0;
 }
-
-int main ( int argc, char **argv )
-{
-
-    cout << MASinitialize() << endl;
-
-    return 0;
-}
-
-/* END DEV PART */
-
-//MASrun();
-
-// MAScollector();
-

@@ -1,17 +1,14 @@
 #ifndef __C_PLANTS_H_INCLUDED__
 #define __C_PLANTS_H_INCLUDED__
 
-#include <string>
-#include <vector>
-
-class Plants
+class Plant
 {
 public:
-    Plants ( int newId = 0 )
+    Plant ( int newId = 0 )
     {
         id = newId;
     };
-    ~Plants ( void ) {};
+    ~Plant () {};
     std::string name;
 
     int getID();
@@ -29,34 +26,34 @@ protected :
 
 };
 
-class Gentiania: public Plants
+class Gentiania: public Plant
 {
 public :
-    Gentiania ( int id = 0 ) :Plants ( id ) {}
+    Gentiania ( int id = 0 ) :Plant ( id ) {}
 };
 
-class Juncus: public Plants
+class Juncus: public Plant
 {
 public :
-    Juncus ( int id = 1 ) :Plants ( id ) {}
+    Juncus ( int id = 1 ) :Plant ( id ) {}
 };
 
-class Glyceria: public Plants
+class Glyceria: public Plant
 {
 public :
-    Glyceria ( int id = 2 ) :Plants ( id ) {}
+    Glyceria ( int id = 2 ) :Plant ( id ) {}
 };
 
-class Carex: public Plants
+class Carex: public Plant
 {
 public :
-    Carex ( int id = 3 ) :Plants ( id ) {}
+    Carex ( int id = 3 ) :Plant ( id ) {}
 };
 
-class Iris: public Plants
+class Iris: public Plant
 {
 public :
-    Iris ( int id = 4 ) :Plants ( id ) {}
+    Iris ( int id = 4 ) :Plant ( id ) {}
 };
 
 

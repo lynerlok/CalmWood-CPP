@@ -1,18 +1,13 @@
 #ifndef __C_ENVIRONMENT_H_INCLUDED__
 #define __C_ENVIRONMENT_H_INCLUDED__
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unordered_map>
+class Animal;
+class Plant;
+class Cell;
 
-#include "C_animals.hpp"
-#include "C_plants.hpp"
-
-class Animals;
-
-typedef std::unordered_multimap<int, Animals *>::iterator Aumit;
-typedef std::unordered_multimap<int, Plants *>::iterator Pumit;
+typedef std::unordered_multimap<int, Animal *>::iterator Aumit;
+typedef std::unordered_multimap<int, Plant *>::iterator Pumit;
+typedef std::vector<std::vector<Cell*>> MAP;
 
 class Cell
 {
@@ -32,12 +27,12 @@ public :
 
     bool getViabilityBoolean();
 
-    int addAnimal ( int ID, Animals * animal );
-    int removePlant ( int ID, Plants * plant );
-    int removeAnimal ( int ID, Animals * animal );
-    int addPlant ( int ID, Plants * plant );
+    int addAnimal ( int ID, Animal * animal );
+    int removePlant ( int ID, Plant * plant );
+    int removeAnimal ( int ID, Animal * animal );
+    int addPlant ( int ID, Plant * plant );
 
-    std::unordered_multimap<int, Animals *> getCellContentAnimals();
+    std::unordered_multimap<int, Animal *> getCellContentAnimals();
     std::unordered_map<int,int> getCellContentPlants();
     std::vector<int> getCellContentSpecs();
 
@@ -60,27 +55,17 @@ protected :
     int waterPlantClosedRate = 0;
     int sunExpositionRate = 60;
 
-    std::unordered_multimap<int, Animals *> AnimalCellContent;
-    std::unordered_multimap<int, Plants *> PlantCellContent;
+    std::unordered_multimap<int, Animal *> AnimalCellContent;
+    std::unordered_multimap<int, Plant *> PlantCellContent;
 
 };
 
 class Environment
 {
 public :
-    Environment ( void )
-    {
-        for ( int x=0; x<mapLength; ++x )
-            for ( int y=0; y<mapLength; ++y )
-                map[x].push_back ( new Cell(x,y) );
-    };
-    ~Environment ( void )
-    {
-        for ( int x=0; x<mapLength; ++x )
-            for ( int y=0; y<mapLength; ++y )
-                delete ( map[x][y] );
-    };
-
+    Environment ();
+    ~Environment ();
+ 
     int setTemperature ( float newTemperature );
 
     int setHygrometry ( float newHygrometry );
@@ -90,7 +75,6 @@ public :
     int initializeEnvironmentMAP();
 
     int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
-
 
     unsigned int getTimeOfDay();
 
@@ -110,18 +94,15 @@ public :
 
     Cell * getCell ( int x, int y );
 
-    const unsigned int DAYSMONTH = 4;
-
 protected :
     float temperature = 0.0;
     float hygrometry = 0.0 ;
     float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
-    int numberSpecies = 5;
-
+    
     // map, action field
     const unsigned int mapLength = 5;
 
-    std::vector<std::vector<Cell*>> map{mapLength};
+    MAP map{mapLength};
 
     unsigned int timeOfDay = 12; // In hours always % 24
     unsigned int monthOfYear = 6; // Always % 12

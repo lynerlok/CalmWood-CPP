@@ -1,19 +1,15 @@
 #ifndef __C_ANIMALS_H_INCLUDED__
 #define __C_ANIMALS_H_INCLUDED__
 
-#include "U_randomGenerator.hpp"
-#include "C_environment.hpp"
-
-#include <string>
-#include <vector>
-#include <iostream>
-
 class Environment;
 
-class Animals
+// VIRER LES S
+// à encapsuler dans le graphisme !
+
+class Animal
 {
 public :
-    Animals ( int newId = 99,
+    Animal ( int newId = 99,
               std::vector<unsigned int> newlifeCycle = {1,1,1},
               std::vector<int> newprobabilities = {0,0,0,0,0,0,0},
               std::vector<int> newDetectionRadius = {2,2,2},
@@ -21,7 +17,7 @@ public :
               bool isBorn = false
             );
 
-    virtual ~Animals () = 0;
+    virtual ~Animal () = 0;
 
     int run ( Environment * environment );
 
@@ -80,21 +76,21 @@ protected :
     int detection ( Environment * environment );
 
     // Action step
-    virtual int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
+    virtual int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
 
     int move ( Environment * environment );
     int moveTowards ( Environment * environment, int X, int Y );
     int eat ();
     int setHiddenState ( bool state );
-    int reproduction ( std::unordered_multimap<int, Animals *> * VisibleAnimals, int specie );
-    int attack ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, int intruderX, int intruderY, int specie );
+    int reproduction ( std::unordered_multimap<int, Animal *> * VisibleAnimal, int specie );
+    int attack ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, int intruderX, int intruderY, int specie );
     int spawn ( Environment * environment );
     int growth ( Environment * environment );
     int dead ( Environment * environment );
 
 };
 
-class Leucorrhinia: public Animals
+class Leucorrhinia: public Animal
 {
 public :
     Leucorrhinia ( int id = 0,
@@ -102,46 +98,46 @@ public :
                    std::vector<int> probabilities = {0,0,0,100,1,20,50},
                    std::vector<int> detectionRadius = {1,1,2},
                    std::vector<int> actionRadius = {1,1,1},
-                   bool isBorn = false ) : Animals ( id, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn ) {}
+                   bool isBorn = false ) : Animal ( id, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn ) {}
     ~Leucorrhinia() {};
 protected :
-    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 };
 
-class Hyla: public Animals
+class Hyla: public Animal
 {
 public :
-    Hyla ( int id = 1 ) :Animals ( id ) {}
+    Hyla ( int id = 1 ) :Animal ( id ) {}
     ~Hyla() {};
 protected :
-    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 };
 
-class Phengaris: public Animals
+class Phengaris: public Animal
 {
 public :
-    Phengaris ( int id = 2 ) :Animals ( id ) {}
+    Phengaris ( int id = 2 ) :Animal ( id ) {}
     ~Phengaris() {};
 protected :
-    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 };
 
-class Zootoca: public Animals
+class Zootoca: public Animal
 {
 public :
-    Zootoca ( int id = 3 ) :Animals ( id ) {}
+    Zootoca ( int id = 3 ) :Animal ( id ) {}
     ~Zootoca() {};
 protected :
-    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 };
 
-class Vipera: public Animals
+class Vipera: public Animal
 {
 public :
-    Vipera ( int id = 4 ) :Animals ( id ) {}
+    Vipera ( int id = 4 ) :Animal ( id ) {}
     ~Vipera() {};
 protected :
-    int decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+    int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__

@@ -1,3 +1,12 @@
+#include <unistd.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "headers/U_randomGenerator.hpp"
+#include "headers/C_animal.hpp"
+#include "headers/C_plant.hpp"
 #include "headers/C_environment.hpp"
 
 namespace constants
@@ -18,7 +27,7 @@ bool Cell::getViabilityBoolean()
     return viability;
 }
 
-int Cell::addAnimal ( int ID, Animals * animal )
+int Cell::addAnimal ( int ID, Animal * animal )
 {
 
     AnimalCellContent.emplace ( ID,animal );
@@ -26,14 +35,14 @@ int Cell::addAnimal ( int ID, Animals * animal )
     return 0;
 }
 
-int Cell::addPlant ( int ID, Plants * plant )
+int Cell::addPlant ( int ID, Plant * plant )
 {
     PlantCellContent.emplace ( std::make_pair ( ID,plant ) );
 
     return 0;
 }
 
-int Cell::removeAnimal ( int ID, Animals * animal )
+int Cell::removeAnimal ( int ID, Animal * animal )
 {
     Aumit it = AnimalCellContent.begin();
 
@@ -49,7 +58,7 @@ int Cell::removeAnimal ( int ID, Animals * animal )
     return 0;
 }
 
-int Cell::removePlant ( int ID, Plants * plant )
+int Cell::removePlant ( int ID, Plant * plant )
 {
     Pumit it = PlantCellContent.begin();
 
@@ -65,7 +74,7 @@ int Cell::removePlant ( int ID, Plants * plant )
     return 0;
 }
 
-std::unordered_multimap<int, Animals *> Cell::getCellContentAnimals()
+std::unordered_multimap<int, Animal *> Cell::getCellContentAnimals()
 {
     return AnimalCellContent;
 }
@@ -105,6 +114,20 @@ int Cell::toggleWetland()
 {
     containWetland = ! containWetland;
     return 0;
+}
+
+Environment::Environment()
+{
+    for ( int x=0; x<mapLength; ++x )
+        for ( int y=0; y<mapLength; ++y )
+            map[x].push_back ( new Cell ( x,y ) );
+}
+
+Environment::~Environment()
+{
+    for ( int x=0; x<mapLength; ++x )
+        for ( int y=0; y<mapLength; ++y )
+            delete ( map[x][y] );
 }
 
 int Environment::setTemperature ( float newTemperature )
@@ -193,11 +216,6 @@ std::vector<float> Environment::getEnvironmentParameters()
 {
 
     std::vector<float> parameters {temperature,hygrometry,antropizationRate};
-
-    std::cout << "[DEBUG] Returning environment parameters : " << std::endl;
-
-    for ( const auto& x: parameters )
-        std::cout << x << std::endl;
 
     return parameters;
 }

@@ -1,6 +1,16 @@
-#include "headers/C_animals.hpp"
+#include <unistd.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
-int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+#include "headers/U_randomGenerator.hpp"
+#include "headers/C_animal.hpp"
+#include "headers/C_plant.hpp"
+#include "headers/C_animal.hpp"
+#include "headers/C_environment.hpp"
+
+int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
 
     int timeOfDay = environment->getTimeOfDay();
@@ -9,9 +19,19 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     int wetLand = CellSpecs->at ( 3 );
     int X = CellSpecs->at ( 4 );
     int Y = CellSpecs->at ( 5 );
+    
+    int temperature = environment->getEnvironmentParameters()[0];
+    int hygrometry = environment->getEnvironmentParameters()[1];
+    int antropizationRate = environment->getEnvironmentParameters()[2];
 
     int actionProbability = runRNG ( 0,100 );
 
+    if ( temperature > 30 || temperature < 15 )
+        dead(environment);
+    
+    if ( antropizationRate > 0.8 )
+        dead(environment);
+    
     if ( month < 5 && month >= 9 && sex == 1 )
     {
         hidden = true;
@@ -64,23 +84,23 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
     return 0;
 }
 
-int Hyla::decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+int Hyla::decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
     return 0;
 }
 
 
-int Phengaris::decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+int Phengaris::decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
     return 0;
 }
 
-int Zootoca::decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+int Zootoca::decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
     return 0;
 }
 
-int Vipera::decision ( Environment * environment, std::unordered_multimap<int, Animals *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
+int Vipera::decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs )
 {
     return 0;
 }
