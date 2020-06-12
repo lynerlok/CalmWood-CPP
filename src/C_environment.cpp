@@ -118,9 +118,11 @@ int Cell::toggleWetland()
 
 Environment::Environment()
 {
+
     for ( int x=0; x<mapLength; ++x )
         for ( int y=0; y<mapLength; ++y )
             map[x].push_back ( new Cell ( x,y ) );
+
 }
 
 Environment::~Environment()

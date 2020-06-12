@@ -3,9 +3,6 @@
 
 class Environment;
 
-// VIRER LES S
-// à encapsuler dans le graphisme !
-
 class Animal
 {
 public :

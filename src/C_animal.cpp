@@ -34,10 +34,7 @@ Animal::Animal ( int newId,
     length = runRNG ( 0,10 );
     sex = runRNG ( 0,1 );
 
-    if ( ! isBorn )
-        growthState = runRNG ( 0,2 );
-    else if ( isBorn )
-        growthState = 0;
+    growthState = isBorn ? 0 : runRNG(0,2);
 
 }
 
