@@ -50,3 +50,10 @@ MAS.gpr
 
 #Ignore bak file
 *.bak
+
+#Ignore caches
+data/.cache_textures/*
+data/.runtimes/*
+*.cache
+data/*
+.thumbnails/*
