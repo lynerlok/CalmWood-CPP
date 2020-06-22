@@ -62,7 +62,11 @@ AppSystemLogic::~AppSystemLogic()
 int AppSystemLogic::init()
 {
         // Write here code to be called on engine initialization.
-       // ComponentSystem::get()->initialize();
+
+        cout << "Init system" << endl;
+        ComponentSystem::get()->initialize();
+
+        // ComponentSystem::get()->addComponent<GEnvironment> ( World::getNodeByName ( "EnvironmentSimulation" ) );
 
         return 1;
 }

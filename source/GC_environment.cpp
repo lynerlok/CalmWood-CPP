@@ -26,32 +26,41 @@ REGISTER_COMPONENT ( GEnvironment );
 
 void GEnvironment::init()
 {
-        vector<int> location = {0,0,0};
-        ComponentSystem::get()->addComponent<GEnvironment> ( World::getNodeByName ( "EnvironmentSimulation" ) );
 
+        cout << "GEnvironment initialization" << endl;
+
+        vector<int> location = {0,0,0};
+        vector<float> direction = { 0.0f, 0.0f, 0.0f };
+            
         const unsigned int mapLength = environment.getMapLength();
 
         auto initAnimals = [&] ( Environment * environment, vector<Animal*> * animals ) {
-                vector<Animal *> newAnimals = { new Leucorrhinia(), new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
+                vector<Animal *> newAnimals = { new Leucorrhinia() }; //, new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
 
                 for ( int animal = 0; animal < newAnimals.size(); ++animal ) {
 
                         meshPathStr = "animals_assets/" + ( *newAnimals[animal] ).getName() + "_MESH.mesh" ;
                         meshPathConst = meshPathStr.c_str();
+
                         temporaryMesh = ObjectMeshStatic::create ( meshPathConst );
 
                         for ( int i = 0; i < 3; ++i ) {
+                            
                                 location[i] = runRNG ( 0,mapLength-1 );
                         }
+                        
+                        direction = getDirection(0,180);
 
-                        temporaryMesh->setPosition ( Vec3 ( location[0],location[1],location[2] ) );
-                        temporaryMesh->setMaterial ( "mesh_base", "*" );
+                        temporaryMesh->setPosition ( Vec3 ( (float) location[0], (float) location[1], (float) location[2] ) );
+                        
+                        temporaryMesh->setDirection(vec3(direction[0], direction[1], direction[2]), vec3(0.0f,0.0f,1.0f));
 
                         ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
-                        temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( ( *newAnimals[animal] ).getID() );
-                        ComponentSystem::get()->getComponent<GAnimal> ( animalMesh[0] )->setAnimal ( newAnimals[animal] );
 
-                        Log::message ( "Animal ID : %d\n", property->getParameterPtr ( "id" )->getValueInt() );
+                        temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( ( *newAnimals[animal] ).getID() );
+                        ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( newAnimals[animal] );
+
+                        //Log::message ( "Animal ID : %d\n", temporaryMesh->getProperty()->getParameterPtr ( "id" )->getValueInt() );
 
                         ( *newAnimals[animal] ).setLocation ( location );
                         ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
@@ -213,3 +222,6 @@ int GEnvironment::triggerSimulationEnd()
         simulationEnd = true;
         return 0;
 }
+
+
+

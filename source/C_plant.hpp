@@ -4,11 +4,8 @@
 class Plant
 {
 public:
-    Plant ( int newId = 0 )
-    {
-        id = newId;
-    };
-    ~Plant () {};
+    Plant ( int newId = 0 );
+    ~Plant ();
     std::string name;
 
     int getID();
@@ -58,3 +55,4 @@ public :
 
 
 #endif // __C_PLANTS_H_INCLUDED__
+

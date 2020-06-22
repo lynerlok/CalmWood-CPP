@@ -58,8 +58,8 @@ int main ( int argc, char *argv[] )
         AppWorldLogic world_logic;
         AppEditorLogic editor_logic;
         
-        system_logic.worldlogic_ptr = &world_logic;
-        world_logic.systemlogic_ptr = &system_logic;
+       // system_logic.worldlogic_ptr = &world_logic;
+       // world_logic.systemlogic_ptr = &system_logic;
         
         // init engine
         Unigine::EnginePtr engine ( UNIGINE_VERSION, argc, argv );

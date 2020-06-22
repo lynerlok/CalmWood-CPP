@@ -6,33 +6,39 @@
 
 #include "C_plant.hpp"
 
+Plant::Plant ( int newId )
+{
+        id = newId;
+};
+
+Plant::~Plant () {};
+
 int Plant::getID()
 {
-    return id;
+        return id;
 }
 
 int Plant::growth ( int targetState )
 {
-    return 0;
+        return 0;
 }
 
 int Plant::damage()
 {
-    return 0;
+        return 0;
 }
-
 
 int Plant::setLocation ( std::vector<int> newLocation )
 {
-    if ( newLocation.size() != 3 )
-        return -1;
+        if ( newLocation.size() != 3 )
+                return -1;
 
-    location = newLocation;
+        location = newLocation;
 
-    return 0;
+        return 0;
 }
 
 std::vector<int> Plant::getLocation()
 {
-    return location;
+        return location;
 }

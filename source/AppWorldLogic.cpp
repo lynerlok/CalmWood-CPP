@@ -39,7 +39,6 @@
 
 #include "GC_animal.hpp"
 #include "GC_environment.hpp"
-
 #include "AppWorldLogic.h"
 #include "AppSystemLogic.h"
 
@@ -65,12 +64,15 @@ int AppWorldLogic::init()
 {
         // Write here code to be called on world initialization: initialize resources for your world scene during the world start.
 
+        cout << "init world" << endl;
         label = WidgetLabel::create ( Gui::get() );
         label->setPosition ( 10, 10 );
         label->setFontSize ( 24 );
         label->setFontOutline ( 1 );
         Gui::get()->addChild ( label, Gui::ALIGN_OVERLAP );
-        
+
+        ComponentSystem::get()->addComponent<GEnvironment> ( World::getNodeByName ( "EnvironmentSimulation" ) );
+
         return 1;
 }
 
@@ -143,3 +145,4 @@ Unigine::ObjectMeshDynamicPtr AppWorldLogic::create_box ( const Unigine::Math::M
 
         return object;
 }
+

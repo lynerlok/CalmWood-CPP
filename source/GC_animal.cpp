@@ -14,6 +14,8 @@
 #include "C_animal.hpp"
 #include "GC_animal.hpp"
 
+using namespace std;
+
 REGISTER_COMPONENT ( GAnimal );
 
 void GAnimal::init()

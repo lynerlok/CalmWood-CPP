@@ -49,7 +49,7 @@ int Animal::getID()
 
 std::string Animal::getName()
 {
-    return name;
+        return name;
 }
 
 int Animal::run ( Environment * environment )
@@ -61,6 +61,7 @@ int Animal::run ( Environment * environment )
 
 int Animal::setLocation ( std::vector<int> newLocation )
 {
+
         if ( newLocation.size() != 3 )
                 return -1;
 

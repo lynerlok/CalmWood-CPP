@@ -23,6 +23,7 @@ public :
         std::string getName();
 
         int setLocation ( std::vector<int> newLocation );
+        
         std::vector <int> getLocation();
 
         bool isDead();

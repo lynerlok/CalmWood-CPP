@@ -54,3 +54,4 @@ private:
 };
 
 #endif // __APP_WORLD_LOGIC_H__
+
