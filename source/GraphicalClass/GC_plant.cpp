@@ -9,9 +9,9 @@
 #include <UnigineControls.h>
 #include <UnigineConsole.h>
 #include <UnigineRender.h>
-#include "C_plant.hpp"
+#include "../SMA/C_plant.hpp"
 
-#include "ComponentSystem/ComponentSystem.h"
+#include "../ComponentSystem/ComponentSystem.h"
 
 #include "GC_plant.hpp"
 

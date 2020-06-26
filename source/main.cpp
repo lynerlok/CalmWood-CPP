@@ -30,15 +30,15 @@
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
 
-#include "U_randomGenerator.hpp"
-#include "C_animal.hpp"
-#include "C_plant.hpp"
-#include "C_environment.hpp"
+#include "SMA/U_randomGenerator.hpp"
+#include "SMA/C_animal.hpp"
+#include "SMA/C_plant.hpp"
+#include "SMA/C_environment.hpp"
 
 #include "ComponentSystem/ComponentSystem.h"
 
-#include "GC_animal.hpp"
-#include "GC_environment.hpp"
+#include "GraphicalClass/GC_animal.hpp"
+#include "GraphicalClass/GC_environment.hpp"
 
 #include "AppEditorLogic.h"
 #include "AppSystemLogic.h"
@@ -57,10 +57,10 @@ int main ( int argc, char *argv[] )
         AppSystemLogic system_logic;
         AppWorldLogic world_logic;
         AppEditorLogic editor_logic;
-        
-       // system_logic.worldlogic_ptr = &world_logic;
-       // world_logic.systemlogic_ptr = &system_logic;
-        
+
+        system_logic.worldlogic_ptr = &world_logic;
+        world_logic.systemlogic_ptr = &system_logic;
+
         // init engine
         Unigine::EnginePtr engine ( UNIGINE_VERSION, argc, argv );
 

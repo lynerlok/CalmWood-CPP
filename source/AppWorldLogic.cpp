@@ -30,15 +30,17 @@
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
 
-#include "U_randomGenerator.hpp"
-#include "C_animal.hpp"
-#include "C_plant.hpp"
-#include "C_environment.hpp"
+#include "SMA/U_randomGenerator.hpp"
+#include "SMA/C_animal.hpp"
+#include "SMA/C_plant.hpp"
+#include "SMA/C_environment.hpp"
 
 #include "ComponentSystem/ComponentSystem.h"
 
-#include "GC_animal.hpp"
-#include "GC_environment.hpp"
+#include "GraphicalClass/GC_animal.hpp"
+#include "GraphicalClass/GC_plant.hpp"
+#include "GraphicalClass/GC_environment.hpp"
+
 #include "AppWorldLogic.h"
 #include "AppSystemLogic.h"
 

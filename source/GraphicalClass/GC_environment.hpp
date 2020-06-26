@@ -5,6 +5,9 @@ using namespace std;
 using namespace Unigine;
 using namespace Math;
 
+class GAnimal;
+class GPlant;
+
 class GEnvironment : public ComponentBase
 {
 public :
@@ -19,8 +22,8 @@ public :
         PROP_PARAM ( Int, MaxNumberAgent, 100 );
         PROP_PARAM ( Int, PlantDensity, 1 );
         PROP_PARAM ( Int, MaxDailyRun, 10 );
-        PROP_PARAM ( Int, MaxDayMonth, 30 );
-        PROP_PARAM ( Int, MaxTimeSimulation, 12 );
+        PROP_PARAM ( Int, MaxDayMonth, 2 ); // 30
+        PROP_PARAM ( Int, MaxTimeSimulation, 12 ); // 12
         PROP_PARAM ( Int, RunDuration, 1 );
 
         void init();
@@ -32,10 +35,12 @@ public :
 protected :
 
         Environment environment;
-        vector<Animal*> animals;
-        vector<Plant*> plants;
-        vector<Animal*>::iterator agent;
         vector<ObjectMeshStaticPtr> animalMesh;
+        vector<ObjectMeshStaticPtr> plantMesh;
+        vector<ObjectMeshStaticPtr>::iterator agent;
+        
+        GAnimal * animal;
+        GPlant * plant;
         int agentNumber = 0;
 
         std::string meshPathStr;
@@ -55,9 +60,11 @@ protected :
         int deadCount = 0;
         int spawnCount = 0;
 
-        bool simulationEnd = true;
+        bool simulationEnd = false;
+        float ifps = 0.0;
 
-        int spawn ( Animal * animal );
+        int spawn ( GAnimal * animal );
+        
 };
 
 #endif // __GC_ENVIRONMENT_H_INCLUDED__

@@ -10,15 +10,16 @@
 #include <UnigineRender.h>
 #include <UnigineWorld.h>
 
-#include "U_randomGenerator.hpp"
-#include "C_animal.hpp"
-#include "C_plant.hpp"
-#include "C_environment.hpp"
+#include "../SMA/U_randomGenerator.hpp"
+#include "../SMA/C_animal.hpp"
+#include "../SMA/C_plant.hpp"
+#include "../SMA/C_environment.hpp"
 
-#include "ComponentSystem/ComponentSystem.h"
+#include "../ComponentSystem/ComponentSystem.h"
 
 #include "GC_environment.hpp"
 #include "GC_animal.hpp"
+#include "GC_plant.hpp"
 
 using namespace std;
 
@@ -31,10 +32,10 @@ void GEnvironment::init()
 
         vector<int> location = {0,0,0};
         vector<float> direction = { 0.0f, 0.0f, 0.0f };
-            
+
         const unsigned int mapLength = environment.getMapLength();
 
-        auto initAnimals = [&] ( Environment * environment, vector<Animal*> * animals ) {
+        auto initAnimals = [&] ( Environment * environment ) {
                 vector<Animal *> newAnimals = { new Leucorrhinia() }; //, new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
 
                 for ( int animal = 0; animal < newAnimals.size(); ++animal ) {
@@ -45,83 +46,89 @@ void GEnvironment::init()
                         temporaryMesh = ObjectMeshStatic::create ( meshPathConst );
 
                         for ( int i = 0; i < 3; ++i ) {
-                            
+
                                 location[i] = runRNG ( 0,mapLength-1 );
                         }
-                        
-                        direction = getDirection(0,180);
 
-                        temporaryMesh->setPosition ( Vec3 ( (float) location[0], (float) location[1], (float) location[2] ) );
-                        
-                        temporaryMesh->setDirection(vec3(direction[0], direction[1], direction[2]), vec3(0.0f,0.0f,1.0f));
+                        direction = getDirection ( -180,180 );
+
+                        temporaryMesh->setPosition ( Vec3 ( ( float ) location[0], ( float ) location[1], ( float ) location[2] ) );
+
+                        temporaryMesh->setDirection ( Vec3 ( direction[0], direction[1], direction[2] ), Vec3 ( 0.0f,0.0f,1.0f ) );
 
                         ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
 
                         temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( ( *newAnimals[animal] ).getID() );
                         ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( newAnimals[animal] );
 
-                        //Log::message ( "Animal ID : %d\n", temporaryMesh->getProperty()->getParameterPtr ( "id" )->getValueInt() );
-
                         ( *newAnimals[animal] ).setLocation ( location );
                         ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
 
                         animalMesh.push_back ( temporaryMesh );
-                        ( *animals ).push_back ( newAnimals[animal] );
 
                 }
 
         };
 
-        auto initPlants = [&] ( Environment * environment, vector<Plant*> * plants ) {
-                vector<Plant *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
-
-                for ( int plant = 0; plant < newPlants.size(); ++plant ) {
-
-                        for ( int i = 0; i < 3; ++i ) {
-                                location[i] = runRNG ( 0,mapLength-1 );
-                        }
-
-                        ( *newPlants[plant] ).setLocation ( location );
-                        ( *environment ).getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
-
-                        ( *plants ).push_back ( newPlants[plant] );
-                }
+        auto initPlants = [&] ( Environment * environment ) {
+//                 vector<Plant *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
+//
+//                 for ( int plant = 0; plant < newPlants.size(); ++plant ) {
+//
+//                         for ( int i = 0; i < 3; ++i ) {
+//                                 location[i] = runRNG ( 0,mapLength-1 );
+//                         }
+//
+//                         ( *newPlants[plant] ).setLocation ( location );
+//                         ( *environment ).getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
+//
+//                         ( *plants ).push_back ( newPlants[plant] );
+//                 }
 
         };
 
         for ( int agent=0; agent < MaxNumberAgent; ++agent ) {
-                initAnimals ( &environment,  &animals );
+                initAnimals ( &environment );
         }
 
         for ( int agent=0; agent < PlantDensity; ++agent ) {
-                initPlants ( &environment, &plants );
+                initPlants ( &environment );
         }
 
-        runShuffle ( &animals );
-        runShuffle ( &plants );
+        runShuffle ( &animalMesh );
+
+        agent = animalMesh.begin();
+        // runShuffle ( &animals ); // Shuffle the GUI static mesh because the animal is accessible.
+        //  runShuffle ( &plants );
 
         environment.setEnvironmentParameters ( 25,0.5,0.7 );
 }
 
 void GEnvironment::update ( float ifps )
 {
+        ifps = Game::getIFps();
 
         if ( simulationEnd == false ) {
+            
+                if ( agent == animalMesh.end() )
+                        agent = animalMesh.begin();
 
+                agentNumber = runRNG ( 0,animalMesh.size()-1 );
+
+                animal = ComponentSystem::get()->getComponent<GAnimal> ( *agent );
+            
                 if ( runTime < 0.0f ) {
 
-                        agentNumber = 0; // runRNG ( 0,animals.size()-1 );
+                        animal->run ( &environment );
 
-                        animals[agentNumber]->run ( &environment );
-
-                        if ( animals[agentNumber]->isDead() ) {
+                        if ( animal->isDead() ) {
                                 deadCount += 1;
-                                delete ( animals[agentNumber] );
-                                agent = animals.erase ( agent );
+                                agent = animalMesh.erase ( agent );
+                                --agent;
 
-                        } else if ( animals[agentNumber]->isSpawn() && runRNG ( 0,100 ) < animals[agentNumber]->getSpawnProbability() ) {
+                        } else if ( animal->isSpawn() && runRNG ( 0,100 ) < animal->getSpawnProbability() ) {
                                 spawnCount += 1;
-                                spawn ( ( *agent ) );
+                                spawn ( animal );
                         }
 
                         environment.setTimeOfDay ( ( environment.getTimeOfDay() + AddDayTime ) % 24 );
@@ -129,7 +136,7 @@ void GEnvironment::update ( float ifps )
                 }
 
                 if ( simulationTime < 0.0f ) {
-                        Log::message ( "SIMULATION ENDING..." );
+                        Log::message ( "SIMULATION ENDING...\n" );
                         simulationEnd = true;
                 }
 
@@ -141,6 +148,7 @@ void GEnvironment::update ( float ifps )
                 runTime -= ifps;
                 simulationTime -= ifps;
                 monthTime -= ifps;
+                agent++;
         }
 
 }
@@ -157,8 +165,8 @@ void GEnvironment::shutdown()
 
         int LeucorrhiniaCount = 0;
 
-        for ( int animal = 0; animal < animals.size(); ++animal )
-                if ( animals[animal]->getID() == 0 )
+        for ( agent = animalMesh.begin(); agent != animalMesh.end() ; ++agent )
+                if ( ComponentSystem::get()->getComponent<GAnimal> ( *agent )->getProperty()->getParameterPtr ( "id" )->getValueInt() == 0 )
                         LeucorrhiniaCount++;
 
         cout << "Number of Leucorrhinia at the end : " << LeucorrhiniaCount << endl;
@@ -169,50 +177,40 @@ void GEnvironment::shutdown()
 
         cout << "Antrhopization at the end of the simulation : " << environment.getEnvironmentParameters() [2] << endl;
 
-        for ( int i=0; i<animals.size(); ++i ) {
-                delete ( animals[i] );
-        }
-
-        animals.clear();
-
-        for ( int i=0; i<plants.size(); ++i ) {
-                delete ( plants[i] );
-        }
-
-        plants.clear();
+        animalMesh.clear();
 }
 
-int GEnvironment::spawn ( Animal * animal )
+int GEnvironment::spawn ( GAnimal * animal )
 {
-        Animal * newAnimal;
-        vector<int> spawnLocation = animal->getLocation();
-
-        switch ( animal->getID() ) {
-        case 0 :
-                newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
-                break;
-        case 1 :
-                newAnimal = new Hyla();
-                break;
-        case 2 :
-                newAnimal = new Phengaris();
-                break;
-        case 3 :
-                newAnimal = new Zootoca();
-                break;
-        case 4 :
-                newAnimal = new Vipera();
-                break;
-        }
-
-        newAnimal->setLocation ( spawnLocation );
-        environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
-
-        animals.push_back ( newAnimal );
-
-        animal->setSpawnAbility ( false );
-
-        runShuffle ( &animals );
+//         Animal * newAnimal;
+//         vector<int> spawnLocation = animal->getLocation();
+//
+//         switch ( animal->getID() ) {
+//         case 0 :
+//                 newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
+//                 break;
+//         case 1 :
+//                 newAnimal = new Hyla();
+//                 break;
+//         case 2 :
+//                 newAnimal = new Phengaris();
+//                 break;
+//         case 3 :
+//                 newAnimal = new Zootoca();
+//                 break;
+//         case 4 :
+//                 newAnimal = new Vipera();
+//                 break;
+//         }
+//
+//         newAnimal->setLocation ( spawnLocation );
+//         environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
+//
+//         animals.push_back ( newAnimal );
+//
+//         animal->setSpawnAbility ( false );
+//
+//         runShuffle ( &animals );
 
         return 0;
 }
