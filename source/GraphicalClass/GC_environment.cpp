@@ -53,6 +53,7 @@ void GEnvironment::init()
                         direction = getDirection ( -180,180 );
 
                         temporaryMesh->setPosition ( Vec3 ( ( float ) location[0], ( float ) location[1], ( float ) location[2] ) );
+                        ( *newAnimals[animal] ).setLocation ( location );
 
                         temporaryMesh->setDirection ( Vec3 ( direction[0], direction[1], direction[2] ), Vec3 ( 0.0f,0.0f,1.0f ) );
 
@@ -61,7 +62,6 @@ void GEnvironment::init()
                         temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( ( *newAnimals[animal] ).getID() );
                         ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( newAnimals[animal] );
 
-                        ( *newAnimals[animal] ).setLocation ( location );
                         ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
 
                         animalMesh.push_back ( temporaryMesh );
@@ -109,14 +109,14 @@ void GEnvironment::update ( float ifps )
         ifps = Game::getIFps();
 
         if ( simulationEnd == false ) {
-            
+
                 if ( agent == animalMesh.end() )
                         agent = animalMesh.begin();
 
                 agentNumber = runRNG ( 0,animalMesh.size()-1 );
 
                 animal = ComponentSystem::get()->getComponent<GAnimal> ( *agent );
-            
+
                 if ( runTime < 0.0f ) {
 
                         animal->run ( &environment );
@@ -125,6 +125,8 @@ void GEnvironment::update ( float ifps )
                                 deadCount += 1;
                                 agent = animalMesh.erase ( agent );
                                 --agent;
+                                if ( agent <= animalMesh.begin() )
+                                        simulationEnd = true;
 
                         } else if ( animal->isSpawn() && runRNG ( 0,100 ) < animal->getSpawnProbability() ) {
                                 spawnCount += 1;

@@ -48,7 +48,7 @@ protected :
     int viability = 1;
     int containTrees = 0;
     int containAnthropization = 0;
-    int containWetland = 0;
+    int containWetland = 1;
     int isWater = 0;
 
     int waterEutrophisationRate = 0;

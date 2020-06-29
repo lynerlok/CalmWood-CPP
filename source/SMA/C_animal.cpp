@@ -97,7 +97,7 @@ bool Animal::getHiddenState()
 
 int Animal::setSpawnAbility ( bool newSpawnAbility ) // RDI + offset
 {
-        if ( newSpawnAbility ) // Carteful this is string in assembly !!! so test sil, sil
+        if ( newSpawnAbility ) // Careful this is string in assembly !!! so test sil, sil
                 deadProbability = deadProbability - 30 < 0 ? 0 : deadProbability - 30;
         if ( ! newSpawnAbility )
                 deadProbability += 30;
@@ -156,6 +156,7 @@ int Animal::detection ( Environment * environment )
 
 int Animal::move ( Environment * environment )
 {
+
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> locationOffset ( 2 );
         std::vector<int> savedLocation = {location[0],location[1]};
@@ -168,33 +169,16 @@ int Animal::move ( Environment * environment )
                 newLocation[coord] = location[coord]+locationOffset[coord] >= mapLength ? mapLength-1 : location[coord]+locationOffset[coord];
         }
 
-        satietyIndex -= ( abs ( savedLocation[0]-newLocation[0] ) + abs ( savedLocation[1]-newLocation[1] ) );
-
-        if ( satietyIndex <= 0 ) {
-                satietyIndex = 0;
-                int TestEatProbability = runRNG ( 0,100 );
-
-                if ( TestEatProbability < eatProbability ) {
-                        dead ( environment );
-                        return 0;
-                }
-
-                eat();
-        }
-
         location[0], location[1] = newLocation[0], newLocation[1];
 
         environment->getCell ( savedLocation[0],savedLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
-
-        detection ( environment );
 
         return 0;
 }
 
 int Animal::moveTowards ( Environment * environment, int X, int Y )
 {
-
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> newLocation = {X,Y};
         std::vector<int> savedLocation = {location[0],location[1]};
@@ -204,26 +188,10 @@ int Animal::moveTowards ( Environment * environment, int X, int Y )
                 newLocation[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
         }
 
-
-        satietyIndex -= ( abs ( savedLocation[0]-newLocation[0] ) + abs ( savedLocation[1]-newLocation[1] ) );
-
-        if ( satietyIndex <= 0 ) {
-                int TestEatProbability = runRNG ( 0,100 );
-
-                if ( TestEatProbability < eatProbability ) {
-                        dead ( environment );
-                        return 0;
-                }
-
-                eat();
-        }
-
         location[0], location[1] = newLocation[0], newLocation[1];
 
         environment->getCell ( savedLocation[0], savedLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
-
-        detection ( environment );
 
         return 0;
 }

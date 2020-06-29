@@ -37,6 +37,8 @@ protected :
         vector<float> rotation = {0.0f,0.0f,0.0f};
         vector<int> hook;
         vector<int> oldHook;
+        float X = 0.0f;
+        float Y = 0.0f;
         
         float movement_speed = 5.0f;
         float angle = ( float ) runRNG ( -180,180 );
@@ -48,7 +50,6 @@ protected :
         void shutdown();
 
         int move ( float ifps );
-
 
 };
 

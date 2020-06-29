@@ -97,7 +97,7 @@ public :
         Leucorrhinia ( int id = 0,
                        std::string newName = "Leucorrhinia",
                        std::vector<unsigned int> lifeCycle = {1,24,1},
-                       std::vector<int> probabilities = {0,0,0,100,1,100,50},
+                       std::vector<int> probabilities = {70,0,0,0,0,0,0},
                        std::vector<int> detectionRadius = {1,1,2},
                        std::vector<int> actionRadius = {1,1,1},
                        bool isBorn = false ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn ) {}

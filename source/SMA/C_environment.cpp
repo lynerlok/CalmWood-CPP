@@ -44,6 +44,7 @@ int Cell::addPlant ( int ID, Plant * plant )
 
 int Cell::removeAnimal ( int ID, Animal * animal )
 {
+
     Aumit it = AnimalCellContent.begin();
 
     for ( it ; it != AnimalCellContent.end(); it++ )

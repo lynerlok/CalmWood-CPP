@@ -19,11 +19,11 @@ public :
 
         PROP_NAME ( "environment" );
 
-        PROP_PARAM ( Int, MaxNumberAgent, 100 );
+        PROP_PARAM ( Int, MaxNumberAgent, 10 ); // 100
         PROP_PARAM ( Int, PlantDensity, 1 );
-        PROP_PARAM ( Int, MaxDailyRun, 10 );
+        PROP_PARAM ( Int, MaxDailyRun, 1 ); // 10
         PROP_PARAM ( Int, MaxDayMonth, 2 ); // 30
-        PROP_PARAM ( Int, MaxTimeSimulation, 12 ); // 12
+        PROP_PARAM ( Int, MaxTimeSimulation, 4 ); // 12
         PROP_PARAM ( Int, RunDuration, 1 );
 
         void init();
@@ -55,7 +55,7 @@ protected :
 
         float runTime = RunDuration;
         float monthTime = MaxDayMonth;
-        float simulationTime = MaxTimeSimulation;
+        float simulationTime = SimulationDuration;
 
         int deadCount = 0;
         int spawnCount = 0;
