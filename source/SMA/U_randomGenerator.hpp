@@ -6,7 +6,9 @@
 //#include <iomanip>
 //#include <string>
 //#include <map>
-//#include <cmath>
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
 
 #include <random>
 #include "pcg_random.hpp"
@@ -14,43 +16,50 @@
 inline int runRNG ( int lower, int upper )
 {
 
-        // Seed with a real random value, if available
-        pcg_extras::seed_seq_from<std::random_device> seed_source;
+    // Seed with a real random value, if available
+    pcg_extras::seed_seq_from<std::random_device> seed_source;
 
-        // Make a random number engine
-        pcg32 rng ( seed_source );
+    // Make a random number engine
+    pcg32 rng ( seed_source );
 
-        // Choose a random mean between lower and upper
-        std::uniform_int_distribution<int> uniform_dist ( lower, upper );
-        int number = uniform_dist ( rng );
+    // Choose a random mean between lower and upper
+    std::uniform_int_distribution<int> uniform_dist ( lower, upper );
+    int number = uniform_dist ( rng );
 
-        return number;
+    return number;
 }
 
 template<typename T>
 
 inline int runShuffle ( std::vector<T> * vectorToSfuffle )
 {
-        // Seed with a real random value, if available
-        pcg_extras::seed_seq_from<std::random_device> seed_source;
+    // Seed with a real random value, if available
+    pcg_extras::seed_seq_from<std::random_device> seed_source;
 
-        // Make a random number engine
-        pcg32 rng ( seed_source );
+    // Make a random number engine
+    pcg32 rng ( seed_source );
 
-        pcg_extras::shuffle ( begin ( ( *vectorToSfuffle ) ), end ( ( *vectorToSfuffle ) ), rng );
+    pcg_extras::shuffle ( begin ( ( *vectorToSfuffle ) ), end ( ( *vectorToSfuffle ) ), rng );
 
-        return 0;
+    return 0;
 }
 
 inline std::vector<float> getDirection ( int lower, int upper )
 {
 
-        std::vector<float> vector;
+    std::vector<float> vector;
 
-        for ( int i = 0; i < 3; ++i )
-                vector.push_back ( ldexp ( runRNG ( lower,upper ), -32 ) );
+    srand (static_cast <unsigned> (time(0)));
+    
+    for ( int i = 0; i < 3; ++i )
+        vector.push_back ( lower + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(upper-lower))) );
 
-        return vector ;
+    return vector ;
 }
 
+inline float getFloat ( int lower, int upper )
+{
+    srand((unsigned int)time(NULL));
+    return (float(rand())/float((RAND_MAX)) * upper) + lower;
+}
 #endif // __RANDOMUTILS_H_INCLUDED__ 

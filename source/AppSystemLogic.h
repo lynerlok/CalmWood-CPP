@@ -35,6 +35,44 @@ public:
     int shutdown() override;
 
     AppWorldLogic *worldlogic_ptr;
+
+    vector<Animal *> animals;
+    vector<Plant *> plants;
+
+protected :
+    Environment environment;
+
+    vector<Animal *>::iterator agentAnimal;
+    vector<Plant *>::iterator agentPlant;
+
+    Animal * animal;
+    Plant * plant;
+
+    int deadCount = 0;
+    int spawnCount = 0;
+
+    bool simulationEnd = true;
+    float ifps = 0.0;
+
+    vector<int> location = {0,0};
+
+    int MaxNumberAgent = 10; // 100
+    int PlantDensity = 1;
+    int MaxDailyRun = 1; // 10
+    int MaxDayMonth = 2; // 30
+    int MaxTimeSimulation = 4; // 12
+    int RunDuration = 1;
+
+    const int MonthDuration = MaxDayMonth * MaxDailyRun;
+    const int SimulationDuration = MaxTimeSimulation * MaxDayMonth * MaxDailyRun;
+    const int AddDayTime = 24 / MaxDailyRun;
+
+    float runTime = RunDuration;
+    float monthTime = MaxDayMonth;
+    float simulationTime = SimulationDuration;
+
+    int spawn ( Animal * animal );
+
 };
 
 #endif // __APP_SYSTEM_LOGIC_H__

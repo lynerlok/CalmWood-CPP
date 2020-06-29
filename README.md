@@ -29,7 +29,13 @@ To build this project with unigine ( development version or release ) :
 
 I make a custom CmakeList.txt in the repository, is usualy the best option to build the project with all the custom components.
 
-In Kdevelop create a new project using this CmakeList.txt
+In Kdevelop open project by choosing `"source" directory in the repository` as project directory.
+
+Choose CMakeLists.txt as project manager
+
+In the `run menu` choose launch configure launches
+
+
 
 ## IDE USER - WINDOWS USERS
 

@@ -58,10 +58,10 @@ int GAnimal::move ( float ifps )
 
         hook = animal->getLocation();
 
-        if ( ( hook[0] != oldHook[0] ) || ( hook[1] != oldHook[1] ) ) {
-                cout << " X : " << oldHook[0] << " | " << hook[0] << endl;
-                cout << " Y : " << oldHook[1] << " | " << hook[1] << endl;
-        }
+//         if ( ( hook[0] != oldHook[0] ) || ( hook[1] != oldHook[1] ) ) {
+//                 cout << " X : " << oldHook[0] << " | " << hook[0] << endl;
+//                 cout << " Y : " << oldHook[1] << " | " << hook[1] << endl;
+//         }
 
         if ( ( hook[0] != oldHook[0] ) && ( hook[1] != oldHook[1] ) ) {
 

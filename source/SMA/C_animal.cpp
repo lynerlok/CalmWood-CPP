@@ -62,7 +62,7 @@ int Animal::run ( Environment * environment )
 int Animal::setLocation ( std::vector<int> newLocation )
 {
 
-        if ( newLocation.size() != 3 )
+        if ( newLocation.size() != 2 )
                 return -1;
 
         location = newLocation;
@@ -159,7 +159,7 @@ int Animal::move ( Environment * environment )
 
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> locationOffset ( 2 );
-        std::vector<int> savedLocation = {location[0],location[1]};
+        std::vector<int> savedLocation = location;
         std::vector<int> newLocation ( 2 );
 
         locationOffset = { runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ), runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ) };
@@ -169,7 +169,7 @@ int Animal::move ( Environment * environment )
                 newLocation[coord] = location[coord]+locationOffset[coord] >= mapLength ? mapLength-1 : location[coord]+locationOffset[coord];
         }
 
-        location[0], location[1] = newLocation[0], newLocation[1];
+        location = newLocation;
 
         environment->getCell ( savedLocation[0],savedLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
@@ -181,14 +181,14 @@ int Animal::moveTowards ( Environment * environment, int X, int Y )
 {
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> newLocation = {X,Y};
-        std::vector<int> savedLocation = {location[0],location[1]};
+        std::vector<int> savedLocation = location;
 
         for ( int coord=0; coord < 2; ++coord ) {
                 newLocation[coord] = newLocation[coord] < 0 ? 0 : newLocation[coord];
                 newLocation[coord] = newLocation[coord] >= mapLength ? mapLength-1 : newLocation[coord];
         }
 
-        location[0], location[1] = newLocation[0], newLocation[1];
+        location = newLocation;
 
         environment->getCell ( savedLocation[0], savedLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );

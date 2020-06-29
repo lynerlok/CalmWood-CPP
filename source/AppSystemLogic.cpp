@@ -52,23 +52,73 @@ using namespace Math;
 // These methods are called right after corresponding system script's (UnigineScript) methods.
 
 AppSystemLogic::AppSystemLogic()
-{
-}
+{}
 
 AppSystemLogic::~AppSystemLogic()
-{
-}
+{}
 
 int AppSystemLogic::init()
 {
-        // Write here code to be called on engine initialization.
+    // Write here code to be called on engine initialization.
 
-        cout << "Init system" << endl;
-        ComponentSystem::get()->initialize();
+    cout << "Init system" << endl;
 
-        // ComponentSystem::get()->addComponent<GEnvironment> ( World::getNodeByName ( "EnvironmentSimulation" ) );
+    ComponentSystem::get()->initialize();
 
-        return 1;
+    const unsigned int mapLength = environment.getMapLength();
+
+    auto initAnimals = [&] ( Environment * environment ) {
+
+        vector<Animal *> newAnimals = { new Leucorrhinia() }; // , new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
+
+        for ( int animal = 0; animal < newAnimals.size(); ++animal ) {
+
+            for ( int i = 0; i < 2; ++i ) {
+                location[i] = runRNG ( 0,mapLength-1 );
+            }
+
+            ( *newAnimals[animal] ).setLocation ( location );
+            ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
+
+            animals.push_back ( newAnimals[animal] );
+
+        }
+
+    };
+
+    auto initPlants = [&] ( Environment * environment ) {
+//                 vector<Plant *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
+//
+//                 for ( int plant = 0; plant < newPlants.size(); ++plant ) {
+//
+//                         for ( int i = 0; i < 3; ++i ) {
+//                                 location[i] = runRNG ( 0,mapLength-1 );
+//                         }
+//
+//                         ( *newPlants[plant] ).setLocation ( location );
+//                         ( *environment ).getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
+//
+//                         ( *plants ).push_back ( newPlants[plant] );
+//                 }
+
+    };
+
+    for ( int agent=0; agent < MaxNumberAgent; ++agent ) {
+        initAnimals ( &environment );
+    }
+//     for ( int agent=0; agent < PlantDensity; ++agent ) {
+//         initPlants ( &environment );
+//     }
+
+    runShuffle ( &animals );
+
+    agentAnimal = animals.begin();
+
+    //  runShuffle ( &plants );
+
+    environment.setEnvironmentParameters ( 25,0.5,0.7 );
+
+    return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,14 +127,58 @@ int AppSystemLogic::init()
 
 int AppSystemLogic::update()
 {
-        // Write here code to be called before updating each render frame.
-        return 1;
+    // Write here code to be called before updating each render frame.
+
+    ifps = Game::getIFps();
+
+    if ( simulationEnd == false ) {
+
+        if ( agentAnimal == animals.end() )
+            agentAnimal = animals.begin();
+
+        if ( runTime < 0.0f ) {
+
+            animal->run ( &environment );
+
+            if ( animal->isDead() ) {
+                deadCount += 1;
+                agentAnimal = animals.erase ( agentAnimal );
+                --agentAnimal;
+                if ( agentAnimal <= animals.begin() )
+                    simulationEnd = true;
+
+            } else if ( animal->isSpawn() && runRNG ( 0,100 ) < animal->getSpawnProbability() ) {
+                spawnCount += 1;
+                spawn ( animal );
+            }
+
+            environment.setTimeOfDay ( ( environment.getTimeOfDay() + AddDayTime ) % 24 );
+            runTime = RunDuration;
+        }
+
+        if ( simulationTime < 0.0f ) {
+            Log::message ( "SIMULATION ENDING...\n" );
+            simulationEnd = true;
+        }
+
+        if ( monthTime < 0.0f ) {
+            environment.setMonth ( ( environment.getMonth() + 1 ) % 12 );
+            monthTime = MonthDuration;
+        }
+
+        runTime -= ifps;
+        simulationTime -= ifps;
+        monthTime -= ifps;
+        agentAnimal++;
+    }
+
+    return 1;
 }
 
 int AppSystemLogic::postUpdate()
 {
-        // Write here code to be called after updating each render frame.
-        return 1;
+    // Write here code to be called after updating each render frame.
+    return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +187,75 @@ int AppSystemLogic::postUpdate()
 
 int AppSystemLogic::shutdown()
 {
-        // Write here code to be called on engine shutdown.
-        return 1;
+    // Write here code to be called on engine shutdown.
+
+    cout << "Some statistics on the simulation" << endl;
+
+    cout << "Number of death ( animals ) : " << deadCount << endl;
+    cout << "Number of birth ( animals ) : " << spawnCount << endl;
+
+    cout << "Number of Leucorrhinia at simulation start : " << MaxNumberAgent << endl;
+
+    int LeucorrhiniaCount = 0;
+
+    for ( agentAnimal = animals.begin(); agentAnimal != animals.end() ; ++agentAnimal )
+        if ( ( * agentAnimal )->getID() == 0 )
+            LeucorrhiniaCount++;
+
+    cout << "Number of Leucorrhinia at the end : " << LeucorrhiniaCount << endl;
+
+    cout << "Temperature at the end of the simulation : " << environment.getEnvironmentParameters() [0] << endl;
+
+    cout << "Hygrometry at the end of the simulation : " << environment.getEnvironmentParameters() [1] << endl;
+
+    cout << "Antrhopization at the end of the simulation : " << environment.getEnvironmentParameters() [2] << endl;
+
+    for ( agentAnimal = animals.begin(); agentAnimal != animals.end() ; ++agentAnimal ) {
+        delete ( ( * agentAnimal ) );
+    }
+
+    animals.clear();
+
+//     for ( int i=0; i<plants.size(); ++i ) {
+//         delete ( plants[i] );
+//     }
+//
+//     plants.clear();
+    return 1;
 }
 
+
+int AppSystemLogic::spawn ( Animal * animal )
+{
+//         Animal * newAnimal;
+//         vector<int> spawnLocation = animal->getLocation();
+// 
+//         switch ( animal->getID() ) {
+//         case 0 :
+//                 newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
+//                 break;
+//         case 1 :
+//                 newAnimal = new Hyla();
+//                 break;
+//         case 2 :
+//                 newAnimal = new Phengaris();
+//                 break;
+//         case 3 :
+//                 newAnimal = new Zootoca();
+//                 break;
+//         case 4 :
+//                 newAnimal = new Vipera();
+//                 break;
+//         }
+// 
+//         newAnimal->setLocation ( spawnLocation );
+//         environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
+// 
+//         animals.push_back ( newAnimal );
+// 
+//         animal->setSpawnAbility ( false );
+// 
+//         runShuffle ( &animals );
+
+    return 0;
+}

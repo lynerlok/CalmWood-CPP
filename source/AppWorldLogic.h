@@ -47,10 +47,32 @@ private:
     PlayerDummyPtr player;
     LightWorldPtr sun;
 
+    vector<ObjectMeshStaticPtr> animalMesh;
+    vector<ObjectMeshStaticPtr> plantMesh;
+    vector<Animal *> animals;
+    vector<Plant *> plants;
+    vector<ObjectMeshStaticPtr>::iterator agent;
+    vector<Animal *>::iterator agentAnimal;
+    vector<Plant *>::iterator agentPlant;
+
+    GAnimal * animal;
+    GPlant * plant;
+
+    vector<int> agentLocation = {0,0};
+    vector<float> direction = { 0.0f, 0.0f, 0.0f };
+
+    std::string meshPathStr;
+    const char *meshPathConst;
+    ObjectMeshStaticPtr temporaryMesh;
+    PropertyPtr property;
+    PropertyParameterPtr param;
+
     float ifps = 0.0f;
-    
+
     // method creating a box
     ObjectMeshDynamicPtr create_box ( const Mat4 &transform, const vec3 &size );
+    
+ //   int spawn ( Animal * animal );
 };
 
 #endif // __APP_WORLD_LOGIC_H__

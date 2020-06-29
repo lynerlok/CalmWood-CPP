@@ -44,7 +44,7 @@ protected :
         int id = 0;
         std::string name;
 
-        std::vector <int> location{0,0,0};
+        std::vector <int> location{0,0};
         std::vector<int> actionRadius{0,0,0};
         std::vector<int>  detectionRadius{0,0,0};
 
