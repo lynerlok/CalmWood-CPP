@@ -21,7 +21,7 @@ To build this project with unigine ( development version or release ) :
 
 5. Run unigine browser and sign in
 
-6. Choose "ADD EXISTING" dans choose the path of the cloned repository
+6. Choose "ADD EXISTING" choose the path of the cloned repository
 
 7. Modify the project in editor, run build version,... from here
 
@@ -33,13 +33,18 @@ In Kdevelop open project by choosing `"source" directory in the repository` as p
 
 Choose CMakeLists.txt as project manager
 
-In the `run menu` choose launch configure launches
+In the `run menu` choose `configure launches`
+
+Add a script application with bash as script interpreter and run always the same file `launch_debug.sh` ( for debug mode )
 
 
+**Troubleshoot :**
+
+*The IDE doesn't build the debug version but the release version* : force Cmake to use debug version in `Project --> Open Configuration --> Show Advanced --> Build Type : Debug`
 
 ## IDE USER - WINDOWS USERS
 
-You can use visual studio code, usualy windows integration is good with Windows - see the docs here : 
+You can use visual studio code, usualy integration is good with Windows - see the docs here : 
 
 https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
