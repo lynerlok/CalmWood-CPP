@@ -23,7 +23,9 @@ using namespace std;
 
 REGISTER_COMPONENT ( GAnimal );
 
-void GAnimal::init() {}
+void GAnimal::init()
+{
+}
 
 void GAnimal::update()
 {
@@ -42,7 +44,6 @@ void GAnimal::shutdown()
 int GAnimal::setAnimal ( Animal* newAnimal )
 {
         animal = newAnimal;
-        oldHook = animal->getLocation();
         return 0;
 }
 
@@ -54,75 +55,79 @@ int GAnimal::run ( Environment* environment )
 
 int GAnimal::move ( float ifps )
 {
-        // angle = ( float ) runRNG ( -180,180 );
 
-        hook = animal->getLocation();
+        X = node->getWorldPosition().x;
+        Y = node->getWorldPosition().y;
+        
+        coord = { static_cast <int> ( trunc ( X ) ), static_cast <int> ( trunc ( Y ) ) };
 
-//         if ( ( hook[0] != oldHook[0] ) || ( hook[1] != oldHook[1] ) ) {
-//                 cout << " X : " << oldHook[0] << " | " << hook[0] << endl;
-//                 cout << " Y : " << oldHook[1] << " | " << hook[1] << endl;
-//         }
+        if ( ! isMoving && animal->getOldLocation() != animal->getLocation() ) {
+                animal->stopSimulation();
+                isMoving = true;
+                goal = animal->getLocation();
 
-        if ( ( hook[0] != oldHook[0] ) && ( hook[1] != oldHook[1] ) ) {
+        } else {
 
-                changeHook = true;
+                hook = animal->getLocation();
 
-                X = node->getWorldPosition().x;
-                Y = node->getWorldPosition().y;
+                angle = ( float ) runRNG ( -180,180 );
 
-                if ( ( X < hook[0] ) && ( Y < hook[1] ) ) {
+                Math::Mat4 tranform = node->getTransform();
+                Math::Vec3 forward_direction = tranform.getColumn3 ( 1 );
 
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, 0.1, 0 ) * 100 * ifps );
+                Vec3 forward = node->getWorldPosition() + forward_direction * movement_speed * ifps;
 
-                } else if ( ( X < hook[0] ) && ( Y > hook[1] ) ) {
+                if ( forward[0] >= hook[0]+1 || forward[1] >= hook[1]+1 || forward[0] <= hook[0]-1 || forward[1] <= hook[1]-1 )
+                        angle = -180.0f;
 
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, -0.1, 0 ) * 100 * ifps );
+                Math::quat delta_rotation = Math::quat ( 0.0f, 0.0f, 1.0f, angleMultiplicator * angle * ifps );
 
-                } else if ( ( X > hook[0] ) && ( Y < hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, 0.1, 0 ) * 100 * ifps );
-
-                } else if ( ( X > hook[0] ) && ( Y > hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, -0.1, 0 ) * 100 * ifps );
-
-                } else if ( ( X == hook[0] ) && ( Y < hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0, 0.1, 0 ) * 100 * ifps );
-
-                } else if ( ( X == hook[0] ) && ( Y > hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0, -0.1, 0 ) * 100 * ifps );
-
-                } else if ( ( X > hook[0] ) && ( Y == hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, 0, 0 ) * 100 * ifps );
-
-                } else if ( ( X < hook[0] ) && ( Y == hook[1] ) ) {
-
-                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, 0, 0 ) * 100 * ifps );
-
-                }
-                return 0;
+                node->setWorldPosition ( node->getWorldPosition() + forward_direction * movement_speed * ifps );
+                node->setWorldRotation ( node->getWorldRotation() * delta_rotation );
         }
 
-        if ( ( hook[0] == oldHook[0] ) && ( hook[1] == oldHook[1] ) )
-                oldHook = hook;
+        if ( isMoving && coord != goal ) {
+            
+                if ( ( X < goal[0] ) && ( Y < goal[1] ) ) {
 
-        changeHook = false;
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, 0.1, 0 ) * movement_speed * ifps );
 
-//         Math::Mat4 tranform = node->getTransform();
-//         Math::Vec3 forward_direction = tranform.getColumn3 ( 1 );
-//
-//         Vec3 forward = node->getWorldPosition() + forward_direction * movement_speed * ifps;
-//
-//       //  for ( int i = 0; i < 3 ; ++i )
-//        //         angle = forward[i] >= location[i]+1 ? angle = -180.0f : angle;
-//
-//         Math::quat delta_rotation = Math::quat ( 0.0f, 0.0f, 1.0f, angle * ifps );
-//
-//         node->setWorldPosition ( node->getWorldPosition() + forward_direction * movement_speed * ifps );
-//         node->setWorldRotation ( node->getWorldRotation() * delta_rotation );
+                } else if ( ( X < goal[0] ) && ( Y > goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, -0.1, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X > goal[0] ) && ( Y < goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, 0.1, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X > goal[0] ) && ( Y > goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, -0.1, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X == goal[0] ) && ( Y < goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0, 0.1, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X == goal[0] ) && ( Y > goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0, -0.1, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X > goal[0] ) && ( Y == goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( -0.1, 0, 0 ) * movement_speed * ifps );
+
+                } else if ( ( X < goal[0] ) && ( Y == goal[1] ) ) {
+
+                        node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, 0, 0 ) * movement_speed * ifps );
+
+                }
+        }
+
+        if ( isMoving && coord == goal ) {
+                isMoving = false;
+                animal->setOldLocation ( goal );
+                animal->continueSimulation();
+        }
 
         return 0;
 }

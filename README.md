@@ -45,33 +45,33 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 # TO DO LIST
 
-~~1. Enlever "Dead" depuis "Move" ( remove statiety index from move move towards )~~
+1. ~~Enlever "Dead" depuis "Move" ( remove statiety index from move move towards )~~
 
-~~2. Faire un README~~
+2. ~~Faire un README~~
 
-3. Décrémenter satiety index à chaque decision
+3. ~~Décrémenter satiety index à chaque decision~~
 
-4. Check RNG, si on prend bien tout les animaux par RUN
+4. ~~Check RNG, si on prend bien tout les animaux par RUN~~
 
-5. 1 détection = 1 décision ( éviter les loop si movProba = 100 )
+5. ~~1 détection = 1 décision ( éviter les loop si movProba = 100 )~~
 
 6. Multiple spawn + implémenter correctement spawn GUI
 
-7. Vérifier si protéger territoire est cohérent
+7. ~~GUI déplacement non aléatoire~~
 
-8. Affiner proba 
+8. ~~GUI déplacement aléatoire~~
 
-9. GUI déplacement non aléatoire
+9. Vérifier si protéger territoire est cohérent
 
-10. GUI déplacement aléatoire
+10. Affiner proba 
 
 11. GUI remove dead animal
 
-12. Réduire amplitude en Z
+12. ~~Réduire amplitude en Z~~
 
-13. Bool isMoving dans GC_environment : while true = déplacement non aléatoire, while false = déplacement aléatoire
+13. ~~Bool isMoving dans GC_environment : while true = déplacement non aléatoire, while false = déplacement aléatoire~~
 
-14. Birth Date pour changer d'état ( State Date )
+14. ~~Birth Date pour changer d'état ( State Date ) ==> relié avec 6 si on passe de 0 à 1 invoquer createGUIAnimal !~~
 
 15. Supprimer les proba inutiles
 
@@ -81,8 +81,10 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 18. Interface user
 
-19. Passer tout les agents par RUN ???
+19. ~~Passer tout les agents par RUN ???~~
 
 20. Animation animal ( vol + se poser )
 
-21. Animation auxiliaire ( attaquer,... ) ==> méthode isTarget( bool, Animal * attaquer )
+21. Animation auxiliaire ( attaquer,... ) ==> méthode isTarget( bool ) ( Animal * animalQuiAttaque )
+
+22. ~~Si rien de plus dans animal.run ( que detection ) supprimer animal.run au profit d'animal.detection~~

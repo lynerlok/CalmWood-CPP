@@ -25,7 +25,9 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
         float antropizationRate = environment->getEnvironmentParameters() [2];
 
         int actionProbability = runRNG ( 0,100 );
-
+        
+        satietyIndex -= 10;
+        
         if ( temperature < 15.0 || temperature > 30.0 )
                 dead ( environment );
 
@@ -41,8 +43,8 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
                 deadProbability = 0;
         }
 
-        if ( actionProbability < deadProbability )
-                dead ( environment );
+//         if ( actionProbability < deadProbability )
+//                 dead ( environment );
 
         if ( actionProbability < growthProbability )
                 growth ( environment );

@@ -41,7 +41,7 @@ public:
 
 protected :
     Environment environment;
-
+    
     vector<Animal *>::iterator agentAnimal;
     vector<Plant *>::iterator agentPlant;
 
@@ -51,7 +51,7 @@ protected :
     int deadCount = 0;
     int spawnCount = 0;
 
-    bool simulationEnd = true;
+    bool simulationEnd = false;
     float ifps = 0.0;
 
     vector<int> location = {0,0};
@@ -64,7 +64,7 @@ protected :
     int RunDuration = 1;
 
     const int MonthDuration = MaxDayMonth * MaxDailyRun;
-    const int SimulationDuration = MaxTimeSimulation * MaxDayMonth * MaxDailyRun;
+    const int SimulationDuration = MaxNumberAgent * MaxTimeSimulation * MaxDayMonth * MaxDailyRun;
     const int AddDayTime = 24 / MaxDailyRun;
 
     float runTime = RunDuration;

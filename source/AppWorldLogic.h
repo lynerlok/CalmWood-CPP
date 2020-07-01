@@ -41,6 +41,8 @@ public:
 
     AppSystemLogic *systemlogic_ptr;
 
+    int createAnimal ( Animal * animal );
+
 private:
 
     WidgetLabelPtr label;
@@ -59,7 +61,7 @@ private:
     GPlant * plant;
 
     vector<int> agentLocation = {0,0};
-    vector<float> direction = { 0.0f, 0.0f, 0.0f };
+    int direction = 0;
 
     std::string meshPathStr;
     const char *meshPathConst;
@@ -71,8 +73,8 @@ private:
 
     // method creating a box
     ObjectMeshDynamicPtr create_box ( const Mat4 &transform, const vec3 &size );
-    
- //   int spawn ( Animal * animal );
+
+//   int spawn ( Animal * animal );
 };
 
 #endif // __APP_WORLD_LOGIC_H__

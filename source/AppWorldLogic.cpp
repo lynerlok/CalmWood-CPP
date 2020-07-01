@@ -39,7 +39,6 @@
 
 #include "GraphicalClass/GC_animal.hpp"
 #include "GraphicalClass/GC_plant.hpp"
-#include "GraphicalClass/GC_environment.hpp"
 
 #include "AppWorldLogic.h"
 #include "AppSystemLogic.h"
@@ -64,48 +63,22 @@ AppWorldLogic::~AppWorldLogic()
 
 int AppWorldLogic::init()
 {
-    // Write here code to be called on world initialization: initialize resources for your world scene during the world start.
+        // Write here code to be called on world initialization: initialize resources for your world scene during the world start.
 
-    cout << "Init world" << endl;
-    label = WidgetLabel::create ( Gui::get() );
-    label->setPosition ( 10, 10 );
-    label->setFontSize ( 24 );
-    label->setFontOutline ( 1 );
-    Gui::get()->addChild ( label, Gui::ALIGN_OVERLAP );
+        cout << "Init world" << endl;
+        label = WidgetLabel::create ( Gui::get() );
+        label->setPosition ( 10, 10 );
+        label->setFontSize ( 24 );
+        label->setFontOutline ( 1 );
+        Gui::get()->addChild ( label, Gui::ALIGN_OVERLAP );
 
-    //  ComponentSystem::get()->addComponent<GEnvironment> ( World::getNodeByName ( "EnvironmentSimulation" ) );
+        animals = systemlogic_ptr->animals;
+        plants = systemlogic_ptr->plants;
 
-    animals = systemlogic_ptr->animals;
-    plants = systemlogic_ptr->plants;
+        for ( agentAnimal = animals.begin(); agentAnimal != animals.end(); ++agentAnimal )
+                createAnimal ( ( * agentAnimal ) );
 
-    cout << "Animal size : " << animals.size() << endl;
-
-    for ( agentAnimal = animals.begin(); agentAnimal != animals.end(); ++agentAnimal ) {
-
-        meshPathStr = "animals_assets/" + ( * agentAnimal )->getName() + "_MESH.mesh" ;
-        meshPathConst = meshPathStr.c_str();
-
-        temporaryMesh = ObjectMeshStatic::create ( meshPathConst );
-
-        direction = getDirection ( -180,180 );
-
-        agentLocation = ( *agentAnimal )->getLocation();
-
-        temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], getFloat ( 0, 2 ) ) );
-
-        temporaryMesh->setDirection ( Vec3 ( direction[0], direction[1], direction[2] ), Vec3 ( 0.0f,0.0f,1.0f ) );
-
-        ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
-
-        temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( (*agentAnimal)->getID() );
-        ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( ( * agentAnimal ) );
-
-        animalMesh.push_back ( temporaryMesh );
-
-    }
-
-
-    return 1;
+        return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,31 +87,31 @@ int AppWorldLogic::init()
 
 int AppWorldLogic::update()
 {
-    // Write here code to be called before updating each render frame: specify all graphics-related functions you want to be called every frame while your application executes.
+        // Write here code to be called before updating each render frame: specify all graphics-related functions you want to be called every frame while your application executes.
 
-    // show game info
-    label->setText ( String::format (
-                         "Components: %d",
-                         ComponentSystem::get()->getNumComponents() ).get() );
+        // show game info
+        label->setText ( String::format (
+                                 "Components: %d",
+                                 ComponentSystem::get()->getNumComponents() ).get() );
 
 
-    ifps = Game::getIFps();
+        ifps = Game::getIFps();
 
-    return 1;
+        return 1;
 }
 
 int AppWorldLogic::postUpdate()
 {
-    // The engine calls this function after updating each render frame: correct behavior after the state of the node has been updated.
-    return 1;
+        // The engine calls this function after updating each render frame: correct behavior after the state of the node has been updated.
+        return 1;
 }
 
 int AppWorldLogic::updatePhysics()
 {
-    // Write here code to be called before updating each physics frame: control physics in your application and put non-rendering calculations.
-    // The engine calls updatePhysics() with the fixed rate (60 times per second by default) regardless of the FPS value.
-    // WARNING: do not create, delete or change transformations of nodes here, because rendering is already in progress.
-    return 1;
+        // Write here code to be called before updating each physics frame: control physics in your application and put non-rendering calculations.
+        // The engine calls updatePhysics() with the fixed rate (60 times per second by default) regardless of the FPS value.
+        // WARNING: do not create, delete or change transformations of nodes here, because rendering is already in progress.
+        return 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,43 +120,72 @@ int AppWorldLogic::updatePhysics()
 
 int AppWorldLogic::shutdown()
 {
-    // Write here code to be called on world shutdown: delete resources that were created during world script execution to avoid memory leaks.
-    return 1;
+        // Write here code to be called on world shutdown: delete resources that were created during world script execution to avoid memory leaks.
+        return 1;
 }
 
 int AppWorldLogic::save ( const Unigine::StreamPtr &stream )
 {
-    // Write here code to be called when the world is saving its state (i.e. state_save is called): save custom user data to a file.
-    UNIGINE_UNUSED ( stream );
-    return 1;
+        // Write here code to be called when the world is saving its state (i.e. state_save is called): save custom user data to a file.
+        UNIGINE_UNUSED ( stream );
+        return 1;
 }
 
 int AppWorldLogic::restore ( const Unigine::StreamPtr &stream )
 {
-    // Write here code to be called when the world is restoring its state (i.e. state_restore is called): restore custom user data to a file here.
-    UNIGINE_UNUSED ( stream );
-    return 1;
+        // Write here code to be called when the world is restoring its state (i.e. state_restore is called): restore custom user data to a file here.
+        UNIGINE_UNUSED ( stream );
+        return 1;
 }
 
 Unigine::ObjectMeshDynamicPtr AppWorldLogic::create_box ( const Unigine::Math::Mat4& transform, const Unigine::Math::vec3& size )
 {
-    MeshPtr mesh = Mesh::create();
-    mesh->addBoxSurface ( "box", size );
+        MeshPtr mesh = Mesh::create();
+        mesh->addBoxSurface ( "box", size );
 
-    ObjectMeshDynamicPtr object = ObjectMeshDynamic::create ( 1 );
-    object->setMesh ( mesh );
-    object->setWorldTransform ( transform );
-    object->setMaterial ( "mesh_base", "*" );
+        ObjectMeshDynamicPtr object = ObjectMeshDynamic::create ( 1 );
+        object->setMesh ( mesh );
+        object->setWorldTransform ( transform );
+        object->setMaterial ( "mesh_base", "*" );
 
-    return object;
+        return object;
 }
 
+int AppWorldLogic::createAnimal ( Animal * animal )
+{
+
+        if ( animal->getGrowthState() == 2 ) {
+
+                meshPathStr = "animals_assets/" + animal->getName() + "_MESH.mesh" ;
+                meshPathConst = meshPathStr.c_str();
+
+                temporaryMesh = ObjectMeshStatic::create ( meshPathConst );
+
+                direction = runRNG ( -180,180 );
+
+                agentLocation = animal->getLocation();
+
+                temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], getFloat ( 1, 3 ) ) );
+
+                temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f,0.0f,1.0f ) );
+
+                ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
+
+                temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( animal->getID() );
+                ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( animal );
+
+                animalMesh.push_back ( temporaryMesh );
+
+        }
+
+        return 0;
+}
 
 // int AppWorldLogic::spawn ( Animal * animal )
 // {
 //         Animal * newAnimal;
 //         vector<int> spawnLocation = animal->getLocation();
-// 
+//
 //         switch ( animal->getID() ) {
 //         case 0 :
 //                 newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
@@ -201,15 +203,15 @@ Unigine::ObjectMeshDynamicPtr AppWorldLogic::create_box ( const Unigine::Math::M
 //                 newAnimal = new Vipera();
 //                 break;
 //         }
-// 
+//
 //         newAnimal->setLocation ( spawnLocation );
 //         environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
-// 
+//
 //         animals.push_back ( newAnimal );
-// 
+//
 //         animal->setSpawnAbility ( false );
-// 
+//
 //         runShuffle ( &animals );
-// 
+//
 //     return 0;
 // }

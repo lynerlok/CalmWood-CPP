@@ -12,7 +12,8 @@ public :
                  std::vector<int> newprobabilities = {0,0,0,0,0,0,0},
                  std::vector<int> newDetectionRadius = {2,2,2},
                  std::vector<int> newActionRadius = {1,1,1},
-                 bool isBorn = false
+                 bool isBorn = false,
+                 int spawnNumber = 1
                );
 
         virtual ~Animal () = 0;
@@ -21,15 +22,23 @@ public :
 
         int getID();
         std::string getName();
+        int getSex();
+        int getGrowthState();
 
         int setLocation ( std::vector<int> newLocation );
-        
+        int setOldLocation ( std::vector<int> newLocation );
+
         std::vector <int> getLocation();
+        std::vector <int> getOldLocation();
 
         bool isDead();
         bool isSpawn();
-
-        int getSex();
+        bool isGrowing();
+        
+        int stopSimulation();
+        int continueSimulation();
+        
+        int growthFinished();
 
         bool getHiddenState();
 
@@ -44,12 +53,15 @@ protected :
         int id = 0;
         std::string name;
 
+        std::vector<int> oldLocation{0,0};
         std::vector <int> location{0,0};
         std::vector<int> actionRadius{0,0,0};
         std::vector<int>  detectionRadius{0,0,0};
 
         int sex = 0; // 0 = male 1 = female
 
+        bool simulationState = true;
+        
         int length = 0;
         int growthState = 0;
 
@@ -69,6 +81,7 @@ protected :
         bool hidden = false;
         bool death = false;
         bool spawnAbility = false;
+        bool growing = false;
         bool protectTerritory = false;
 
         std::vector<int> territoryCoordinates{0,0};
@@ -85,7 +98,6 @@ protected :
         int setHiddenState ( bool state );
         int reproduction ( std::unordered_multimap<int, Animal *> * VisibleAnimal, int specie );
         int attack ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, int intruderX, int intruderY, int specie );
-        int spawn ( Environment * environment );
         int growth ( Environment * environment );
         int dead ( Environment * environment );
 
@@ -97,19 +109,22 @@ public :
         Leucorrhinia ( int id = 0,
                        std::string newName = "Leucorrhinia",
                        std::vector<unsigned int> lifeCycle = {1,24,1},
-                       std::vector<int> probabilities = {70,0,0,0,0,0,0},
+                       std::vector<int> probabilities = {100,0,0,0,0,0,0},
                        std::vector<int> detectionRadius = {1,1,2},
                        std::vector<int> actionRadius = {1,1,1},
-                       bool isBorn = false ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn ) {}
+                       bool isBorn = false,
+                       int spawnNumber = 100
+                     ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn, spawnNumber ) {}
         ~Leucorrhinia() {};
 protected :
         int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+
 };
 
 class Hyla: public Animal
 {
 public :
-        Hyla ( int id = 1, std::string newName = "Hyla" ) :Animal ( id, newName) {}
+        Hyla ( int id = 1, std::string newName = "Hyla" ) :Animal ( id, newName ) {}
         ~Hyla() {};
 protected :
         int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
@@ -143,6 +158,7 @@ protected :
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__
+
 
 
 

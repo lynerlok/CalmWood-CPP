@@ -38,7 +38,7 @@
 #include "ComponentSystem/ComponentSystem.h"
 
 #include "GraphicalClass/GC_animal.hpp"
-#include "GraphicalClass/GC_environment.hpp"
+#include "GraphicalClass/GC_plant.hpp"
 
 #include "AppEditorLogic.h"
 #include "AppSystemLogic.h"

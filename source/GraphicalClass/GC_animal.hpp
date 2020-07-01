@@ -35,21 +35,29 @@ protected :
         float ifps = 0.0f;
         float rotationTrigger = 3.0f;
         vector<float> rotation = {0.0f,0.0f,0.0f};
-        vector<int> hook;
-        vector<int> oldHook;
+
+        bool isMoving = false;
+
+        vector<int> hook{2};
+        vector<int> coord{2};
+        vector<int> goal{2};
+
         float X = 0.0f;
         float Y = 0.0f;
-        
+
         float movement_speed = 5.0f;
-        float angle = ( float ) runRNG ( -180,180 );
-        
-        bool changeHook = false;
-    
+        float angleMultiplicator = 1.2f;
+        float angle = 0.0f;
+
         void init();
         void update();
         void shutdown();
 
         int move ( float ifps );
+
+        int landOff ( float ifps );
+
+        int landOffProbability = 0;
 
 };
 

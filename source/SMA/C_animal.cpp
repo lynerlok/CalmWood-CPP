@@ -16,7 +16,9 @@ Animal::Animal ( int newId,
                  std::vector<int> newprobabilities,
                  std::vector<int> newDetectionRadius,
                  std::vector<int> newActionRadius,
-                 bool isBorn )
+                 bool isBorn,
+                 int spawnNumber
+               )
 {
 
         id = newId;
@@ -42,6 +44,24 @@ Animal::Animal ( int newId,
 
 Animal::~Animal() {}
 
+int Animal::continueSimulation()
+{
+        simulationState = true;
+        return 0;
+}
+
+int Animal::stopSimulation()
+{
+        simulationState = false;
+        return 0;
+}
+
+int Animal::growthFinished()
+{
+        growing = false;
+        return 0;
+}
+
 int Animal::getID()
 {
         return id;
@@ -52,11 +72,22 @@ std::string Animal::getName()
         return name;
 }
 
+int Animal::getSex()
+{
+        return sex;
+}
+
 int Animal::run ( Environment * environment )
 {
-        detection ( environment );
+        if ( simulationState )
+                detection ( environment );
 
         return 0;
+}
+
+int Animal::getGrowthState()
+{
+        return growthState;
 }
 
 int Animal::setLocation ( std::vector<int> newLocation )
@@ -70,10 +101,27 @@ int Animal::setLocation ( std::vector<int> newLocation )
         return 0;
 }
 
+int Animal::setOldLocation ( std::vector<int> newLocation )
+{
+
+        if ( newLocation.size() != 2 )
+                return -1;
+
+        oldLocation = newLocation;
+
+        return 0;
+}
+
 std::vector <int> Animal::getLocation()
 {
         return location;
 }
+
+std::vector<int> Animal::getOldLocation()
+{
+        return oldLocation;
+}
+
 
 bool Animal::isDead()
 {
@@ -85,15 +133,16 @@ bool Animal::isSpawn ()
         return spawnAbility;
 }
 
-int Animal::getSex()
-{
-        return sex;
-}
-
 bool Animal::getHiddenState()
 {
         return hidden;
 }
+
+bool Animal::isGrowing()
+{
+        return growing;
+}
+
 
 int Animal::setSpawnAbility ( bool newSpawnAbility ) // RDI + offset
 {
@@ -140,27 +189,25 @@ int Animal::detection ( Environment * environment )
 
         detectionRangeSize = detectionRange.size();
 
-        runShuffle ( &detectionRange );
+        int i = runRNG ( 0, detectionRangeSize-1 );
 
-        for ( int i = 0; i < detectionRangeSize; ++i ) {
+        VisibleAnimals = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentAnimals();
+        VisiblePlants = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentPlants();
+        CellSpecs = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentSpecs();
 
-                VisibleAnimals = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentAnimals();
-                VisiblePlants = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentPlants();
-                CellSpecs = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentSpecs();
+        decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
 
-                decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
-        }
 
         return 0;
 }
 
 int Animal::move ( Environment * environment )
 {
-
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> locationOffset ( 2 );
-        std::vector<int> savedLocation = location;
         std::vector<int> newLocation ( 2 );
+
+        oldLocation = location;
 
         locationOffset = { runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ), runRNG ( 0-actionRadius[growthState], actionRadius[growthState] ) };
 
@@ -171,7 +218,7 @@ int Animal::move ( Environment * environment )
 
         location = newLocation;
 
-        environment->getCell ( savedLocation[0],savedLocation[1] )->removeAnimal ( id, this );
+        environment->getCell ( oldLocation[0],oldLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
 
         return 0;
@@ -179,9 +226,11 @@ int Animal::move ( Environment * environment )
 
 int Animal::moveTowards ( Environment * environment, int X, int Y )
 {
+
         const unsigned int mapLength = environment->getMapLength();
         std::vector<int> newLocation = {X,Y};
-        std::vector<int> savedLocation = location;
+
+        oldLocation = location;
 
         for ( int coord=0; coord < 2; ++coord ) {
                 newLocation[coord] = newLocation[coord] < 0 ? 0 : newLocation[coord];
@@ -190,7 +239,7 @@ int Animal::moveTowards ( Environment * environment, int X, int Y )
 
         location = newLocation;
 
-        environment->getCell ( savedLocation[0], savedLocation[1] )->removeAnimal ( id, this );
+        environment->getCell ( oldLocation[0], oldLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
 
         return 0;
@@ -225,6 +274,7 @@ int Animal::growth ( Environment * environment )
                 }
 
                 growthState += 1;
+                growing = true;
                 timeLifeCycle = 0;
 
         }
@@ -286,3 +336,4 @@ int Animal::dead ( Environment * environment )
         death = true;
         return 0;
 }
+
