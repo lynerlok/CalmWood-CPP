@@ -46,8 +46,6 @@ public :
 
         int getSpawnProbability();
 
-        int killed ( Environment * environment );
-
 protected :
 
         int id = 0;

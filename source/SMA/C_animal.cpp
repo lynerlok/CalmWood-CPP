@@ -304,29 +304,15 @@ int Animal::attack ( Environment * environment, std::unordered_multimap<int, Ani
 {
         std::pair<MMAnimalIterator, MMAnimalIterator> LeucoFound = VisibleAnimal->equal_range ( 0 );
         int X, Y = location[0],location[1];
-
+        
         int trigger = 0;
 
-        for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it ) {
-                if ( it->second->getSex() == 0 ) {
-                        trigger = runRNG ( 0,100 );
+//         for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it ) {
+//                 if ( it->second->getSex() == 0 ) {
+//                         trigger = runRNG ( 0,100 );
+//                 }
+//         }
 
-                        if ( trigger < deadProbability ) {
-                                dead ( environment );
-                                return 0;
-                        } else if ( trigger > deadProbability ) {
-                                it->second->killed ( environment );
-                        }
-                }
-        }
-
-        return 0;
-}
-
-int Animal::killed ( Environment * environment )
-{
-        environment->getCell ( location[0], location[1] )->removeAnimal ( id, this );
-        death = true;
         return 0;
 }
 

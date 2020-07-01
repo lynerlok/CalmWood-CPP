@@ -93,3 +93,5 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 21. Animation auxiliaire ( attaquer,... ) ==> méthode isTarget( bool ) ( Animal * animalQuiAttaque )
 
 22. ~~Si rien de plus dans animal.run ( que detection ) supprimer animal.run au profit d'animal.detection~~
+
+23. Review attack !!

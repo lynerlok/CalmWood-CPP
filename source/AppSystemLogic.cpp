@@ -105,6 +105,7 @@ int AppSystemLogic::init()
         for ( int agent=0; agent < MaxNumberAgent; ++agent ) {
                 initAnimals ( &environment );
         }
+        
 //     for ( int agent=0; agent < PlantDensity; ++agent ) {
 //         initPlants ( &environment );
 //     }
@@ -131,9 +132,7 @@ int AppSystemLogic::update()
         // Write here code to be called before updating each render frame.
 
         ifps = Game::getIFps();
-
-        // cout << "Iterator : " << agentAnimal - animals.begin() << endl;
-
+        
         if ( simulationEnd == false ) {
 
                 if ( agentAnimal == animals.end() ) {
@@ -243,7 +242,7 @@ int AppSystemLogic::spawn ( Animal * animal )
         switch ( animal->getID() ) {
         case 0 :
 
-                for ( int i = 0 ; i < 100 ; ++i ) {
+                for ( int i = 0 ; i < animal ; ++i ) {
                         newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
                         createAnimals();
                 }
