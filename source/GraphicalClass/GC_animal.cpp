@@ -32,6 +32,9 @@ void GAnimal::update()
 
         ifps = Game::getIFps();
 
+        if ( animal->isDead() )
+                node.deleteLater();
+
         move ( ifps );
 
 }
@@ -58,7 +61,7 @@ int GAnimal::move ( float ifps )
 
         X = node->getWorldPosition().x;
         Y = node->getWorldPosition().y;
-        
+
         coord = { static_cast <int> ( trunc ( X ) ), static_cast <int> ( trunc ( Y ) ) };
 
         if ( ! isMoving && animal->getOldLocation() != animal->getLocation() ) {
@@ -87,7 +90,7 @@ int GAnimal::move ( float ifps )
         }
 
         if ( isMoving && coord != goal ) {
-            
+
                 if ( ( X < goal[0] ) && ( Y < goal[1] ) ) {
 
                         node->setWorldPosition ( node->getWorldPosition() + Unigine::Math::Vec3 ( 0.1, 0.1, 0 ) * movement_speed * ifps );

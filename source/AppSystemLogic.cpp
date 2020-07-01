@@ -76,7 +76,7 @@ int AppSystemLogic::init()
 
                         ( *newAnimals[animal] ).setLocation ( location );
                         ( *newAnimals[animal] ).setOldLocation ( location );
-                        
+
                         ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
 
                         animals.push_back ( newAnimals[animal] );
@@ -105,7 +105,7 @@ int AppSystemLogic::init()
         for ( int agent=0; agent < MaxNumberAgent; ++agent ) {
                 initAnimals ( &environment );
         }
-        
+
 //     for ( int agent=0; agent < PlantDensity; ++agent ) {
 //         initPlants ( &environment );
 //     }
@@ -132,7 +132,7 @@ int AppSystemLogic::update()
         // Write here code to be called before updating each render frame.
 
         ifps = Game::getIFps();
-        
+
         if ( simulationEnd == false ) {
 
                 if ( agentAnimal == animals.end() ) {
@@ -141,20 +141,24 @@ int AppSystemLogic::update()
                 }
 
                 if ( runTime < 0.0f ) {
-                    
+
                         ( *agentAnimal )->run ( &environment );
-                        
-                        if( animal->isGrowing() && animal->getGrowthState() == 2 ){
-                            worldlogic_ptr->createAnimal(animal);
-                            animal->growthFinished();
+
+                        if ( animal->isGrowing() && animal->getGrowthState() == 2 ) {
+                                worldlogic_ptr->createAnimal ( animal );
+                                animal->growthFinished();
                         }
 
                         if ( animal->isDead() ) {
                                 deadCount += 1;
                                 agentAnimal = animals.erase ( agentAnimal );
-                                --agentAnimal;
-                                if ( agentAnimal <= animals.begin() )
+                                
+                                if ( animals.empty() ) {
                                         simulationEnd = true;
+                                        return 1;
+                                }
+                                
+                                --agentAnimal;
 
                         } else if ( animal->isSpawn() ) {
                                 spawnCount += 1;
@@ -242,7 +246,7 @@ int AppSystemLogic::spawn ( Animal * animal )
         switch ( animal->getID() ) {
         case 0 :
 
-                for ( int i = 0 ; i < animal ; ++i ) {
+                for ( int i = 0 ; i < animal->getSpawnNumber() ; ++i ) {
                         newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
                         createAnimals();
                 }

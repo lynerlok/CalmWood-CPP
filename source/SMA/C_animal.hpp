@@ -9,7 +9,7 @@ public :
         Animal ( int newId = 99,
                  std::string newName = "nothing",
                  std::vector<unsigned int> newlifeCycle = {1,1,1},
-                 std::vector<int> newprobabilities = {0,0,0,0,0,0,0},
+                 std::vector<int> newprobabilities = {0,0,0,0,0,0,0,0},
                  std::vector<int> newDetectionRadius = {2,2,2},
                  std::vector<int> newActionRadius = {1,1,1},
                  bool isBorn = false,
@@ -45,11 +45,15 @@ public :
         int setSpawnAbility ( bool newSpawnAbility );
 
         int getSpawnProbability();
+        int getSpawnNumber();
 
+        int flee( Environment * environment );
+        
 protected :
 
         int id = 0;
         std::string name;
+        int spawnNumber = 0;
 
         std::vector<int> oldLocation{0,0};
         std::vector <int> location{0,0};
@@ -62,6 +66,7 @@ protected :
         
         int length = 0;
         int growthState = 0;
+        int oldDetectionRadius = 0;
 
         int satietyIndex = 100; // MAX 100 MIN 0
 
@@ -72,6 +77,7 @@ protected :
         int deadProbability = 0 ;
         int reproductionProbability = 0;
         int attackProbability = 0;
+        int protectionProbability = 0;
 
         unsigned int timeLifeCycle = 0;
         std::vector<unsigned int> lifeCycle{0,0,0};
@@ -107,12 +113,12 @@ public :
         Leucorrhinia ( int id = 0,
                        std::string newName = "Leucorrhinia",
                        std::vector<unsigned int> lifeCycle = {1,24,1},
-                       std::vector<int> probabilities = {100,0,0,0,0,0,0},
+                       std::vector<int> probabilities = {100,0,0,0,0,0,0,60},
                        std::vector<int> detectionRadius = {1,1,2},
                        std::vector<int> actionRadius = {1,1,1},
                        bool isBorn = false,
-                       int spawnNumber = 100
-                     ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn, spawnNumber ) {}
+                       int newSpawnNumber = 100
+                     ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn, newSpawnNumber ) {}
         ~Leucorrhinia() {};
 protected :
         int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );

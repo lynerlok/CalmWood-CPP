@@ -31,7 +31,7 @@ public :
 
 protected :
 
-        Animal *animal;
+        Animal * animal;
         float ifps = 0.0f;
         float rotationTrigger = 3.0f;
         vector<float> rotation = {0.0f,0.0f,0.0f};

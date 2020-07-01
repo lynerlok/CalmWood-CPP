@@ -167,7 +167,7 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
                 temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], getFloat ( 1, 3 ) ) );
 
-                temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f,0.0f,1.0f ) );
+                temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f, 0.0f, 1.0f ) );
 
                 ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
 
@@ -180,38 +180,3 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
         return 0;
 }
-
-// int AppWorldLogic::spawn ( Animal * animal )
-// {
-//         Animal * newAnimal;
-//         vector<int> spawnLocation = animal->getLocation();
-//
-//         switch ( animal->getID() ) {
-//         case 0 :
-//                 newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
-//                 break;
-//         case 1 :
-//                 newAnimal = new Hyla();
-//                 break;
-//         case 2 :
-//                 newAnimal = new Phengaris();
-//                 break;
-//         case 3 :
-//                 newAnimal = new Zootoca();
-//                 break;
-//         case 4 :
-//                 newAnimal = new Vipera();
-//                 break;
-//         }
-//
-//         newAnimal->setLocation ( spawnLocation );
-//         environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
-//
-//         animals.push_back ( newAnimal );
-//
-//         animal->setSpawnAbility ( false );
-//
-//         runShuffle ( &animals );
-//
-//     return 0;
-// }

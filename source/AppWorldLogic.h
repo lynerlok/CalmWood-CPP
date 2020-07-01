@@ -42,6 +42,8 @@ public:
     AppSystemLogic *systemlogic_ptr;
 
     int createAnimal ( Animal * animal );
+    
+    int removeAnimal ( Animal * animal );
 
 private:
 
@@ -74,7 +76,6 @@ private:
     // method creating a box
     ObjectMeshDynamicPtr create_box ( const Mat4 &transform, const vec3 &size );
 
-//   int spawn ( Animal * animal );
 };
 
 #endif // __APP_WORLD_LOGIC_H__

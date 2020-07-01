@@ -25,9 +25,9 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
         float antropizationRate = environment->getEnvironmentParameters() [2];
 
         int actionProbability = runRNG ( 0,100 );
-        
+
         satietyIndex -= 10;
-        
+
         if ( temperature < 15.0 || temperature > 30.0 )
                 dead ( environment );
 
@@ -40,11 +40,11 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
 
         if ( month < 5 && month >= 9 && sex == 1 ) {
                 hidden = true;
-                deadProbability = 0;
+                deadProbability = deadProbability - 30 < 0 ? 0 : deadProbability - 30;
         }
 
-//         if ( actionProbability < deadProbability )
-//                 dead ( environment );
+        if ( actionProbability < deadProbability )
+                dead ( environment );
 
         if ( actionProbability < growthProbability )
                 growth ( environment );
@@ -59,12 +59,14 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
         }
 
         if ( growthState == 2 ) {
-            
+
                 if ( sex == 0 ) {
 
-                        if ( viability == 1 && month >= 4 && month < 7 ) {
+                        if ( actionProbability < protectionProbability && viability == 1 && month >= 4 && month < 7 && ! protectTerritory ) {
+                                moveTowards ( environment,X,Y );
                                 protectTerritory = true;
-                                territoryCoordinates = {location[0],location[1]};
+                                territoryCoordinates = {X,Y};
+                                oldDetectionRadius = detectionRadius[2];
                                 detectionRadius[2] = 1;
                         }
 
@@ -78,7 +80,14 @@ int Leucorrhinia::decision ( Environment * environment, std::unordered_multimap<
                                 protectTerritory = false;
                 }
 
-                if ( ( actionProbability < moveProbability && month >= 5 && month < 9 && growthState > 0 && ! protectTerritory ) || viability == 0 )
+                if ( sex == 1 ) {
+
+                        if ( spawnAbility && wetLand == 1 ) {
+                                moveTowards ( environment, X, Y );
+                        }
+                }
+
+                if ( ( actionProbability < moveProbability && month >= 5 && month < 9 && growthState > 0 && ! protectTerritory && ! spawnAbility ) )
                         move ( environment );
         }
 

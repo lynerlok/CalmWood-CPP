@@ -17,13 +17,14 @@ Animal::Animal ( int newId,
                  std::vector<int> newDetectionRadius,
                  std::vector<int> newActionRadius,
                  bool isBorn,
-                 int spawnNumber
+                 int newSpawnNumber
                )
 {
 
         id = newId;
         name = newName;
         lifeCycle = newlifeCycle;
+        
         moveProbability = newprobabilities[0];
         eatProbability = newprobabilities[1];
         growthProbability = newprobabilities[2];
@@ -31,6 +32,7 @@ Animal::Animal ( int newId,
         deadProbability = newprobabilities[4];
         reproductionProbability = newprobabilities[5];
         attackProbability = newprobabilities[6];
+        protectionProbability = newprobabilities[7];
 
         actionRadius = newActionRadius;
         detectionRadius = newDetectionRadius;
@@ -39,6 +41,8 @@ Animal::Animal ( int newId,
         sex = runRNG ( 0,1 );
 
         growthState = isBorn ? 0 : runRNG ( 0,2 );
+
+        spawnNumber = newSpawnNumber;
 
 }
 
@@ -161,6 +165,11 @@ int Animal::getSpawnProbability()
         return spawnProbability;
 }
 
+int Animal::getSpawnNumber()
+{
+        return spawnNumber;
+}
+
 
 int Animal::detection ( Environment * environment )
 {
@@ -176,6 +185,9 @@ int Animal::detection ( Environment * environment )
         std::unordered_map<int,int> VisiblePlants;
         std::vector<int> CellSpecs;
         std::vector<std::vector<int>> detectionRange;
+
+        if ( environment->getCell ( currentX, currentY )->getCellContentSpecs() [0] == 0 )
+                dead ( environment );
 
         for ( int i = ( 0 - detectionRadius[growthState] ); i <= detectionRadius[growthState]; ++i ) {
                 for ( int j = ( 0 - detectionRadius[growthState] ); j <= detectionRadius[growthState]; ++j ) {
@@ -196,7 +208,6 @@ int Animal::detection ( Environment * environment )
         CellSpecs = environment->getCell ( detectionRange[i][0], detectionRange[i][1] )->getCellContentSpecs();
 
         decision ( environment, &VisibleAnimals, &VisiblePlants, &CellSpecs );
-
 
         return 0;
 }
@@ -242,6 +253,12 @@ int Animal::moveTowards ( Environment * environment, int X, int Y )
         environment->getCell ( oldLocation[0], oldLocation[1] )->removeAnimal ( id, this );
         environment->getCell ( location[0], location[1] )->addAnimal ( id, this );
 
+        return 0;
+}
+
+int Animal::flee ( Environment * environment )
+{
+        move ( environment );
         return 0;
 }
 
@@ -293,6 +310,9 @@ int Animal::reproduction ( std::unordered_multimap<int, Animal *> * VisibleAnima
                         trigger = runRNG ( 0,100 );
                         if ( trigger < reproductionProbability ) {
                                 it->second->setSpawnAbility ( true );
+                                protectTerritory = false;
+                                detectionRadius[2] = oldDetectionRadius;
+                                return 0;
                         }
                 }
         }
@@ -304,14 +324,18 @@ int Animal::attack ( Environment * environment, std::unordered_multimap<int, Ani
 {
         std::pair<MMAnimalIterator, MMAnimalIterator> LeucoFound = VisibleAnimal->equal_range ( 0 );
         int X, Y = location[0],location[1];
-        
+
         int trigger = 0;
 
-//         for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it ) {
-//                 if ( it->second->getSex() == 0 ) {
-//                         trigger = runRNG ( 0,100 );
-//                 }
-//         }
+        for ( MMAnimalIterator it = LeucoFound.first; it != LeucoFound.second; ++it ) {
+                if ( it->second->getSex() == 0 ) {
+                        trigger = runRNG ( 0, 1 );
+                        if ( trigger == 0 )
+                                it->second->flee ( environment );
+                        if ( trigger == 1 )
+                                move ( environment );
+                }
+        }
 
         return 0;
 }
@@ -320,6 +344,7 @@ int Animal::dead ( Environment * environment )
 {
         environment->getCell ( location[0], location[1] )->removeAnimal ( id, this );
         death = true;
+
         return 0;
 }
 

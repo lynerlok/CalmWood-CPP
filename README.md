@@ -60,17 +60,17 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 5. ~~1 détection = 1 décision ( éviter les loop si movProba = 100 )~~
 
-6. Multiple spawn + implémenter correctement spawn GUI
+6. ~~Multiple spawn + implémenter correctement spawn GUI~~
 
 7. ~~GUI déplacement non aléatoire~~
 
 8. ~~GUI déplacement aléatoire~~
 
-9. Vérifier si protéger territoire est cohérent
+9. ~~Vérifier si protéger territoire est cohérent~~
 
 10. Affiner proba 
 
-11. GUI remove dead animal
+11. ~~GUI remove dead animal ( world --> delete animal system call world->deleteAnimal )~~
 
 12. ~~Réduire amplitude en Z~~
 
@@ -78,7 +78,7 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 14. ~~Birth Date pour changer d'état ( State Date ) ==> relié avec 6 si on passe de 0 à 1 invoquer createGUIAnimal !~~
 
-15. Supprimer les proba inutiles
+15. ~~Supprimer les proba inutiles~~
 
 16. Texture animal
 
@@ -90,8 +90,10 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 20. Animation animal ( vol + se poser )
 
-21. Animation auxiliaire ( attaquer,... ) ==> méthode isTarget( bool ) ( Animal * animalQuiAttaque )
+21. Animation auxiliaire ( attaquer,... )
 
 22. ~~Si rien de plus dans animal.run ( que detection ) supprimer animal.run au profit d'animal.detection~~
 
 23. Review attack !!
+
+24. **BUG** DEAD !! SIGSEV
