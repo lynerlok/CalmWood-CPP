@@ -114,8 +114,6 @@ int AppSystemLogic::init()
 
         agentAnimal = animals.begin();
 
-        cout << "Iterator : " << agentAnimal - animals.begin() << endl;
-
         //  runShuffle ( &plants );
 
         environment.setEnvironmentParameters ( 25,0.5,0.7 );
@@ -135,34 +133,35 @@ int AppSystemLogic::update()
 
         if ( simulationEnd == false ) {
 
-                if ( agentAnimal == animals.end() ) {
-                        runShuffle ( &animals );
-                        agentAnimal = animals.begin();
-                }
-
                 if ( runTime < 0.0f ) {
+
+                        if ( agentAnimal == animals.end() ) {
+                                runShuffle ( &animals );
+                                agentAnimal = animals.begin();
+                        }
 
                         ( *agentAnimal )->run ( &environment );
 
-                        if ( animal->isGrowing() && animal->getGrowthState() == 2 ) {
-                                worldlogic_ptr->createAnimal ( animal );
-                                animal->growthFinished();
+                        if ( ( *agentAnimal )->isGrowing() && ( *agentAnimal )->getGrowthState() == 2 ) {
+                                worldlogic_ptr->createAnimal ( ( *agentAnimal ) );
+                                ( *agentAnimal )->growthFinished();
                         }
 
-                        if ( animal->isDead() ) {
+                        if ( ( *agentAnimal )->isDead() ) {
                                 deadCount += 1;
                                 agentAnimal = animals.erase ( agentAnimal );
-                                
+
                                 if ( animals.empty() ) {
                                         simulationEnd = true;
+                                        Log::message ( "STOPING SIMULATION...\n" );
                                         return 1;
                                 }
-                                
+
                                 --agentAnimal;
 
-                        } else if ( animal->isSpawn() ) {
+                        } else if ( ( *agentAnimal )->isSpawn() ) {
                                 spawnCount += 1;
-                                spawn ( animal );
+                                spawn ( ( *agentAnimal ) );
                         }
 
                         environment.setTimeOfDay ( ( environment.getTimeOfDay() + AddDayTime ) % 24 );
@@ -224,7 +223,7 @@ int AppSystemLogic::shutdown()
 
         cout << "Antrhopization at the end of the simulation : " << environment.getEnvironmentParameters() [2] << endl;
 
-        animals.clear();
+//        animals.clear();
 
 //     plants.clear();
         return 1;

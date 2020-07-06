@@ -66,6 +66,7 @@ int AppWorldLogic::init()
         // Write here code to be called on world initialization: initialize resources for your world scene during the world start.
 
         cout << "Init world" << endl;
+
         label = WidgetLabel::create ( Gui::get() );
         label->setPosition ( 10, 10 );
         label->setFontSize ( 24 );
@@ -138,19 +139,6 @@ int AppWorldLogic::restore ( const Unigine::StreamPtr &stream )
         return 1;
 }
 
-Unigine::ObjectMeshDynamicPtr AppWorldLogic::create_box ( const Unigine::Math::Mat4& transform, const Unigine::Math::vec3& size )
-{
-        MeshPtr mesh = Mesh::create();
-        mesh->addBoxSurface ( "box", size );
-
-        ObjectMeshDynamicPtr object = ObjectMeshDynamic::create ( 1 );
-        object->setMesh ( mesh );
-        object->setWorldTransform ( transform );
-        object->setMaterial ( "mesh_base", "*" );
-
-        return object;
-}
-
 int AppWorldLogic::createAnimal ( Animal * animal )
 {
 
@@ -173,6 +161,8 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
                 temporaryMesh->getProperty()->getParameterPtr ( "id" )->setValue ( animal->getID() );
                 ComponentSystem::get()->getComponent<GAnimal> ( temporaryMesh )->setAnimal ( animal );
+
+                temporaryMesh->setParent ( World::getNodeByName ( "AgentSwitcher" ) );
 
                 animalMesh.push_back ( temporaryMesh );
 

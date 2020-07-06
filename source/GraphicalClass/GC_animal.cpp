@@ -24,8 +24,7 @@ using namespace std;
 REGISTER_COMPONENT ( GAnimal );
 
 void GAnimal::init()
-{
-}
+{}
 
 void GAnimal::update()
 {

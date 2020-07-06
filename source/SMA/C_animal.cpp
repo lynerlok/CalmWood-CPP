@@ -24,7 +24,7 @@ Animal::Animal ( int newId,
         id = newId;
         name = newName;
         lifeCycle = newlifeCycle;
-        
+
         moveProbability = newprobabilities[0];
         eatProbability = newprobabilities[1];
         growthProbability = newprobabilities[2];

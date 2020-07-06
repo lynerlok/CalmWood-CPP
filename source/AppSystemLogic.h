@@ -45,9 +45,6 @@ protected :
     vector<Animal *>::iterator agentAnimal;
     vector<Plant *>::iterator agentPlant;
 
-    Animal * animal;
-    Plant * plant;
-
     int deadCount = 0;
     int spawnCount = 0;
 
@@ -60,7 +57,7 @@ protected :
     int PlantDensity = 1;
     int MaxDailyRun = 1; // 10
     int MaxDayMonth = 2; // 30
-    int MaxTimeSimulation = 4; // 12
+    int MaxTimeSimulation = 1; // 12
     int RunDuration = 1;
 
     const int MonthDuration = MaxDayMonth * MaxDailyRun;
@@ -76,3 +73,4 @@ protected :
 };
 
 #endif // __APP_SYSTEM_LOGIC_H__
+

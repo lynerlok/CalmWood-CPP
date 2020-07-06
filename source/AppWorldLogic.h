@@ -73,9 +73,6 @@ private:
 
     float ifps = 0.0f;
 
-    // method creating a box
-    ObjectMeshDynamicPtr create_box ( const Mat4 &transform, const vec3 &size );
-
 };
 
 #endif // __APP_WORLD_LOGIC_H__
