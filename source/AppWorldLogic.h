@@ -51,11 +51,11 @@ private:
     PlayerDummyPtr player;
     LightWorldPtr sun;
 
-    vector<ObjectMeshStaticPtr> animalMesh;
-    vector<ObjectMeshStaticPtr> plantMesh;
+    vector<ObjectMeshSkinnedPtr> animalMesh;
+    vector<ObjectMeshSkinnedPtr> plantMesh;
     vector<Animal *> animals;
     vector<Plant *> plants;
-    vector<ObjectMeshStaticPtr>::iterator agent;
+    vector<ObjectMeshSkinnedPtr>::iterator agent;
     vector<Animal *>::iterator agentAnimal;
     vector<Plant *>::iterator agentPlant;
 
@@ -67,7 +67,7 @@ private:
 
     std::string meshPathStr;
     const char *meshPathConst;
-    ObjectMeshStaticPtr temporaryMesh;
+    ObjectMeshSkinnedPtr temporaryMesh;
     PropertyPtr property;
     PropertyParameterPtr param;
 

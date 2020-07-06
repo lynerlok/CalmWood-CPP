@@ -147,7 +147,7 @@ int AppWorldLogic::createAnimal ( Animal * animal )
                 meshPathStr = "animals_assets/" + animal->getName() + "_MESH.mesh" ;
                 meshPathConst = meshPathStr.c_str();
 
-                temporaryMesh = ObjectMeshStatic::create ( meshPathConst );
+                temporaryMesh = ObjectMeshSkinned::create ( meshPathConst );
 
                 direction = runRNG ( -180,180 );
 
