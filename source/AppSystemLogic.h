@@ -53,7 +53,7 @@ protected :
 
     vector<int> location = {0,0};
 
-    int MaxNumberAgent = 10; // 100
+    int MaxNumberAgent = 50; // 100
     int PlantDensity = 1;
     int MaxDailyRun = 1; // 10
     int MaxDayMonth = 2; // 30

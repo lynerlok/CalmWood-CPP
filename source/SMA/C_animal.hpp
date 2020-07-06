@@ -2,6 +2,7 @@
 #define __C_ANIMALS_H_INCLUDED__
 
 class Environment;
+class Plant;
 
 class Animal
 {
@@ -94,7 +95,7 @@ protected :
         int detection ( Environment * environment );
 
         // Action step
-        virtual int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs ) = 0;
+        virtual int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs ) = 0;
 
         int move ( Environment * environment );
         int moveTowards ( Environment * environment, int X, int Y );
@@ -121,7 +122,7 @@ public :
                      ) : Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn, newSpawnNumber ) {}
         ~Leucorrhinia() {};
 protected :
-        int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
 
 };
 
@@ -131,7 +132,7 @@ public :
         Hyla ( int id = 1, std::string newName = "Hyla" ) :Animal ( id, newName ) {}
         ~Hyla() {};
 protected :
-        int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+       int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
 };
 
 class Phengaris: public Animal
@@ -140,7 +141,7 @@ public :
         Phengaris ( int id = 2, std::string newName = "Phengaris" ) :Animal ( id, newName ) {}
         ~Phengaris() {};
 protected :
-        int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
 };
 
 class Zootoca: public Animal
@@ -149,7 +150,7 @@ public :
         Zootoca ( int id = 3, std::string newName = "Zootoca" ) :Animal ( id, newName ) {}
         ~Zootoca() {};
 protected :
-        int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
 };
 
 class Vipera: public Animal
@@ -158,7 +159,7 @@ public :
         Vipera ( int id = 4, std::string newName = "Vipera" ) :Animal ( id, newName ) {}
         ~Vipera() {};
 protected :
-        int decision ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimal, std::unordered_map<int,int> * VisiblePlants, std::vector<int> * CellSpecs );
+        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimal, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
 };
 
 #endif // __C_ANIMALS_H_INCLUDED__
