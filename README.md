@@ -96,4 +96,10 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 23. Review attack !!
 
-24. **BUG** DEAD !! SIGSEV
+24. ~~**BUG** DEAD !! SIGSEV~~
+
+25. Rework detection + decision ==> collecter ttes les cases
+
+26. Ajouter biologie en fonction de l'environnement
+
+27. Gérer plantes

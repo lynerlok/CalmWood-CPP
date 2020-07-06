@@ -80,18 +80,9 @@ std::unordered_multimap<int, Animal *> Cell::getCellContentAnimals()
     return AnimalCellContent;
 }
 
-std::unordered_map<int,int> Cell::getCellContentPlants()
+std::unordered_multimap<int, Plant *> Cell::getCellContentPlants()
 {
-
-    std::unordered_map<int,int> ContentPlants;
-
-    for ( int i = 0; i < constants::numberOfSpeciesPlant; ++i )
-    {
-        ContentPlants.emplace ( 0,PlantCellContent.count ( 0 ) );
-    }
-
-    return ContentPlants;
-
+    return PlantCellContent;
 }
 
 std::vector<int> Cell::getCellContentSpecs()

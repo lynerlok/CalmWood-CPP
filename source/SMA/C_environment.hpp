@@ -33,7 +33,7 @@ public :
     int addPlant ( int ID, Plant * plant );
 
     std::unordered_multimap<int, Animal *> getCellContentAnimals();
-    std::unordered_map<int,int> getCellContentPlants();
+    std::unordered_multimap<int, Plant *> getCellContentPlants();
     std::vector<int> getCellContentSpecs();
 
     int toggleTrees();
