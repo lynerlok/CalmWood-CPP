@@ -202,7 +202,7 @@ int AppSystemLogic::shutdown()
 {
         // Write here code to be called on engine shutdown.
 
-        cout << "Some statistics on the simulation" << endl;
+        cout  << "Some statistics on the simulation" << endl;
 
         cout << "Number of death ( animals ) : " << deadCount << endl;
         cout << "Number of birth ( animals ) : " << spawnCount << endl;
