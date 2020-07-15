@@ -94,7 +94,7 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 22. ~~Si rien de plus dans animal.run ( que detection ) supprimer animal.run au profit d'animal.detection~~
 
-23. Review attack !!
+23. ~~Review attack !!~~
 
 24. ~~**BUG** DEAD !! SIGSEV~~
 
@@ -103,3 +103,5 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 26. Ajouter biologie en fonction de l'environnement
 
 27. Gérer plantes
+
+28. Faire le cahier de maintenance ( comment ajouter des animaux modifier params... )
