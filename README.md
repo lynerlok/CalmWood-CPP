@@ -30,7 +30,7 @@ To build this project with unigine ( development version or release ) :
 
 3. Clone or download this repository
 
-4. Download data directory here ( **Link coming soon** )
+4. Download data directory here : https://mega.nz/file/CkFUGCDQ#RcxpSiuLujGpGRwpN4btNa_1vEZ7lLRCQRbP_uCs5nU
 
 5. Run unigine browser and sign in
 
