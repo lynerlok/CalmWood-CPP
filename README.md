@@ -1,10 +1,23 @@
-# CalmWood-CPP
+# ROS video game
+
+# This future video game use V2E ( Virtual Ecosystem Engine )
+
+# V2E is in the source folder named "V2E"
 
 WINDOWS AND LINUX ONLY. Unfortunaly, no unigine sdk is compatible with macOS.
 
-CPP files for multi agent system module
-
 /!\ data directory is missing to avoid heavy GIT project !
+
+/!\ This is a very early project with no good graphics optimization and only a debug ( development ) version !   
+
+Hardware in use to build and run the simulation :
+
+* GPU : MSI Gaming X TRIO 2080 TI
+* CPU : AMD Ryzen 9 3950X 3.5 Ghz, 8 cores, 16 threads
+* RAM : Corsair LPX Vengeance 3200 MHz 32 Gio
+* OS : Linux version 5.7.7-200.fc32.x86_64 (mockbuild@bkernel01.iad2.fedoraproject.org) (gcc version 10.1.1 20200507 (Red Hat 10.1.1-1) (GCC), GNU ld version 2.34-3.fc32) #1 SMP Wed Jul 1 19:53:01 UTC 2020  
+
+Please report your configuration in case of issue.
 
 
 # DEV BUILD INSTRUCTIONS
@@ -50,58 +63,20 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 # TO DO LIST
 
-1. ~~Enlever "Dead" depuis "Move" ( remove statiety index from move move towards )~~
+1. Probabilities correction.
 
-2. ~~Faire un README~~
+2. Texturing.
 
-3. ~~Décrémenter satiety index à chaque decision~~
+3. User interface.
 
-4. ~~Check RNG, si on prend bien tout les animaux par RUN~~
+4. System Integration.
 
-5. ~~1 détection = 1 décision ( éviter les loop si movProba = 100 )~~
+5. Special animation than land/take off.
 
-6. ~~Multiple spawn + implémenter correctement spawn GUI~~
+6. Add other animals.
 
-7. ~~GUI déplacement non aléatoire~~
+7. Plants and Cells better integration.
 
-8. ~~GUI déplacement aléatoire~~
+18. User Interface.
 
-9. ~~Vérifier si protéger territoire est cohérent~~
-
-10. Affiner proba 
-
-11. ~~GUI remove dead animal ( world --> delete animal system call world->deleteAnimal )~~
-
-12. ~~Réduire amplitude en Z~~
-
-13. ~~Bool isMoving dans GC_environment : while true = déplacement non aléatoire, while false = déplacement aléatoire~~
-
-14. ~~Birth Date pour changer d'état ( State Date ) ==> relié avec 6 si on passe de 0 à 1 invoquer createGUIAnimal !~~
-
-15. ~~Supprimer les proba inutiles~~
-
-16. Texture animal
-
-17. Faire des tiles avec maisons, forêt, marais, bord de marais
-
-18. Interface user
-
-19. ~~Passer tout les agents par RUN ???~~
-
-20. Animation animal ( vol + se poser )
-
-21. Animation auxiliaire ( attaquer,... )
-
-22. ~~Si rien de plus dans animal.run ( que detection ) supprimer animal.run au profit d'animal.detection~~
-
-23. ~~Review attack !!~~
-
-24. ~~**BUG** DEAD !! SIGSEV~~
-
-25. ~~Rework detection + decision ==> collecter ttes les cases~~
-
-26. Ajouter biologie en fonction de l'environnement
-
-27. Gérer plantes
-
-28. Faire le cahier de maintenance ( comment ajouter des animaux modifier params... )
+19. Optimization ( graphical and code )

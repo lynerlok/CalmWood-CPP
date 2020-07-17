@@ -45,7 +45,7 @@ protected :
         float X = 0.0f;
         float Y = 0.0f;
 
-        float movement_speed = 5.0f;
+        float movement_speed = 3.0f;
         float angleMultiplicator = 1.2f;
         float angle = 0.0f;
 

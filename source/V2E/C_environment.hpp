@@ -100,7 +100,7 @@ protected :
     float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
     
     // map, action field
-    const unsigned int mapLength = 50;
+    const unsigned int mapLength = 20;
 
     MAP map{mapLength};
 

@@ -112,7 +112,7 @@ class Leucorrhinia: public Animal
 {
 public :
         Leucorrhinia ( int id = 0,
-                       std::string newName = "Leucorrhinia",
+                       std::string newName = "leucorrhinia",
                        std::vector<unsigned int> lifeCycle = {1,24,1},
                        std::vector<int> probabilities = {100,0,0,0,50,0,0,60},
                        std::vector<int> detectionRadius = {1,1,2},
@@ -129,7 +129,7 @@ protected :
 class Hyla: public Animal
 {
 public :
-        Hyla ( int id = 1, std::string newName = "Hyla" ) :Animal ( id, newName ) {}
+        Hyla ( int id = 1, std::string newName = "hyla" ) :Animal ( id, newName ) {}
         ~Hyla() {};
 protected :
        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
@@ -138,7 +138,7 @@ protected :
 class Phengaris: public Animal
 {
 public :
-        Phengaris ( int id = 2, std::string newName = "Phengaris" ) :Animal ( id, newName ) {}
+        Phengaris ( int id = 2, std::string newName = "phengaris" ) :Animal ( id, newName ) {}
         ~Phengaris() {};
 protected :
         int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
@@ -147,7 +147,7 @@ protected :
 class Zootoca: public Animal
 {
 public :
-        Zootoca ( int id = 3, std::string newName = "Zootoca" ) :Animal ( id, newName ) {}
+        Zootoca ( int id = 3, std::string newName = "zootoca" ) :Animal ( id, newName ) {}
         ~Zootoca() {};
 protected :
         int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
@@ -156,7 +156,7 @@ protected :
 class Vipera: public Animal
 {
 public :
-        Vipera ( int id = 4, std::string newName = "Vipera" ) :Animal ( id, newName ) {}
+        Vipera ( int id = 4, std::string newName = "vipera" ) :Animal ( id, newName ) {}
         ~Vipera() {};
 protected :
         int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );

@@ -30,10 +30,10 @@
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
 
-#include "SMA/U_randomGenerator.hpp"
-#include "SMA/C_animal.hpp"
-#include "SMA/C_plant.hpp"
-#include "SMA/C_environment.hpp"
+#include "V2E/U_randomGenerator.hpp"
+#include "V2E/C_animal.hpp"
+#include "V2E/C_plant.hpp"
+#include "V2E/C_environment.hpp"
 
 #include "ComponentSystem/ComponentSystem.h"
 
@@ -144,16 +144,26 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
         if ( animal->getGrowthState() == 2 ) {
 
-                meshPathStr = "animals_assets/" + animal->getName() + "_MESH.mesh" ;
+                meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/" + animal->getName() + ".mesh" ;
                 meshPathConst = meshPathStr.c_str();
 
                 temporaryMesh = ObjectMeshSkinned::create ( meshPathConst );
 
+                meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/A_" + animal->getName() + ".anim" ;
+
+                temporaryMesh->setAnimation ( 0, meshPathStr.c_str() );
+                
+                temporaryMesh->setSpeed(60.0f);
+                
+                temporaryMesh->play();
+
+                temporaryMesh->setLoop ( 1 );
+
                 direction = runRNG ( -180,180 );
 
                 agentLocation = animal->getLocation();
-
-                temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], getFloat ( 1, 3 ) ) );
+                
+                temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], 0.5f ) );
 
                 temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f, 0.0f, 1.0f ) );
 
@@ -170,3 +180,4 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
         return 0;
 }
+

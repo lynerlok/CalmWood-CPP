@@ -30,10 +30,10 @@
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
 
-#include "SMA/U_randomGenerator.hpp"
-#include "SMA/C_animal.hpp"
-#include "SMA/C_plant.hpp"
-#include "SMA/C_environment.hpp"
+#include "V2E/U_randomGenerator.hpp"
+#include "V2E/C_animal.hpp"
+#include "V2E/C_plant.hpp"
+#include "V2E/C_environment.hpp"
 
 #include "ComponentSystem/ComponentSystem.h"
 

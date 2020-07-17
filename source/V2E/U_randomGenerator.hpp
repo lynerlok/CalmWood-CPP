@@ -52,14 +52,9 @@ inline std::vector<float> getDirection ( int lower, int upper )
     srand (static_cast <unsigned> (time(0)));
     
     for ( int i = 0; i < 3; ++i )
-        vector.push_back ( lower + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(upper-lower))) );
+        vector.push_back ( lower + static_cast <float> (rand()) / ( static_cast <float> (RAND_MAX/(upper-lower))) );
 
     return vector ;
 }
 
-inline float getFloat ( int lower, int upper )
-{
-    srand((unsigned int)time(NULL));
-    return (float(rand())/float((RAND_MAX)) * upper) + lower;
-}
 #endif // __RANDOMUTILS_H_INCLUDED__ 

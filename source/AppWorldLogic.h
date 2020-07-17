@@ -58,6 +58,7 @@ private:
     vector<ObjectMeshSkinnedPtr>::iterator agent;
     vector<Animal *>::iterator agentAnimal;
     vector<Plant *>::iterator agentPlant;
+    MeshPtr mesh;
 
     GAnimal * animal;
     GPlant * plant;

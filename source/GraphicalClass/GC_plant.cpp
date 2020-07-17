@@ -9,7 +9,7 @@
 #include <UnigineControls.h>
 #include <UnigineConsole.h>
 #include <UnigineRender.h>
-#include "../SMA/C_plant.hpp"
+#include "../V2E/C_plant.hpp"
 
 #include "../ComponentSystem/ComponentSystem.h"
 
