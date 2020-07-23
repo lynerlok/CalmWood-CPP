@@ -44,7 +44,7 @@ I make a custom CmakeList.txt in the repository, is usualy the best option to bu
 
 In Kdevelop open project by choosing `"source" directory in the repository` as project directory.
 
-Choose CMakeLists.txt as project manager
+Choose CMakeLists.txt as project manager then choose `"build" directory in the root of the project` and set extra options with `-S ../source/`
 
 In the `run menu` choose `configure launches`
 
