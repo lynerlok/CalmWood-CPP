@@ -12,103 +12,114 @@ typedef std::vector<std::vector<Cell*>> MAP;
 class Cell
 {
 public :
-    Cell ( int newX = 0, int newY = 0 )
-    {
-        X = newX;
-        Y = newY;
-    };
-    ~Cell()
-    {
-        AnimalCellContent.clear();
-        PlantCellContent.clear();
-    };
+        Cell ( int newX = 0, int newY = 0 )
+        {
+                X = newX;
+                Y = newY;
+        };
+        ~Cell()
+        {
+                AnimalCellContent.clear();
+                PlantCellContent.clear();
+        };
 
-    int setViability ( bool newViability );
+        int setViability ( bool newViability );
 
-    bool getViabilityBoolean();
+        bool getViabilityBoolean();
 
-    int addAnimal ( int ID, Animal * animal );
-    int removePlant ( int ID, Plant * plant );
-    int removeAnimal ( int ID, Animal * animal );
-    int addPlant ( int ID, Plant * plant );
+        int addAnimal ( int ID, Animal * animal );
+        int removePlant ( int ID, Plant * plant );
+        int removeAnimal ( int ID, Animal * animal );
+        int addPlant ( int ID, Plant * plant );
 
-    std::unordered_multimap<int, Animal *> getCellContentAnimals();
-    std::unordered_multimap<int, Plant *> getCellContentPlants();
-    std::vector<int> getCellContentSpecs();
+        std::unordered_multimap<int, Animal *> getCellContentAnimals();
+        std::unordered_multimap<int, Plant *> getCellContentPlants();
+        std::vector<int> getCellContentSpecs();
 
-    int toggleTrees();
-    int toggleAnthropization();
-    int toggleWetland();
+        int toggleTrees();
+        int toggleAnthropization();
+        int toggleWetland();
 
 protected :
 
-    int X = 0;
-    int Y = 0;
+        int X = 0;
+        int Y = 0;
 
-    int viability = 1;
-    int containTrees = 0;
-    int containAnthropization = 0;
-    int containWetland = 1;
-    int isWater = 0;
+        int viability = 1;
+        int containTrees = 0;
+        int containAnthropization = 0;
+        int containWetland = 1;
+        int isWater = 0;
 
-    int waterEutrophisationRate = 0;
-    int waterPlantClosedRate = 0;
-    int sunExpositionRate = 60;
+        int waterEutrophisationRate = 0;
+        int waterPlantClosedRate = 0;
+        int sunExpositionRate = 60;
 
-    std::unordered_multimap<int, Animal *> AnimalCellContent;
-    std::unordered_multimap<int, Plant *> PlantCellContent;
+        std::unordered_multimap<int, Animal *> AnimalCellContent;
+        std::unordered_multimap<int, Plant *> PlantCellContent;
 
 };
 
 class Environment
 {
 public :
-    Environment ();
-    ~Environment ();
- 
-    int setTemperature ( float newTemperature );
+        Environment ();
+        ~Environment ();
 
-    int setHygrometry ( float newHygrometry );
+        int setTemperature ( float newTemperature );
 
-    int setAntropization ( float newAntropizationRate );
+        int setHygrometry ( float newHygrometry );
 
-    int initializeEnvironmentMAP();
+        int setAntropization ( float newAntropizationRate );
 
-    int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
+        int initializeEnvironmentMAP();
 
-    unsigned int getTimeOfDay();
+        int setEnvironmentParameters ( float newTemperature, float newHygrometry, float newAntropizationRate );
 
-    unsigned int setTimeOfDay ( int newTimeOfDay );
+        unsigned int getTimeOfDay();
 
-    unsigned int setMonth ( int newMonthOfYear );
+        int setTimeOfDay ( unsigned int newTimeOfDay );
 
-    unsigned int getMonth();
+        int setMonth ( unsigned int newMonthOfYear );
 
-    unsigned int getOriginDayTime();
+        unsigned int getMonth();
 
-    unsigned int getOriginMonth();
+        unsigned int getOriginDayTime();
 
-    std::vector<float> getEnvironmentParameters();
+        unsigned int getOriginMonth();
 
-    const unsigned int getMapLength();
+        unsigned int getOriginYear();
 
-    Cell * getCell ( int x, int y );
+        int setYear ( unsigned int newYear );
+        
+        unsigned int getYear();
+
+        std::vector<float> getEnvironmentParameters();
+
+        const unsigned int getMapLength();
+
+        Cell * getCell ( int x, int y );
+
+        const int numberOfSpeciesAnimal = 5;
+        const int numberOfSpeciesPlant = 1;
 
 protected :
-    float temperature = 0.0;
-    float hygrometry = 0.0 ;
-    float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
-    
-    // map, action field
-    const unsigned int mapLength = 20;
+        float temperature = 0.0;
+        float hygrometry = 0.0 ;
+        float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
 
-    MAP map{mapLength};
+        // map, action field
+        const unsigned int mapLength = 20;
 
-    unsigned int timeOfDay = 12; // In hours always % 24
-    unsigned int monthOfYear = 6; // Always % 12
+        MAP map{mapLength};
 
-    const unsigned int originTimeOfDay = timeOfDay;
-    const unsigned int originMonth = monthOfYear;
+        unsigned int timeOfDay = 12; // In hours always % 24
+        unsigned int monthOfYear = 6; // Always % 12
+        unsigned int yearOfSimulation = 2020; // 2100 max
+
+        const unsigned int originTimeOfDay = timeOfDay;
+        const unsigned int originMonth = monthOfYear;
+        const unsigned int originYear = yearOfSimulation;
 
 };
 

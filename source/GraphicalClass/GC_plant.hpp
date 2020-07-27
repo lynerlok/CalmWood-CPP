@@ -18,9 +18,9 @@ public :
     
     PROP_PARAM(String, name, "Plant");
     
-    Plant *plant;
-
 protected :
+    
+    Plant *plant;
     
     void init();
     void update();

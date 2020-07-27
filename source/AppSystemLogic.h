@@ -53,15 +53,17 @@ protected :
 
     vector<int> location = {0,0};
 
-    int MaxNumberAgent = 50; // 100
-    int PlantDensity = 1;
+    int MaxNumberAgentAnimal = 50; // The max number of agent for the most large specie.
+    std::vector<float> MaxNumberAgentByTypeAnimal = {1.0f,1.0f,1.0f,1.0f,1.0f}; // MaxNumberAgentAnimal multiplicator !
+    int MaxNumberAgentPlant = 10;
+    std::vector<float> MaxNumberAgentByTypePlant = {1.0f,1.0f,1.0f,1.0f,1.0f}; // MaxNumberAgentPlant multiplicator !
     int MaxDailyRun = 1; // 10
     int MaxDayMonth = 2; // 30
     int MaxTimeSimulation = 1; // 12
     int RunDuration = 1;
 
     const int MonthDuration = MaxDayMonth * MaxDailyRun;
-    const int SimulationDuration = MaxNumberAgent * MaxTimeSimulation * MaxDayMonth * MaxDailyRun;
+    const int SimulationDuration = MaxNumberAgentAnimal * MaxTimeSimulation * MaxDayMonth * MaxDailyRun;
     const int AddDayTime = 24 / MaxDailyRun;
 
     float runTime = RunDuration;

@@ -64,57 +64,47 @@ int AppSystemLogic::init()
 
         const unsigned int mapLength = environment.getMapLength();
 
-        auto initAnimals = [&] ( Environment * environment ) {
+        vector<Animal *> newAnimals = { new Leucorrhinia() }; // , new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
+        vector<Plant *> newPlants = { new Gentiania() };
 
-                vector<Animal *> newAnimals = { new Leucorrhinia() }; // , new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
+        for ( int specie = 0 ; specie < newAnimals.size(); ++specie ) {
 
-                for ( int animal = 0; animal < newAnimals.size(); ++animal ) {
+                for ( int animal=0; animal < MaxNumberAgentAnimal * MaxNumberAgentByTypeAnimal[specie] ; ++animal ) {
 
-                        for ( int i = 0; i < 2; ++i ) {
-                                location[i] = runRNG ( 0,mapLength-1 );
-                        }
+                        for ( int i = 0; i < 2; ++i )
+                                location[i] = runRNG ( 0, mapLength-1 );
 
                         ( *newAnimals[animal] ).setLocation ( location );
                         ( *newAnimals[animal] ).setOldLocation ( location );
 
-                        ( *environment ).getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
+                        environment.getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
 
                         animals.push_back ( newAnimals[animal] );
-
                 }
-
-        };
-
-        auto initPlants = [&] ( Environment * environment ) {
-//                 vector<Plant *> newPlants = { new Gentiania(), new Juncus(), new Glyceria(), new Carex(), new Iris() };
-//
-//                 for ( int plant = 0; plant < newPlants.size(); ++plant ) {
-//
-//                         for ( int i = 0; i < 3; ++i ) {
-//                                 location[i] = runRNG ( 0,mapLength-1 );
-//                         }
-//
-//                         ( *newPlants[plant] ).setLocation ( location );
-//                         ( *environment ).getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
-//
-//                         ( *plants ).push_back ( newPlants[plant] );
-//                 }
-
-        };
-
-        for ( int agent=0; agent < MaxNumberAgent; ++agent ) {
-                initAnimals ( &environment );
         }
 
-//     for ( int agent=0; agent < PlantDensity; ++agent ) {
-//         initPlants ( &environment );
-//     }
+        for ( int specie = 0 ; specie < newPlants.size(); ++specie ) {
+
+                for ( int plant = 0; plant <  MaxNumberAgentPlant * MaxNumberAgentByTypePlant[specie]; ++plant ) {
+
+                        for ( int i = 0; i < 2; ++i ) {
+                                location[i] = runRNG ( 0, mapLength-1 );
+                        }
+
+                        ( *newPlants[plant] ).setLocation ( location );
+                        environment.getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
+
+                        plants.push_back ( newPlants[plant] );
+                }
+        }
 
         runShuffle ( &animals );
 
         agentAnimal = animals.begin();
 
-        //  runShuffle ( &plants );
+        runShuffle ( &plants );
+
+        agentPlant = plants.begin();
 
         environment.setEnvironmentParameters ( 25,0.5,0.7 );
 
@@ -176,6 +166,9 @@ int AppSystemLogic::update()
                 }
 
                 if ( monthTime < 0.0f ) {
+                        if ( environment.getMonth() + 1 > 12 )
+                                environment.setYear ( ( environment.getYear() + 1 ) % 2100 );
+
                         environment.setMonth ( ( environment.getMonth() + 1 ) % 12 );
                         monthTime = MonthDuration;
                 }
@@ -207,7 +200,7 @@ int AppSystemLogic::shutdown()
         cout << "Number of death ( animals ) : " << deadCount << endl;
         cout << "Number of birth ( animals ) : " << spawnCount << endl;
 
-        cout << "Number of Leucorrhinia at simulation start : " << MaxNumberAgent << endl;
+        cout << "Number of Leucorrhinia at simulation start : " << MaxNumberAgentAnimal * MaxNumberAgentByTypeAnimal[0] << endl;
 
         int LeucorrhiniaCount = 0;
 
