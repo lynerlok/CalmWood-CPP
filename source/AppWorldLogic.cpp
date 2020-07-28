@@ -92,8 +92,8 @@ int AppWorldLogic::update()
 
         // show game info
         label->setText ( String::format (
-                                 "Components: %d\n, Temperature : %f, Hygrometry : %f, Antrhopization rate : %f\n, Time of day : %d, Month : %d, Year : %d",
-                                 ComponentSystem::get()->getNumComponents(), 
+                                 "Number of Leucorrhinia : %d\nTemperature : %f\nHygrometry : %f\nAntrhopization rate : %f\nTime of day : %d, Month : %d, Year : %d",
+                                 getAnimalCount(0), 
                                  systemlogic_ptr->environment.getEnvironmentParameters()[0],
                                  systemlogic_ptr->environment.getEnvironmentParameters()[1],
                                  systemlogic_ptr->environment.getEnvironmentParameters()[2],
@@ -184,4 +184,14 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
         return 0;
 }
+
+int AppWorldLogic::getAnimalCount ( int id )
+{
+    int count = -1;
+    for ( int animal = 0; animal < systemlogic_ptr->animals.size(); ++animal)
+        if ( systemlogic_ptr->animals[animal]->getID() == id )
+            ++count;
+    return count;
+}
+
 

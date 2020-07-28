@@ -300,3 +300,13 @@ int AppSystemLogic::spawn ( Animal * animal )
         return 0;
 }
 
+int AppSystemLogic::getDeadCount()
+{
+    return deadCount;
+}
+
+int AppSystemLogic::getSpawnCount()
+{
+    return spawnCount;
+}
+

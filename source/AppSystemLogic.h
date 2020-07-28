@@ -40,6 +40,10 @@ public:
     
     vector<Animal *> animals;
     vector<Plant *> plants;
+    
+    int getDeadCount();
+    
+    int getSpawnCount();
 
 protected :
     
@@ -67,4 +71,5 @@ protected :
 };
 
 #endif // __APP_SYSTEM_LOGIC_H__
+
 

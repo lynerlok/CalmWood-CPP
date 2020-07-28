@@ -73,6 +73,8 @@ private:
     PropertyParameterPtr param;
 
     float ifps = 0.0f;
+    
+    int getAnimalCount( int id );
 
 };
 
