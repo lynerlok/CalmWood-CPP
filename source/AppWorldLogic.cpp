@@ -92,11 +92,15 @@ int AppWorldLogic::update()
 
         // show game info
         label->setText ( String::format (
-                                 "Components: %d",
-                                 ComponentSystem::get()->getNumComponents() ).get() );
-
-
-        ifps = Game::getIFps();
+                                 "Components: %d\n, Temperature : %f, Hygrometry : %f, Antrhopization rate : %f\n, Time of day : %d, Month : %d, Year : %d",
+                                 ComponentSystem::get()->getNumComponents(), 
+                                 systemlogic_ptr->environment.getEnvironmentParameters()[0],
+                                 systemlogic_ptr->environment.getEnvironmentParameters()[1],
+                                 systemlogic_ptr->environment.getEnvironmentParameters()[2],
+                                 systemlogic_ptr->environment.getTimeOfDay(),
+                                 systemlogic_ptr->environment.getMonth(),
+                                 systemlogic_ptr->environment.getYear()
+                                        ).get());
 
         return 1;
 }

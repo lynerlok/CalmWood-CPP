@@ -69,7 +69,7 @@ int AppSystemLogic::init()
 
         for ( int specie = 0 ; specie < environment.numberOfSpeciesAnimal; ++specie ) {
 
-                for ( int animal = 0; animal <= environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[specie]; ++animal ) {
+                for ( int animal = 0; animal < environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[specie]; ++animal ) {
 
                         switch ( specie ) {
                         case 0 :
@@ -134,7 +134,7 @@ int AppSystemLogic::init()
                 }
 
         }
-        
+
         runShuffle ( &animals );
 
         agentAnimal = animals.begin();
@@ -203,10 +203,14 @@ int AppSystemLogic::update()
                 }
 
                 if ( monthTime < 0.0f ) {
-                        if ( environment.getMonth() + 1 > 12 )
-                                environment.setYear ( ( environment.getYear() + 1 ) % 2100 );
-
-                        environment.setMonth ( ( environment.getMonth() + 1 ) % 12 );
+                    
+                        if ( environment.getMonth() + 1 > 12 ) {
+                                environment.setYear ( environment.getYear() + 1 );
+                                environment.setMonth ( 1 );
+                        } else {
+                            environment.setMonth ( environment.getMonth() + 1 );
+                        }
+                        
                         monthTime = MonthDuration;
                 }
 
@@ -253,9 +257,6 @@ int AppSystemLogic::shutdown()
 
         cout << "Antrhopization at the end of the simulation : " << environment.getEnvironmentParameters() [2] << endl;
 
-//        animals.clear();
-
-//     plants.clear();
         return 1;
 }
 
@@ -263,36 +264,33 @@ int AppSystemLogic::spawn ( Animal * animal )
 {
         Animal * newAnimal;
         vector<int> spawnLocation = animal->getLocation();
+        int id = animal->getID();
 
-        auto createAnimals = [&] () {
+        for ( int i = 0 ; i < animal->getSpawnNumber() ; ++i ) {
+
+                switch ( id ) {
+
+                case 0 :
+                        newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
+                        break;
+                case 1 :
+                        newAnimal = new Hyla();
+                        break;
+                case 2 :
+                        newAnimal = new Phengaris();
+                        break;
+                case 3 :
+                        newAnimal = new Zootoca();
+                        break;
+                case 4 :
+                        newAnimal = new Vipera();
+                        break;
+                }
 
                 newAnimal->setLocation ( spawnLocation );
                 environment.getCell ( spawnLocation[0],spawnLocation[1] )->addAnimal ( newAnimal->getID(), newAnimal );
                 animals.push_back ( newAnimal );
 
-        };
-
-        switch ( animal->getID() ) {
-        case 0 :
-
-                for ( int i = 0 ; i < animal->getSpawnNumber() ; ++i ) {
-                        newAnimal = new Leucorrhinia ( 0, "Leucorrhinia", {1,24,1}, {0,0,0,100,1,20}, {1,1,2}, {1,1,1}, true );
-                        createAnimals();
-                }
-
-                break;
-        case 1 :
-                //  newAnimal = new Hyla();
-                break;
-        case 2 :
-                //  newAnimal = new Phengaris();
-                break;
-        case 3 :
-                //   newAnimal = new Zootoca();
-                break;
-        case 4 :
-                //  newAnimal = new Vipera();
-                break;
         }
 
         animal->setSpawnAbility ( false );
@@ -301,3 +299,4 @@ int AppSystemLogic::spawn ( Animal * animal )
 
         return 0;
 }
+

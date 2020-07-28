@@ -36,11 +36,12 @@ public:
 
     AppWorldLogic *worldlogic_ptr;
 
+    Environment environment;
+    
     vector<Animal *> animals;
     vector<Plant *> plants;
 
 protected :
-    Environment environment;
     
     vector<Animal *>::iterator agentAnimal;
     vector<Plant *>::iterator agentPlant;

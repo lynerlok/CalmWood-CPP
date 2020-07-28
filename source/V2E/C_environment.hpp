@@ -12,16 +12,8 @@ typedef std::vector<std::vector<Cell*>> MAP;
 class Cell
 {
 public :
-        Cell ( int newX = 0, int newY = 0 )
-        {
-                X = newX;
-                Y = newY;
-        };
-        ~Cell()
-        {
-                AnimalCellContent.clear();
-                PlantCellContent.clear();
-        };
+        Cell ( int newX = 0, int newY = 0 );
+        ~Cell();
 
         int setViability ( bool newViability );
 

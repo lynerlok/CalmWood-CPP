@@ -46,7 +46,7 @@ public:
     int removeAnimal ( Animal * animal );
 
 private:
-
+    
     WidgetLabelPtr label;
     PlayerDummyPtr player;
     LightWorldPtr sun;
