@@ -64,40 +64,77 @@ int AppSystemLogic::init()
 
         const unsigned int mapLength = environment.getMapLength();
 
-        vector<Animal *> newAnimals = { new Leucorrhinia() }; // , new Hyla(), new Phengaris(), new Zootoca(), new Vipera() };
-        vector<Plant *> newPlants = { new Gentiania() };
+        Animal * newAnimal;
+        Plant * newPlant;
 
-        for ( int specie = 0 ; specie < newAnimals.size(); ++specie ) {
+        for ( int specie = 0 ; specie < environment.numberOfSpeciesAnimal; ++specie ) {
 
-                for ( int animal=0; animal < MaxNumberAgentAnimal * MaxNumberAgentByTypeAnimal[specie] ; ++animal ) {
+                for ( int animal = 0; animal <= environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[specie]; ++animal ) {
+
+                        switch ( specie ) {
+                        case 0 :
+                                newAnimal = new Leucorrhinia();
+                                break;
+                        case 1 :
+                                newAnimal = new Hyla();
+                                break ;
+                        case 2 :
+                                newAnimal = new Phengaris();
+                                break ;
+                        case 3 :
+                                newAnimal = new Zootoca();
+                                break ;
+                        case 4 :
+                                newAnimal = new Vipera();
+                                break ;
+                        }
 
                         for ( int i = 0; i < 2; ++i )
                                 location[i] = runRNG ( 0, mapLength-1 );
 
-                        ( *newAnimals[animal] ).setLocation ( location );
-                        ( *newAnimals[animal] ).setOldLocation ( location );
+                        newAnimal->setLocation ( location );
+                        newAnimal->setOldLocation ( location );
 
-                        environment.getCell ( location[0],location[1] )->addAnimal ( ( *newAnimals[animal] ).getID(), newAnimals[animal] );
+                        environment.getCell ( location[0],location[1] )->addAnimal ( newAnimal->getID(), newAnimal );
 
-                        animals.push_back ( newAnimals[animal] );
+                        animals.push_back ( newAnimal );
                 }
+
         }
 
-        for ( int specie = 0 ; specie < newPlants.size(); ++specie ) {
+        for ( int specie = 0 ; specie < environment.numberOfSpeciesPlant; ++specie ) {
 
-                for ( int plant = 0; plant <  MaxNumberAgentPlant * MaxNumberAgentByTypePlant[specie]; ++plant ) {
+                for ( int plant = 0; plant <= environment.MaxNumberAgentPlant * environment.MaxNumberAgentByTypePlant[specie]; ++plant ) {
 
-                        for ( int i = 0; i < 2; ++i ) {
-                                location[i] = runRNG ( 0, mapLength-1 );
+                        switch ( specie ) {
+                        case 0 :
+                                newPlant = new Gentiania();
+                                break;
+                        case 1 :
+                                newPlant = new Juncus();
+                                break ;
+                        case 2 :
+                                newPlant = new Glyceria();
+                                break ;
+                        case 3 :
+                                newPlant = new Carex();
+                                break ;
+                        case 4 :
+                                newPlant = new Iris();
+                                break ;
                         }
 
-                        ( *newPlants[plant] ).setLocation ( location );
-                        environment.getCell ( location[0],location[1] )->addPlant ( ( *newPlants[plant] ).getID(), newPlants[plant] );
+                        for ( int i = 0; i < 2; ++i )
+                                location[i] = runRNG ( 0, mapLength-1 );
 
-                        plants.push_back ( newPlants[plant] );
+                        newPlant->setLocation ( location );
+                        environment.getCell ( location[0],location[1] )->addPlant ( newPlant->getID(), newPlant );
+
+                        plants.push_back ( newPlant );
                 }
-        }
 
+        }
+        
         runShuffle ( &animals );
 
         agentAnimal = animals.begin();
@@ -155,7 +192,7 @@ int AppSystemLogic::update()
                         }
 
                         environment.setTimeOfDay ( ( environment.getTimeOfDay() + AddDayTime ) % 24 );
-                        runTime = RunDuration;
+                        runTime = environment.RunDuration;
 
                         ++agentAnimal;
                 }
@@ -200,7 +237,7 @@ int AppSystemLogic::shutdown()
         cout << "Number of death ( animals ) : " << deadCount << endl;
         cout << "Number of birth ( animals ) : " << spawnCount << endl;
 
-        cout << "Number of Leucorrhinia at simulation start : " << MaxNumberAgentAnimal * MaxNumberAgentByTypeAnimal[0] << endl;
+        cout << "Number of Leucorrhinia at simulation start : " << environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[0] << endl;
 
         int LeucorrhiniaCount = 0;
 

@@ -91,7 +91,7 @@ public :
         unsigned int getOriginYear();
 
         int setYear ( unsigned int newYear );
-        
+
         unsigned int getYear();
 
         std::vector<float> getEnvironmentParameters();
@@ -101,7 +101,16 @@ public :
         Cell * getCell ( int x, int y );
 
         const int numberOfSpeciesAnimal = 5;
-        const int numberOfSpeciesPlant = 1;
+        const int numberOfSpeciesPlant = 5;
+
+        const int MaxNumberAgentAnimal = 50; // The max number of agent for the most large specie.
+        const std::vector<float> MaxNumberAgentByTypeAnimal = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // MaxNumberAgentAnimal multiplicator !
+        const int MaxNumberAgentPlant = 10;
+        const std::vector<float> MaxNumberAgentByTypePlant = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // MaxNumberAgentPlant multiplicator !
+        const int MaxDailyRun = 1; // 10
+        const int MaxDayMonth = 2; // 30
+        const int MaxTimeSimulation = 1; // 12
+        const int RunDuration = 1;
 
 protected :
         float temperature = 0.0;
