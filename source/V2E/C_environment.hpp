@@ -91,18 +91,20 @@ public :
         const unsigned int getMapLength();
 
         Cell * getCell ( int x, int y );
+        
+        int mapParser (std::string level);
 
         const int numberOfSpeciesAnimal = 5;
         const int numberOfSpeciesPlant = 5;
 
-        const int MaxNumberAgentAnimal = 50; // The max number of agent for the most large specie.
-        const std::vector<float> MaxNumberAgentByTypeAnimal = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // MaxNumberAgentAnimal multiplicator !
-        const int MaxNumberAgentPlant = 10;
-        const std::vector<float> MaxNumberAgentByTypePlant = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}; // MaxNumberAgentPlant multiplicator !
-        const int MaxDailyRun = 1; // 10
-        const int MaxDayMonth = 2; // 30
-        const int MaxTimeSimulation = 1; // 12
-        const int RunDuration = 1;
+        int MaxNumberAgentAnimal = 0; // The max number of agent for the most large specie.
+        std::vector<float> MaxNumberAgentByTypeAnimal; // MaxNumberAgentAnimal multiplicator !
+        int MaxNumberAgentPlant = 0;
+        std::vector<float> MaxNumberAgentByTypePlant; // MaxNumberAgentPlant multiplicator !
+        int MaxDailyRun = 0;
+        int MaxDayMonth = 0;
+        int MaxTimeSimulation = 0;
+        int RunDuration = 0;
 
 protected :
         float temperature = 0.0;
@@ -110,17 +112,21 @@ protected :
         float antropizationRate = 0.0; // Default a super dry, cold and wild environment :)
 
         // map, action field
-        const unsigned int mapLength = 20;
+        unsigned int mapLength = 0;
 
         MAP map{mapLength};
 
-        unsigned int timeOfDay = 12; // In hours always % 24
-        unsigned int monthOfYear = 6; // Always % 12
-        unsigned int yearOfSimulation = 2020; // 2100 max
+        unsigned int timeOfDay = 0; // In hours always % 24
+        unsigned int monthOfYear = 0; // Always % 12
+        unsigned int yearOfSimulation = 0; // 2100 max
 
         const unsigned int originTimeOfDay = timeOfDay;
         const unsigned int originMonth = monthOfYear;
         const unsigned int originYear = yearOfSimulation;
+        
+        std::unordered_map<std::string, std::string> mapContent;
+        std::vector<std::string> mapCells;
+        std::unordered_map<std::string,std::vector<int>> mapCellsParameters;
 
 };
 

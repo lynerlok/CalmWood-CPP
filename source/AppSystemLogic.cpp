@@ -29,6 +29,7 @@
 #include <UnigineWidgets.h>
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
+#include <UnigineXml.h>
 
 #include "V2E/U_randomGenerator.hpp"
 #include "V2E/C_animal.hpp"
@@ -50,7 +51,7 @@ using namespace Math;
 // System logic, it exists during the application life cycle.
 // These methods are called right after corresponding system script's (UnigineScript) methods.
 
-AppSystemLogic::AppSystemLogic() {}
+AppSystemLogic::AppSystemLogic(){}
 
 AppSystemLogic::~AppSystemLogic() {}
 
@@ -61,7 +62,7 @@ int AppSystemLogic::init()
         cout << "Init system" << endl;
 
         ComponentSystem::get()->initialize();
-
+        
         const unsigned int mapLength = environment.getMapLength();
 
         Animal * newAnimal;
@@ -203,14 +204,14 @@ int AppSystemLogic::update()
                 }
 
                 if ( monthTime < 0.0f ) {
-                    
+
                         if ( environment.getMonth() + 1 > 12 ) {
                                 environment.setYear ( environment.getYear() + 1 );
                                 environment.setMonth ( 1 );
                         } else {
-                            environment.setMonth ( environment.getMonth() + 1 );
+                                environment.setMonth ( environment.getMonth() + 1 );
                         }
-                        
+
                         monthTime = MonthDuration;
                 }
 
@@ -302,11 +303,11 @@ int AppSystemLogic::spawn ( Animal * animal )
 
 int AppSystemLogic::getDeadCount()
 {
-    return deadCount;
+        return deadCount;
 }
 
 int AppSystemLogic::getSpawnCount()
 {
-    return spawnCount;
+        return spawnCount;
 }
 
