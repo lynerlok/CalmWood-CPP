@@ -92,15 +92,16 @@ int AppWorldLogic::update()
 
         // show game info
         label->setText ( String::format (
-                                 "Number of Leucorrhinia : %d\nTemperature : %f\nHygrometry : %f\nAntrhopization rate : %f\nTime of day : %d, Month : %d, Year : %d",
-                                 getAnimalCount(0), 
-                                 systemlogic_ptr->environment.getEnvironmentParameters()[0],
-                                 systemlogic_ptr->environment.getEnvironmentParameters()[1],
-                                 systemlogic_ptr->environment.getEnvironmentParameters()[2],
-                                 systemlogic_ptr->environment.getTimeOfDay(),
+                                 "Number of Leucorrhinia (egg, larvae, adult) : %d, %d, %d\nTemperature : %f\nHygrometry : %f\nAntrhopization rate : %f\nMonth : %d, Year : %d",
+                                 getAnimalCount ( 0,0 ),
+                                 getAnimalCount ( 0,1 ),
+                                 getAnimalCount ( 0,2 ),
+                                 systemlogic_ptr->environment.getEnvironmentParameters() [0],
+                                 systemlogic_ptr->environment.getEnvironmentParameters() [1],
+                                 systemlogic_ptr->environment.getEnvironmentParameters() [2],
                                  systemlogic_ptr->environment.getMonth(),
                                  systemlogic_ptr->environment.getYear()
-                                        ).get());
+                         ).get() );
 
         return 1;
 }
@@ -156,9 +157,9 @@ int AppWorldLogic::createAnimal ( Animal * animal )
                 meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/A_" + animal->getName() + ".anim" ;
 
                 temporaryMesh->setAnimation ( 0, meshPathStr.c_str() );
-                
-                temporaryMesh->setSpeed(60.0f);
-                
+
+                temporaryMesh->setSpeed ( 60.0f );
+
                 temporaryMesh->play();
 
                 temporaryMesh->setLoop ( 1 );
@@ -166,7 +167,7 @@ int AppWorldLogic::createAnimal ( Animal * animal )
                 direction = runRNG ( -180,180 );
 
                 agentLocation = animal->getLocation();
-                
+
                 temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], 0.5f ) );
 
                 temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f, 0.0f, 1.0f ) );
@@ -185,13 +186,15 @@ int AppWorldLogic::createAnimal ( Animal * animal )
         return 0;
 }
 
-int AppWorldLogic::getAnimalCount ( int id )
+int AppWorldLogic::getAnimalCount ( int id, int growthState )
 {
-    int count = -1;
-    for ( int animal = 0; animal < systemlogic_ptr->animals.size(); ++animal)
-        if ( systemlogic_ptr->animals[animal]->getID() == id )
-            ++count;
-    return count;
+        int count = -1;
+
+        for ( int animal = 0; animal < systemlogic_ptr->animals.size(); ++animal )
+                if ( systemlogic_ptr->animals[animal]->getID() == id && systemlogic_ptr->animals[animal]->getGrowthState() == growthState )
+                        ++count;
+
+        return count;
 }
 
 

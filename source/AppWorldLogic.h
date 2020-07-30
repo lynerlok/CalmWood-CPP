@@ -74,7 +74,7 @@ private:
 
     float ifps = 0.0f;
     
-    int getAnimalCount( int id );
+    int getAnimalCount ( int id, int growthState );
 
 };
 

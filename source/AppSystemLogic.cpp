@@ -51,7 +51,7 @@ using namespace Math;
 // System logic, it exists during the application life cycle.
 // These methods are called right after corresponding system script's (UnigineScript) methods.
 
-AppSystemLogic::AppSystemLogic(){}
+AppSystemLogic::AppSystemLogic() {}
 
 AppSystemLogic::~AppSystemLogic() {}
 
@@ -62,7 +62,7 @@ int AppSystemLogic::init()
         cout << "Init system" << endl;
 
         ComponentSystem::get()->initialize();
-        
+
         const unsigned int mapLength = environment.getMapLength();
 
         Animal * newAnimal;
@@ -168,34 +168,37 @@ int AppSystemLogic::update()
                                 agentAnimal = animals.begin();
                         }
 
-                        ( *agentAnimal )->run ( &environment );
+                        for ( int agent = 0; agent < environment.MaxAgentRun; ++agent ) {
 
-                        if ( ( *agentAnimal )->isGrowing() && ( *agentAnimal )->getGrowthState() == 2 ) {
-                                worldlogic_ptr->createAnimal ( ( *agentAnimal ) );
-                                ( *agentAnimal )->growthFinished();
-                        }
+                                ( *agentAnimal )->run ( &environment );
 
-                        if ( ( *agentAnimal )->isDead() ) {
-                                deadCount += 1;
-                                agentAnimal = animals.erase ( agentAnimal );
-
-                                if ( animals.empty() ) {
-                                        simulationEnd = true;
-                                        Log::message ( "STOPING SIMULATION...\n" );
-                                        return 1;
+                                if ( ( *agentAnimal )->isGrowing() && ( *agentAnimal )->getGrowthState() == 2 ) {
+                                        worldlogic_ptr->createAnimal ( ( *agentAnimal ) );
+                                        ( *agentAnimal )->growthFinished();
                                 }
 
-                                --agentAnimal;
+                                if ( ( *agentAnimal )->isDead() ) {
+                                        deadCount += 1;
+                                        agentAnimal = animals.erase ( agentAnimal );
 
-                        } else if ( ( *agentAnimal )->isSpawn() ) {
-                                spawnCount += 1;
-                                spawn ( ( *agentAnimal ) );
+                                        if ( animals.empty() ) {
+                                                simulationEnd = true;
+                                                Log::message ( "STOPING SIMULATION...\n" );
+                                                return 1;
+                                        }
+
+                                        --agentAnimal;
+
+                                } else if ( ( *agentAnimal )->isSpawn() ) {
+                                        spawnCount += 1;
+                                        spawn ( ( *agentAnimal ) );
+                                }
+
+                                runTime = environment.RunDuration;
+
+                                ++agentAnimal;
+                                
                         }
-
-                        environment.setTimeOfDay ( ( environment.getTimeOfDay() + AddDayTime ) % 24 );
-                        runTime = environment.RunDuration;
-
-                        ++agentAnimal;
                 }
 
                 if ( simulationTime < 0.0f ) {
@@ -203,7 +206,7 @@ int AppSystemLogic::update()
                         simulationEnd = true;
                 }
 
-                if ( monthTime < 0.0f ) {
+                if ( timeDuration < 0.0f ) {
 
                         if ( environment.getMonth() + 1 > 12 ) {
                                 environment.setYear ( environment.getYear() + 1 );
@@ -212,12 +215,13 @@ int AppSystemLogic::update()
                                 environment.setMonth ( environment.getMonth() + 1 );
                         }
 
-                        monthTime = MonthDuration;
+                        timeDuration = environment.MaxRunPerRunTime;
+
                 }
 
                 runTime -= ifps;
                 simulationTime -= ifps;
-                monthTime -= ifps;
+                timeDuration -= ifps;
         }
 
         return 1;

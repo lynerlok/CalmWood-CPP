@@ -12,16 +12,11 @@
 
 int Leucorrhinia::decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs )
 {
-
-        int timeOfDay = environment->getTimeOfDay();
         int month = environment->getMonth();
 
-        std::vector<std::vector<int>>::iterator cell = CellSpecs->begin();
-
-        int viability = 0;
-        int wetLand = 0;
         int X = 0;
         int Y = 0;
+        int randomTry = 0;
 
         float temperature = environment->getEnvironmentParameters() [0];
         float hygrometry = environment->getEnvironmentParameters() [1];
@@ -63,39 +58,26 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
         if ( actionProbability < eatProbability )
                 eat();
 
-
-        for ( int cell = 0; cell < CellSpecs->size(); ++cell ) {
-
-                if ( CellSpecs->at ( cell ) [0] == 0 ) {
-
-                        CellSpecs->erase ( CellSpecs->begin() + cell - 1 );
-                        VisibleAnimals->erase ( VisibleAnimals->begin() + cell - 1 );
-                        VisiblePlants->erase ( VisiblePlants->begin() + cell - 1 );
-
-                }
-        }
-
         if ( growthState == 1 ) {
 
                 if ( actionProbability < moveProbability ) {
 
-                        for ( int cell = 0; cell < CellSpecs->size(); ++cell ) {
+                        choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
 
-                                if ( CellSpecs->at ( cell ) [3] == 0 ) {
-
-                                        CellSpecs->erase ( CellSpecs->begin() + cell - 1 );
-                                        VisibleAnimals->erase ( VisibleAnimals->begin() + cell - 1 );
-                                        VisiblePlants->erase ( VisiblePlants->begin() + cell - 1 );
-
-                                }
-
+                        while ( ( CellSpecs->at ( choiceProbability ) [3] == 0 || CellSpecs->at ( choiceProbability ) [0] == 0 ) && randomTry < 10 ) {
+                                choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                                ++randomTry;
                         }
 
-                        choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                        if ( randomTry == 4 ) {
+                                dead ( environment );
+                                return 0;
+                        }
 
                         X, Y = CellSpecs->at ( choiceProbability ) [5], CellSpecs->at ( choiceProbability ) [6];
 
                         moveTowards ( environment, X, Y );
+
                 }
         }
 
@@ -106,6 +88,16 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
                         if ( actionProbability < protectionProbability && month >= 4 && month < 7 && ! protectTerritory ) {
 
                                 choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+
+                                while ( CellSpecs->at ( choiceProbability ) [0] == 0 && randomTry < 10 ) {
+                                        choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                                        ++randomTry;
+                                }
+
+                                if ( randomTry == 4 ) {
+                                        dead ( environment );
+                                        return 0;
+                                }
 
                                 X, Y = CellSpecs->at ( choiceProbability ) [5], CellSpecs->at ( choiceProbability ) [6];
 
@@ -139,20 +131,18 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
 
                         if ( spawnAbility ) {
 
-                                for ( int cell = 0; cell < CellSpecs->size(); ++cell ) {
-
-                                        if ( CellSpecs->at ( cell ) [3] == 0 ) {
-
-                                                CellSpecs->erase ( CellSpecs->begin() + cell - 1 );
-                                                VisibleAnimals->erase ( VisibleAnimals->begin() + cell - 1 );
-                                                VisiblePlants->erase ( VisiblePlants->begin() + cell - 1 );
-
-                                        }
-
-                                }
-
                                 choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
 
+                                while ( ( CellSpecs->at ( choiceProbability ) [3] == 0 || CellSpecs->at ( choiceProbability ) [0] == 0 ) && randomTry < 10 ) {
+                                        choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                                        ++randomTry;
+                                }
+
+                                if ( randomTry == 4 ) {
+                                        dead ( environment );
+                                        return 0;
+                                }
+                                
                                 X, Y = CellSpecs->at ( choiceProbability ) [5], CellSpecs->at ( choiceProbability ) [6];
                                 moveTowards ( environment, X, Y );
                         }
@@ -185,3 +175,4 @@ int Vipera::decision ( Environment * environment, std::vector<std::unordered_mul
 {
         return 0;
 }
+

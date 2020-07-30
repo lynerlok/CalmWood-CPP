@@ -14,10 +14,11 @@
 
 using namespace tinyxml2;
 
-Cell::Cell ( int newX, int newY )
+Cell::Cell ( int newX, int newY, std::string newName )
 {
         X = newX;
         Y = newY;
+        name = newName;
 };
 
 Cell::~Cell()
@@ -26,16 +27,14 @@ Cell::~Cell()
         PlantCellContent.clear();
 };
 
-int Cell::setViability ( bool newViability )
-{
-        viability = newViability;
-        return 0;
-
-}
-
 bool Cell::getViabilityBoolean()
 {
         return viability;
+}
+
+std::string Cell::getName()
+{
+        return name;
 }
 
 int Cell::addAnimal ( int ID, Animal * animal )
@@ -97,31 +96,81 @@ std::vector<int> Cell::getCellContentSpecs()
         return {viability,containTrees,containAnthropization,containWetland,X,Y};
 }
 
-int Cell::toggleTrees()
+int Cell::setTrees ( int status )
 {
-        containTrees = ! containTrees;
+        containTrees = status;
         return 0;
 }
 
-int Cell::toggleAnthropization()
+int Cell::setAnthropization ( int status )
 {
-        containAnthropization = ! containAnthropization;
+        containAnthropization = status;
         return 0;
 }
 
-int Cell::toggleWetland()
+int Cell::setWetland ( int status )
 {
-        containWetland = ! containWetland;
+        containWetland = status;
         return 0;
 }
+
+int Cell::setViability ( int status )
+{
+        viability = status;
+        return 0;
+}
+
+int Cell::setWater ( int status )
+{
+        isWater = status;
+        return 0;
+}
+
+int Cell::setRates ( std::vector<int> rates )
+{
+        if ( rates.size() != 3 ) {
+                waterEutrophisationRate = 0;
+                waterPlantClosedRate = 0;
+                sunExpositionRate = 0;
+                return 0;
+        }
+
+        waterEutrophisationRate = rates[0];
+        waterPlantClosedRate = rates[1];
+        sunExpositionRate = rates[2];
+
+        return 0;
+}
+
 
 Environment::Environment()
 {
-        mapParser("level1");
-        
+        mapParser ( "level1" );
+
+        std::string name;
+        std::vector<int> values;
+
+        std::cout << "Sucessfully parsing XML map" << std::endl;
+
         for ( int x=0; x<mapLength; ++x )
-                for ( int y=0; y<mapLength; ++y )
-                        map[x].push_back ( new Cell ( x,y ) );
+                for ( int y=0; y<mapLength; ++y ) {
+                        try {
+                                name = mapCells.at(x).at(y);
+                                values = mapCellsParameters.at(name);
+                        } catch ( const std::out_of_range& oor ) {
+                                std::cerr << "Cell not found in xml file throw to default values" << oor.what() << '\n';
+                                name = "default";
+                        }
+                        map[x].push_back ( new Cell ( x,y, name ) );
+                        map[x][y]->setTrees(values[0]);
+                        map[x][y]->setAnthropization(values[1]);
+                        map[x][y]->setWetland(values[2]);
+                        map[x][y]->setViability(values[3]);
+                        map[x][y]->setWater(values[4]);
+                        map[x][y]->setRates({values[5],values[6],values[7]});
+                }
+
+        std::cout << "Sucessfully creating virtual map" << std::endl;
 }
 
 Environment::~Environment()
@@ -147,45 +196,34 @@ int Environment::setHygrometry ( float newHygrometry )
         return 0;
 }
 
-int Environment::setAntropization ( float newAntropizationRate )
+int Environment::setAnthropization ( float newAnthropizationRate )
 {
 
-        if ( newAntropizationRate < 0 || newAntropizationRate > 1.0 ) {
-                std::cout << "[DEBUG] antropizationRate are percentage value between 0 and 1" << std::endl;
+        if ( newAnthropizationRate < 0 || newAnthropizationRate > 1.0 ) {
+                std::cout << "[DEBUG] anthropizationRate are percentage value between 0 and 1" << std::endl;
                 return -1;
         }
 
-        antropizationRate = newAntropizationRate;
+        anthropizationRate = newAnthropizationRate;
 
         return 0;
 }
 
 int Environment::setEnvironmentParameters ( float newTemperature,
                 float newHygrometry,
-                float newAntropizationRate )
+                float newAnthropizationRate )
 {
 
         if ( newHygrometry < 0.0 || newHygrometry > 1.0 ||
-                        newAntropizationRate < 0.0 || newAntropizationRate > 1.0 ) {
-                std::cout << "[DEBUG] hygrometry and antropizationRate are percentage value between 0 and 1" << std::endl;
+                        newAnthropizationRate < 0.0 || newAnthropizationRate > 1.0 ) {
+                std::cout << "[DEBUG] hygrometry and anthropizationRate are percentage value between 0 and 1" << std::endl;
                 return -1;
         }
 
         temperature = newTemperature;
         hygrometry = newHygrometry;
-        antropizationRate = newAntropizationRate;
+        anthropizationRate = newAnthropizationRate;
 
-        return 0;
-}
-
-unsigned int Environment::getTimeOfDay()
-{
-        return timeOfDay;
-}
-
-int Environment::setTimeOfDay ( unsigned int newTimeOfDay )
-{
-        timeOfDay = newTimeOfDay;
         return 0;
 }
 
@@ -198,11 +236,6 @@ int Environment::setMonth ( unsigned int newMonthOfYear )
 unsigned int Environment::getMonth()
 {
         return monthOfYear;
-}
-
-unsigned int Environment::getOriginDayTime()
-{
-        return originTimeOfDay;
 }
 
 unsigned int Environment::getOriginMonth()
@@ -229,7 +262,7 @@ unsigned int Environment::getOriginYear()
 std::vector<float> Environment::getEnvironmentParameters()
 {
 
-        std::vector<float> parameters {temperature,hygrometry,antropizationRate};
+        std::vector<float> parameters {temperature,hygrometry,anthropizationRate};
 
         return parameters;
 }
@@ -244,10 +277,10 @@ Cell * Environment::getCell ( int x, int y )
         return map[x][y];
 }
 
-int Environment::mapParser (std::string level)
+int Environment::mapParser ( std::string level )
 {
         XMLDocument doc;
-        std::string filename = "MAP_" + level + ".xml";
+        std::string filename = "data/MAPs/MAP_" + level + ".xml";
         std::string name;
         std::vector<int> cellParameters;
 
@@ -268,39 +301,77 @@ int Environment::mapParser (std::string level)
         temperature = std::stof ( parametersElement->FirstChildElement ( "temperature" )->GetText() );
         hygrometry = std::stof ( parametersElement->FirstChildElement ( "hygrometry" )->GetText() );
         mapLength = std::stoi ( parametersElement->FirstChildElement ( "mapLength" )->GetText() );
-        timeOfDay = std::stoi ( parametersElement->FirstChildElement ( "timeOfDay" )->GetText() );
+        mapLength = mapLength > 300 ? 300 : mapLength;
         monthOfYear = std::stoi ( parametersElement->FirstChildElement ( "monthOfYear" )->GetText() );
+        originMonth = monthOfYear;
         yearOfSimulation = std::stoi ( parametersElement->FirstChildElement ( "year" )->GetText() );
+        originYear = yearOfSimulation;
         MaxNumberAgentAnimal = std::stoi ( parametersElement->FirstChildElement ( "maxnumberagentanimal" )->GetText() );
         MaxNumberAgentPlant = std::stoi ( parametersElement->FirstChildElement ( "maxnumberagentplant" )->GetText() );
-        MaxDailyRun = std::stoi ( parametersElement->FirstChildElement ( "maxdailyrun" )->GetText() );
-        MaxDayMonth = std::stoi ( parametersElement->FirstChildElement ( "maxdaymonth" )->GetText() );
-        MaxTimeSimulation = std::stoi ( parametersElement->FirstChildElement ( "maxtimesimulation" )->GetText() );
-        RunDuration = std::stoi ( parametersElement->FirstChildElement ( "runduration" )->GetText() );
+        MaxAgentRun = std::stoi ( parametersElement->FirstChildElement ( "maxagentperrun" )->GetText() );
+        MaxRunPerRunTime = std::stoi ( parametersElement->FirstChildElement ( "maxrunperruntime" )->GetText() );
+        MaxRunTime = std::stoi ( parametersElement->FirstChildElement ( "maxruntime" )->GetText() );
+        RunDuration = std::stof ( parametersElement->FirstChildElement ( "runduration" )->GetText() );
+        timeType =  parametersElement->FirstChildElement ( "timetype" )->GetText();
 
         for ( XMLElement * agent = agentByTypeAnimal->FirstChildElement ( "value" ); agent != NULL; agent = agent->NextSiblingElement ( "value" ) )
-                MaxNumberAgentByTypeAnimal.push_back ( std::stof(agent->GetText()) );
-        
+                MaxNumberAgentByTypeAnimal.push_back ( std::stof ( agent->GetText() ) );
+
         for ( XMLElement * agent = agentByTypePlant->FirstChildElement ( "value" ); agent != NULL; agent = agent->NextSiblingElement ( "value" ) )
-                MaxNumberAgentByTypePlant.push_back ( std::stof(agent->GetText()) );
-        
-        for ( XMLElement * cell = cellsElement->FirstChildElement ( "cell" ); cell != NULL; cell = cell->NextSiblingElement ( "cell" ) )
-                mapCells.push_back ( cell->FirstChildElement()->GetText() );
+                MaxNumberAgentByTypePlant.push_back ( std::stof ( agent->GetText() ) );
+
+        int cellCounterX = 0, cellCounterY = 0;
+
+        for ( XMLElement * cell = cellsElement->FirstChildElement ( "cell" ); cell != NULL; cell = cell->NextSiblingElement ( "cell" ) ) {
+                if ( cellCounterY >= mapLength ) {
+                        cellCounterX += 1;
+                        cellCounterY = 0;
+                }
+                mapCells[cellCounterX].push_back ( cell->FirstChildElement()->GetText() );
+                ++cellCounterY;
+        }
 
         for ( XMLElement * cell = cellsParametersElement->FirstChildElement ( "Cell" ); cell != NULL; cell = cell->NextSiblingElement ( "Cell" ) ) {
                 name = cell->FirstChildElement ( "name" )->GetText();
-                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "surface" )->GetText() ) );
-                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "viability" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "trees" )->GetText() ) );
-                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "antropized" )->GetText() ) );
+                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "anthropized" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "wetland" )->GetText() ) );
+                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "viability" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "water" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "eutrophisation" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "waterPlantClosed" )->GetText() ) );
                 cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "sunExposition" )->GetText() ) );
+                cellParameters.push_back ( std::stoi ( cell->FirstChildElement ( "surface" )->GetText() ) );
                 mapCellsParameters.emplace ( name, cellParameters );
                 cellParameters.clear();
         }
+
+        std::cout << "Data statistics :" << std::endl;
+        for ( int i = 0 ; i < mapLength; ++i )
+                for ( int j = 0 ; j < mapLength ; ++j )
+                        std::cout << "Cell : " << mapCells[i][j] << std::endl;
+
+        for ( int i = 0 ; i < MaxNumberAgentByTypeAnimal.size(); ++i )
+                std::cout << "Animal (" << typeid ( MaxNumberAgentByTypeAnimal[i] ).name() << ") : " << MaxNumberAgentByTypeAnimal[i] << std::endl;
+
+        for ( int i = 0 ; i < MaxNumberAgentByTypePlant.size(); ++i )
+                std::cout << "Plant (" << typeid ( MaxNumberAgentByTypeAnimal[i] ).name() << ") : " << MaxNumberAgentByTypePlant[i] << std::endl;
+
+        std::cout << "Level : " << mapContent.find ( "level" )->second << std::endl;
+        std::cout << "Difficulty : " << mapContent.find ( "difficulty" )->second << std::endl;
+
+        std::cout << "Temperature : " << temperature << std::endl;
+        std::cout << "Hygrometry : " << hygrometry << std::endl;
+        std::cout << "MapLength : " << mapLength << std::endl;
+        std::cout << "Month : " << monthOfYear << std::endl;
+        std::cout << "Year : " << yearOfSimulation << std::endl;
+        std::cout << "Max number agent animal : " << MaxNumberAgentAnimal << std::endl;
+        std::cout << "Max number agent plant : " << MaxNumberAgentPlant << std::endl;
+        std::cout << "Max number agent per run : " << MaxAgentRun << std::endl;
+        std::cout << "Max run per run time : " << MaxRunPerRunTime << std::endl;
+        std::cout << "Max number of run : " << MaxRunTime << std::endl;
+        std::cout << "Time type : " << timeType << std::endl;
+        std::cout << "Run duration : " << RunDuration << std::endl;
 
         return 0;
 }

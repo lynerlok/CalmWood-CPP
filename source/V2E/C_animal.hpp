@@ -114,7 +114,7 @@ public :
         Leucorrhinia ( int id = 0,
                        std::string newName = "leucorrhinia",
                        std::vector<unsigned int> lifeCycle = {1,24,1},
-                       std::vector<int> probabilities = {100,0,0,0,50,0,0,60},
+                       std::vector<int> probabilities = {80,70,20,0,40,10,0,60},
                        std::vector<int> detectionRadius = {1,1,2},
                        std::vector<int> actionRadius = {1,1,1},
                        bool isBorn = false,

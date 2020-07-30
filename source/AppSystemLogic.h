@@ -58,12 +58,10 @@ protected :
 
     vector<int> location = {0,0};
 
-    const int MonthDuration = environment.MaxDayMonth * environment.MaxDailyRun;
-    const int SimulationDuration = environment.MaxNumberAgentAnimal * environment.MaxTimeSimulation * environment.MaxDayMonth * environment.MaxDailyRun;
-    const int AddDayTime = 24 / environment.MaxDailyRun;
+    const int SimulationDuration = environment.MaxAgentRun * environment.MaxRunPerRunTime * environment.MaxRunTime;
 
     float runTime = environment.RunDuration;
-    float monthTime = environment.MaxDayMonth;
+    float timeDuration = environment.MaxRunPerRunTime;
     float simulationTime = SimulationDuration;
 
     int spawn ( Animal * animal );
