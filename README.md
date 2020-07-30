@@ -30,7 +30,9 @@ To build this project with unigine ( development version or release ) :
 
 3. Clone or download this repository
 
-4. Download data directory here : https://mega.nz/file/CkFUGCDQ#RcxpSiuLujGpGRwpN4btNa_1vEZ7lLRCQRbP_uCs5nU
+4. Download data directory here : https://mega.nz/file/G9dGlY4Y#RvMNsqiDXyhqvlIFPQ3lU6WVE6LoDLLYJtxxP0ti8uY
+
+5. Put the directory in the project root directory
 
 5. Run unigine browser and sign in
 
@@ -63,20 +65,18 @@ https://developer.unigine.com/en/docs/2.11/code/environment/windows?rlang=cpp
 
 # TO DO LIST
 
-1. Probabilities correction.
+1. Texturing.
 
-2. Texturing.
+2. User interface.
 
-3. User interface.
+3. System Integration.
 
-4. System Integration.
+4. Special animation than land/take off.
 
-5. Special animation than land/take off.
+5. Add other animals.
 
-6. Add other animals.
+6. Plants and Cells better integration.
 
-7. Plants and Cells better integration.
+7. User Interface.
 
-18. User Interface.
-
-19. Optimization ( graphical and code )
+8. Optimization ( graphical and code )
