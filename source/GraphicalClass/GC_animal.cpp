@@ -43,7 +43,7 @@ void GAnimal::shutdown()
         delete animal;
 }
 
-int GAnimal::setAnimal ( Animal* newAnimal )
+int GAnimal::setAnimal ( Animal * newAnimal )
 {
         animal = newAnimal;
         return 0;
