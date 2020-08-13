@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -175,6 +175,7 @@ public:
 	template <typename ... Args>
 	UNIGINE_INLINE Type &emplace(Key &&key, Args && ... args) { return (*do_emplace(std::move(key), std::forward<Args>(args)...))->data; }
 
+	UNIGINE_INLINE Type take(const Key &key, const Type &value) { return do_take(Hasher<Key>::create(key), key, value); }
 	UNIGINE_INLINE Type take(const Key &key) { return do_take(Hasher<Key>::create(key), key); }
 	UNIGINE_INLINE Type take(const Iterator &it) { return do_take(it->hash, it->key); }
 	UNIGINE_INLINE Type take(const ConstIterator &it) { return do_take(it->hash, it->key); }
@@ -191,6 +192,15 @@ public:
 		assert(Parent::length != 0 && "Hash::get() const : is empty.");
 		const Data * const *d = Parent::do_find(key);
 		assert(d != nullptr && "Hash::get() const : bad key.");
+		return (*d)->data;
+	}
+	
+	UNIGINE_INLINE const Type &get(const Key &key, const Type &value) const
+	{
+		assert(Parent::length != 0 && "Hash::get() const : is empty.");
+		const Data *const *d = Parent::do_find(key);
+		if (!d)
+			return value;
 		return (*d)->data;
 	}
 
@@ -324,6 +334,31 @@ private:
 	UNIGINE_INLINE Data **do_emplace(Key &&key, Args && ... args)
 	{
 		return do_emplace_hash(Hasher<Key>::create(key), std::move(key), std::forward<Args>(args)...);
+	}
+
+	UNIGINE_INLINE Type do_take(HashType hash, const Key &key, Type def)
+	{
+		if (Parent::length == 0)
+			return def;
+		Counter index = hash & (Parent::capacity - 1);
+
+		while (Parent::data[index])
+		{
+			if (Parent::data[index]->hash == hash && Parent::data[index]->key == key)
+				break;
+			index = (index + 1) & (Parent::capacity - 1);
+		}
+
+		if (Parent::data[index] == nullptr)
+			return def;
+
+		Type ret = Parent::data[index]->data;
+		delete Parent::data[index];
+		Parent::data[index] = nullptr;
+
+		--Parent::length;
+		Parent::rehash_data(index);
+		return ret;
 	}
 
 	UNIGINE_INLINE Type do_take(HashType hash, const Key &key)

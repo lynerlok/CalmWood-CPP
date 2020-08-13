@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -29,6 +29,7 @@
 #ifdef USE_SSE
 #include <emmintrin.h>
 #include <xmmintrin.h>
+#include <smmintrin.h>
 #endif
 
 #ifdef min
@@ -69,7 +70,6 @@ namespace Unigine
 {
 namespace Math
 {
-struct uint128;
 struct half;
 struct vec2;
 struct vec3;
@@ -902,282 +902,6 @@ UNIGINE_INLINE float half::getFloat() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-// uint128 type
-//////////////////////////////////////////////////////////////////////////
-
-struct UNIGINE_API uint128
-{
-public:
-	uint64_t upper, lower;
-
-public:
-	uint128(): upper(0), lower(0) {}
-	uint128(const uint128 &v): upper(v.upper), lower(v.lower) {}
-	uint128(uint64_t v): upper(0), lower(v) {}
-	uint128(uint64_t upper, uint64_t lower): upper(upper), lower(lower) {}
-
-	uint128 &operator=(const uint128 &v)
-	{
-		upper = v.upper; lower = v.lower;
-		return *this;
-	}
-	uint128 &operator=(uint64_t v)
-	{
-		upper = 0; lower = v;
-		return *this;
-	}
-
-	bool toBool() const { return (upper | lower) != 0; }
-
-	operator bool() const { return toBool(); }
-	operator uint8_t() const { return static_cast<uint8_t>(lower); }
-	operator uint16_t() const { return static_cast<uint16_t>(lower); }
-	operator uint32_t() const { return static_cast<uint32_t>(lower); }
-	operator uint64_t() const { return static_cast<uint64_t>(lower); }
-
-	uint128 operator&(const uint128 &v) const { return uint128(upper & v.upper, lower & v.lower); }
-	uint128 operator&(const uint64_t &v) const { return uint128(0, lower & v); }
-
-	uint128 &operator&=(const uint128 &v) { upper &= v.upper; lower &= v.lower; return *this; }
-	uint128 &operator&=(const uint64_t &v) { upper = 0; lower &= v; return *this; }
-
-	uint128 operator|(const uint128 &v) const { return uint128(upper | v.upper, lower | v.lower); }
-	uint128 operator|(const uint64_t &v) const { return uint128(upper, lower | v); }
-
-	uint128 &operator|=(const uint128 &v) { upper |= v.upper; lower |= v.lower; return *this; }
-	uint128 &operator|=(const uint64_t &v) { lower |= v; return *this; }
-
-	uint128 operator^(const uint128 &v) const { return uint128(upper ^ v.upper, lower ^ v.lower); }
-	uint128 operator^(const uint64_t &v) const { return uint128(upper, lower | v); }
-
-	uint128 &operator^=(const uint128 &v) { upper ^= v.upper; lower ^= v.lower; return *this; }
-	uint128 &operator^=(const uint64_t &v) { lower ^= v; return *this; }
-
-	uint128 operator~() const { return uint128(~upper, ~lower); }
-
-	uint128 operator<<(int shift) const
-	{
-		if (shift < 64)
-			return uint128((upper << shift) + (lower >> (64 - shift)), lower << shift);
-		if (shift == 0)
-			return *this;
-		if (shift == 64)
-			return uint128(lower, 0);
-		return uint128(lower << (shift - 64), 0);
-	}
-	uint128 operator>>(int shift) const
-	{
-		if (shift < 64)
-			return uint128(upper >> shift, (upper << (64 - shift)) + (lower >> shift));
-		if (shift == 0)
-			return *this;
-		if (shift == 64)
-			return uint128(0, upper);
-		return uint128(0, (upper >> (shift - 64)));
-	}
-
-	uint128 &operator<<=(int shift) { *this = *this << shift; return *this; }
-	uint128 &operator>>=(int shift) { *this = *this >> shift; return *this; }
-
-	bool operator!() const { return (upper | lower) == 0; }
-	bool operator&&(const uint128 &v) const { return toBool() && v; }
-	bool operator||(const uint128 &v) const { return toBool() || v; }
-
-	bool operator&&(const uint64_t &v) const { return toBool() && v; }
-	bool operator||(const uint64_t &v) const { return toBool() || v; }
-
-	bool operator==(const uint128 &v) const { return (upper == v.upper) && (lower == v.lower); }
-	bool operator==(const uint64_t &v) const { return (!upper) && (lower == v); }
-
-	bool operator!=(const uint128 &v) const { return (upper != v.upper) | (lower != v.lower); }
-	bool operator!=(const uint64_t &v) const { return upper != 0 || (lower != v); }
-
-	bool operator>(const uint128 &v) const
-	{
-		if (upper == v.upper)
-			return lower < v.lower;
-		return upper < v.upper;
-	}
-	bool operator>(const uint64_t &v) const { return upper || (lower > v); }
-
-	bool operator<(const uint128 &v) const
-	{
-		if (upper == v.upper)
-			return lower < v.lower;
-		return upper < v.upper;
-	}
-	bool operator<(const uint64_t &v) const { return (!upper) ? lower < v : false; }
-
-	bool operator>=(const uint128 &v) const { return (*this > v) | (*this == v); }
-	bool operator>=(const uint64_t &v) const { return (*this > v) | (*this == v); }
-
-	bool operator<=(const uint128 &v) const { return (*this < v) | (*this == v); }
-	bool operator<=(const uint64_t &v) const { return (*this < v) | (*this == v); }
-
-	uint128 operator+(const uint128 &v) const { return uint128(upper + v.upper + ((lower + v.lower) < lower), lower + v.lower); }
-	uint128 operator+(const uint64_t &v) const { return uint128(upper + ((lower + static_cast<uint64_t>(v)) < lower), lower + v); }
-
-	uint128 &operator+=(const uint128 &v)
-	{
-		upper += v.upper + ((lower + v.lower) < lower);
-		lower += v.lower;
-		return *this;
-	}
-	uint128 &operator+=(const uint64_t &v)
-	{
-		upper = upper + ((lower + v) < lower);
-		lower = lower + v;
-		return *this;
-	}
-
-	uint128 operator-(const uint128 &v) const { return uint128(upper - v.upper - ((lower - v.lower) > lower), lower - v.lower); }
-	uint128 operator-(const uint64_t &v) const { return uint128(upper - ((lower - v) > lower), lower - v); }
-
-	uint128 &operator-=(const uint128 &v) { *this = *this - v; return *this; }
-	uint128 &operator-=(const uint64_t &v) { *this = *this - v; return *this; }
-
-	uint128 operator*(const uint128 &v) const
-	{
-		// split values into 4 32-bit parts
-		uint64_t top[4] = {upper >> 32, upper & 0xffffffff, lower >> 32, lower & 0xffffffff};
-		uint64_t bottom[4] = {v.upper >> 32, v.upper & 0xffffffff, v.lower >> 32, v.lower & 0xffffffff};
-		uint64_t products[4][4];
-
-		// multiply each component of the values
-		for (int y = 3; y > -1; y--)
-		{
-			for (int x = 3; x > -1; x--)
-			{
-				products[3 - x][y] = top[x] * bottom[y];
-			}
-		}
-
-		// first row
-		uint64_t fourth32 = (products[0][3] & 0xffffffff);
-		uint64_t third32 = (products[0][2] & 0xffffffff) + (products[0][3] >> 32);
-		uint64_t second32 = (products[0][1] & 0xffffffff) + (products[0][2] >> 32);
-		uint64_t first32 = (products[0][0] & 0xffffffff) + (products[0][1] >> 32);
-
-		// second row
-		third32 += (products[1][3] & 0xffffffff);
-		second32 += (products[1][2] & 0xffffffff) + (products[1][3] >> 32);
-		first32 += (products[1][1] & 0xffffffff) + (products[1][2] >> 32);
-
-		// third row
-		second32 += (products[2][3] & 0xffffffff);
-		first32 += (products[2][2] & 0xffffffff) + (products[2][3] >> 32);
-
-		// fourth row
-		first32 += (products[3][3] & 0xffffffff);
-
-		// move carry to next digit
-		third32 += fourth32 >> 32;
-		second32 += third32 >> 32;
-		first32 += second32 >> 32;
-
-		// remove carry from current digit
-		fourth32 &= 0xffffffff;
-		third32 &= 0xffffffff;
-		second32 &= 0xffffffff;
-		first32 &= 0xffffffff;
-
-		// combine components
-		return uint128((first32 << 32) | second32, (third32 << 32) | fourth32);
-	}
-
-	uint128 operator*(const uint64_t &v) const { return *this * uint128(v); }
-	uint128 &operator*=(const uint128 &v) { *this = *this * v; return *this; }
-	uint128 &operator*=(const uint64_t &v) { *this = *this * uint128(v); return *this; }
-
-	uint128 &operator++() { return *this += uint128(1); }
-	uint128 operator++(int)
-	{
-		uint128 temp(*this);
-		++ *this;
-		return temp;
-	}
-
-	uint128 &operator--() { return *this -= uint128(1); }
-	uint128 operator--(int)
-	{
-		uint128 temp(*this);
-		-- *this;
-		return temp;
-	}
-
-	uint128 operator+() const { return *this; }
-	uint128 operator-() const { return ~*this + uint128(1); }
-
-	uint8_t bits() const
-	{
-		if (upper)
-		{
-			uint8_t ret = 64;
-			uint64_t up = upper;
-			while (up)
-			{
-				up >>= 1;
-				ret++;
-			}
-			return ret;
-		}
-
-		uint8_t ret = 0;
-		uint64_t low = lower;
-		while (low)
-		{
-			low >>= 1;
-			ret++;
-		}
-		return ret;
-	}
-
-	Pair<uint128, uint128> div_mod(const uint128 &a, const uint128 &b) const
-	{
-		if (b == uint64_t(0))
-			return Pair<uint128, uint128>(uint128(0), uint128(0));
-
-		if (b == uint64_t(1))
-			return Pair<uint128, uint128>(a, uint128(0));
-		
-		if (a == b)
-			return Pair<uint128, uint128>(uint128(1), uint128(0));
-		
-		if ((a == uint128(0)) || (a < b))
-			return Pair<uint128, uint128>(uint128(0), a);
-		
-		Pair<uint128, uint128> ret(uint128(0), uint128(0));
-		for (uint8_t x = a.bits(); x > 0; x--)
-		{
-			ret.first <<= 1;
-			ret.second <<= 1;
-		
-			if ((a >> int(x - 1)) & uint64_t(1))
-				++ret.second;
-		
-			if (ret.second >= b)
-			{
-				ret.second -= b;
-				++ret.first;
-			}
-		}
-		return ret;
-	}
-
-	uint128 operator/(const uint128 &v) const { return div_mod(*this, v).first; }
-	uint128 operator/(const uint64_t &v) const { return *this / uint128(v); }
-
-	uint128 &operator/=(const uint128 &v) { *this = *this / v; return *this; }
-	uint128 &operator/=(const uint64_t &v) { *this = *this / uint128(v); return *this; }
-
-	uint128 operator%(const uint128 &v) const { return div_mod(*this, v).second; }
-	uint128 operator%(const uint64_t &v) const { return *this % uint128(v); }
-
-	uint128 &operator%=(const uint128 &v) { *this = *this & v; return *this; }
-	uint128 &operator%=(const uint64_t &v) { *this = *this & uint128(v); return *this; }
-};
-
-//////////////////////////////////////////////////////////////////////////
 // vec2, vector with 2 float components
 //////////////////////////////////////////////////////////////////////////
 
@@ -1343,15 +1067,44 @@ UNIGINE_API vec2
 		y *= ilength;
 		return *this;
 	}
+
+	UNIGINE_INLINE vec2 &normalizeValid()
+	{
+		float length = x * x + y * y;
+		if(length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		return *this;
+	}
 	
 	UNIGINE_INLINE vec2 frac() const
 	{
 		return vec2(Math::frac(x), Math::frac(y));
 	}
 
+	UNIGINE_INLINE vec2 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		return *this;
+	}
+
 	UNIGINE_INLINE vec2 &normalizeFast()
 	{
 		float ilength = Math::rsqrtFast(x * x + y * y);
+		x *= ilength;
+		y *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE vec2 &normalizeValidFast()
+	{
+		float length = x * x + y * y;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrtFast(length);
 		x *= ilength;
 		y *= ilength;
 		return *this;
@@ -1552,9 +1305,35 @@ UNIGINE_INLINE vec2 normalize(const vec2 &v)
 	return ret.normalize();
 }
 
+UNIGINE_INLINE vec2 normalizeValid(const vec2 &v)
+{
+	vec2 ret = v;
+	return ret.normalizeValid();
+}
+
 UNIGINE_INLINE float cross(const vec2 &v0, const vec2 &v1)
 {
 	return v0.x * v1.y - v0.y * v1.x;
+}
+
+UNIGINE_INLINE vec2 round(const vec2 &v)
+{
+	return { round(v.x), round(v.y) };
+}
+
+UNIGINE_INLINE vec2 floor(const vec2 &v)
+{
+	return {floor(v.x), floor(v.y)};
+}
+
+UNIGINE_INLINE vec2 ceil(const vec2 &v)
+{
+	return {ceil(v.x), ceil(v.y)};
+}
+
+UNIGINE_INLINE vec2 abs(const vec2 &v)
+{
+	return { abs(v.x), abs(v.y) };
 }
 
 UNIGINE_API vec2 min(const vec2 &v0, const vec2 &v1);
@@ -1817,6 +1596,26 @@ UNIGINE_API vec3
 		return *this;
 	}
 
+	UNIGINE_INLINE vec3 &normalizeValid()
+	{
+		float length = x * x + y * y + z * z;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE vec3 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
+		return *this;
+	}
+
 	UNIGINE_INLINE vec3 &normalizeFast()
 	{
 		float ilength = Math::rsqrtFast(x * x + y * y + z * z);
@@ -1826,13 +1625,38 @@ UNIGINE_API vec3
 		return *this;
 	}
 
-	UNIGINE_INLINE float maxXY()
+	UNIGINE_INLINE vec3 &normalizeValidFast()
+	{
+		float length = x * x + y * y + z * z;
+		if(length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrtFast(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE float maxXY() const
 	{
 		return Math::max(x, y);
 	}
-	UNIGINE_INLINE float max()
+	UNIGINE_INLINE float max() const
 	{
 		return Math::max(maxXY(), z);
+	}
+
+	UNIGINE_INLINE vec3 sign() const
+	{
+		return vec3(Math::sign(x), Math::sign(y), Math::sign(z));
+	}
+	UNIGINE_INLINE float minXY()
+	{
+		return Math::min(x, y);
+	}
+	UNIGINE_INLINE float min()
+	{
+		return Math::min(minXY(), z);
 	}
 
 #ifdef USE_SSE
@@ -2056,6 +1880,12 @@ UNIGINE_INLINE vec3 normalize(const vec3 &v)
 	return ret.normalize();
 }
 
+UNIGINE_INLINE vec3 normalizeValid(const vec3 &v)
+{
+	vec3 ret = v;
+	return ret.normalizeValid();
+}
+
 UNIGINE_INLINE vec3 cross(const vec3 &v0, const vec3 &v1)
 {
 	vec3 ret;
@@ -2071,6 +1901,27 @@ UNIGINE_INLINE vec3 reflect(const vec3 &v0, const vec3 &v1)
 UNIGINE_INLINE bool areCollinear(const vec3 &v0, const vec3 &v1)
 {
 	return length(cross(v0, v1)) < 1e-6f;
+}
+
+UNIGINE_INLINE vec3 round(const vec3 &v)
+{
+	return {round(v.x), round(v.y), round(v.z)};
+}
+
+UNIGINE_INLINE vec3 floor(const vec3 &v)
+{
+	return {floor(v.x), floor(v.y), floor(v.z)};
+}
+
+UNIGINE_INLINE vec3 ceil(const vec3 &v)
+{
+	return {ceil(v.x), ceil(v.y), ceil(v.z)};
+}
+
+
+UNIGINE_INLINE vec3 abs(const vec3 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z) };
 }
 
 UNIGINE_API vec3 min(const vec3 &v0, const vec3 &v1);
@@ -2371,9 +2222,35 @@ UNIGINE_API vec4
 		return *this;
 	}
 
+	UNIGINE_INLINE vec4 &normalizeValid()
+	{
+		float length = x * x + y * y + z * z + w * w;
+		if(length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		w *= ilength;
+		return *this;
+	}
+
 	UNIGINE_INLINE vec4 &normalizeFast()
 	{
 		float ilength = Math::rsqrtFast(x * x + y * y + z * z + w * w);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		w *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE vec4 &normalizeValidFast()
+	{
+		float length = x * x + y * y + z * z + w * w;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrtFast(length);
 		x *= ilength;
 		y *= ilength;
 		z *= ilength;
@@ -2390,6 +2267,18 @@ UNIGINE_API vec4
 		return *this;
 	}
 
+	UNIGINE_INLINE vec4 &normalizeValid3()
+	{
+		float length = x * x + y * y + z * z;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
 	UNIGINE_INLINE vec4 &normalizeFast3()
 	{
 		float ilength = Math::rsqrtFast(x * x + y * y + z * z);
@@ -2398,6 +2287,28 @@ UNIGINE_API vec4
 		z *= ilength;
 		return *this;
 	}
+
+	UNIGINE_INLINE vec4 &normalizeValidFast3()
+	{
+		float length = x * x + y * y + z * z;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrtFast(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE vec4 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
+		w = Math::abs(w);
+		return *this;
+	}
+
 	UNIGINE_INLINE float maxXY()
 	{
 		return Math::max(x, y);
@@ -2410,6 +2321,8 @@ UNIGINE_API vec4
 	{
 		return Math::max(maxXYZ(), w);
 	}
+
+	static vec4 parseColor(const char *str);
 
 #ifdef USE_SSE
 	UNIGINE_INLINE __m128 sse() const
@@ -2682,10 +2595,42 @@ UNIGINE_INLINE vec4 normalize(const vec4 &v)
 	return ret.normalize();
 }
 
+UNIGINE_INLINE vec4 normalizeValid(const vec4 &v)
+{
+	vec4 ret = v;
+	return ret.normalizeValid();
+}
+
 UNIGINE_INLINE vec4 normalize3(const vec4 &v)
 {
 	vec4 ret = v;
 	return ret.normalize3();
+}
+
+UNIGINE_INLINE vec4 normalizeValid3(const vec4 &v)
+{
+	vec4 ret = v;
+	return ret.normalizeValid3();
+}
+
+UNIGINE_INLINE vec4 round(const vec4 &v)
+{
+	return {round(v.x), round(v.y), round(v.z), round(v.w)};
+}
+
+UNIGINE_INLINE vec4 floor(const vec4 &v)
+{
+	return {floor(v.x), floor(v.y), floor(v.z), floor(v.w)};
+}
+
+UNIGINE_INLINE vec4 ceil(const vec4 &v)
+{
+	return {ceil(v.x), ceil(v.y), ceil(v.z), ceil(v.w)};
+}
+
+UNIGINE_INLINE vec4 abs(const vec4 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z), abs(v.w) };
 }
 
 UNIGINE_API vec4 min(const vec4 &v0, const vec4 &v1);
@@ -2914,9 +2859,27 @@ UNIGINE_API dvec2
 		return *this;
 	}
 
+	UNIGINE_INLINE dvec2 &normalizeValid()
+	{
+		double length = x * x + y * y;
+		if (length == 0.0)
+			return *this;
+		double ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		return *this;
+	}
+
 	UNIGINE_INLINE dvec2 frac() const
 	{
 		return dvec2(Math::frac(x), Math::frac(y));
+	}
+
+	UNIGINE_INLINE dvec2 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		return *this;
 	}
 
 	UNIGINE_INLINE double max()
@@ -3114,6 +3077,32 @@ UNIGINE_INLINE dvec2 normalize(const dvec2 &v)
 {
 	dvec2 ret = v;
 	return ret.normalize();
+}
+
+UNIGINE_INLINE dvec2 normalizeValid(const dvec2 &v)
+{
+	dvec2 ret = v;
+	return ret.normalizeValid();
+}
+
+UNIGINE_INLINE dvec2 round(const dvec2 &v)
+{
+	return {round(v.x), round(v.y)};
+}
+
+UNIGINE_INLINE dvec2 floor(const dvec2 &v)
+{
+	return {floor(v.x), floor(v.y)};
+}
+
+UNIGINE_INLINE dvec2 ceil(const dvec2 &v)
+{
+	return {ceil(v.x), ceil(v.y)};
+}
+
+UNIGINE_INLINE dvec2 abs(const dvec2 &v)
+{
+	return { abs(v.x), abs(v.y) };
 }
 
 UNIGINE_API dvec2 min(const dvec2 &v0, const dvec2 &v1);
@@ -3352,6 +3341,26 @@ UNIGINE_API dvec3
 		x *= ilength;
 		y *= ilength;
 		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE dvec3 &normalizeValid()
+	{
+		double length = x * x + y * y + z * z;
+		if(length == 0.0)
+			return *this;
+		double ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE dvec3 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
 		return *this;
 	}
 
@@ -3613,6 +3622,12 @@ UNIGINE_INLINE dvec3 normalize(const dvec3 &v)
 	return ret.normalize();
 }
 
+UNIGINE_INLINE dvec3 normalizeValid(const dvec3 &v)
+{
+	dvec3 ret = v;
+	return ret.normalizeValid();
+}
+
 UNIGINE_INLINE dvec3 cross(const dvec3 &v0, const dvec3 &v1)
 {
 	dvec3 ret;
@@ -3628,6 +3643,26 @@ UNIGINE_INLINE dvec3 reflect(const dvec3 &v0, const dvec3 &v1)
 UNIGINE_INLINE bool areCollinear(const dvec3 &v0, const dvec3 &v1)
 {
 	return length(cross(v0, v1)) < 1e-6f;
+}
+
+UNIGINE_INLINE dvec3 round(const dvec3 &v)
+{
+	return {round(v.x), round(v.y), round(v.z),};
+}
+
+UNIGINE_INLINE dvec3 floor(const dvec3 &v)
+{
+	return {floor(v.x), floor(v.y), floor(v.z)};
+}
+
+UNIGINE_INLINE dvec3 ceil(const dvec3 &v)
+{
+	return {ceil(v.x), ceil(v.y), ceil(v.z)};
+}
+
+UNIGINE_INLINE dvec3 abs(const dvec3 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z) };
 }
 
 UNIGINE_API dvec3 min(const dvec3 &v0, const dvec3 &v1);
@@ -3905,12 +3940,46 @@ UNIGINE_API dvec4
 		return *this;
 	}
 
+	UNIGINE_INLINE dvec4 &normalizeValid()
+	{
+		double length = x * x + y * y + z * z + w * w;
+		if(length)
+			return *this;
+		double ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		w *= ilength;
+		return *this;
+	}
+
 	UNIGINE_INLINE dvec4 &normalize3()
 	{
 		double ilength = Math::rsqrt(x * x + y * y + z * z);
 		x *= ilength;
 		y *= ilength;
 		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE dvec4 &normalizeValid3()
+	{
+		double length = x * x + y * y + z * z;
+		if (length)
+			return *this;
+		double ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE dvec4 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
+		w = Math::abs(w);
 		return *this;
 	}
 
@@ -4181,10 +4250,42 @@ UNIGINE_INLINE dvec4 normalize(const dvec4 &v)
 	return ret.normalize();
 }
 
+UNIGINE_INLINE dvec4 normalizeValid(const dvec4 &v)
+{
+	dvec4 ret = v;
+	return ret.normalizeValid();
+}
+
 UNIGINE_INLINE dvec4 normalize3(const dvec4 &v)
 {
 	dvec4 ret = v;
 	return ret.normalize3();
+}
+
+UNIGINE_INLINE dvec4 normalizeValid3(const dvec4 &v)
+{
+	dvec4 ret = v;
+	return ret.normalizeValid3();
+}
+
+UNIGINE_INLINE dvec4 round(const dvec4 &v)
+{
+	return {round(v.x), round(v.y), round(v.z), round(v.w)};
+}
+
+UNIGINE_INLINE dvec4 floor(const dvec4 &v)
+{
+	return {floor(v.x), floor(v.y), floor(v.z), floor(v.w)};
+}
+
+UNIGINE_INLINE dvec4 ceil(const dvec4 &v)
+{
+	return {ceil(v.x), ceil(v.y), ceil(v.z), ceil(v.w)};
+}
+
+UNIGINE_INLINE dvec4 abs(const dvec4 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z), abs(v.w) };
 }
 
 UNIGINE_API dvec4 min(const dvec4 &v0, const dvec4 &v1);
@@ -4691,6 +4792,13 @@ UNIGINE_API ivec2
 		val[1] = y;
 	}
 
+	UNIGINE_INLINE ivec2 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		return *this;
+	}
+
 	UNIGINE_INLINE int *get() { return v; }
 	UNIGINE_INLINE const int *get() const { return v; }
 	UNIGINE_INLINE int length2() const
@@ -4873,6 +4981,11 @@ UNIGINE_INLINE int length2(const ivec2 &v)
 	return v.length2();
 }
 
+UNIGINE_INLINE ivec2 abs(const ivec2 &v)
+{
+	return { abs(v.x), abs(v.y) };
+}
+
 UNIGINE_API ivec2 min(const ivec2 &v0, const ivec2 &v1);
 UNIGINE_API ivec2 max(const ivec2 &v0, const ivec2 &v1);
 UNIGINE_API ivec2 clamp(const ivec2 &v, const ivec2 &v0, const ivec2 &v1);
@@ -4938,7 +5051,7 @@ UNIGINE_API ivec3
 #ifdef USE_SSE2
 	explicit UNIGINE_INLINE ivec3(const vec3 &v)
 	{
-		sse(_mm_cvtps_epi32(v.sse()));
+		sse(_mm_cvttps_epi32(v.sse()));
 	}
 
 	UNIGINE_INLINE ivec3(const ivec3 &v)
@@ -5126,6 +5239,14 @@ UNIGINE_API ivec3
 		return x * x + y * y + z * z;
 	}
 
+	UNIGINE_INLINE ivec3 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
+		return *this;
+	}
+
 #ifdef USE_SSE2
 	UNIGINE_INLINE __m128i sse() const
 	{
@@ -5270,6 +5391,11 @@ UNIGINE_INLINE ivec3 cross(const ivec3 &v0, const ivec3 &v1)
 	return cross(ret, v0, v1);
 }
 
+UNIGINE_INLINE ivec3 abs(const ivec3 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z) };
+}
+
 UNIGINE_API ivec3 min(const ivec3 &v0, const ivec3 &v1);
 UNIGINE_API ivec3 max(const ivec3 &v0, const ivec3 &v1);
 UNIGINE_API ivec3 clamp(const ivec3 &v, const ivec3 &v0, const ivec3 &v1);
@@ -5357,7 +5483,7 @@ UNIGINE_API ivec4
 #ifdef USE_SSE2
 	explicit UNIGINE_INLINE ivec4(const vec4 &v)
 	{
-		sse(_mm_cvtps_epi32(v.sse()));
+		sse(_mm_cvttps_epi32(v.sse()));
 	}
 
 	UNIGINE_INLINE ivec4(const ivec4 &v)
@@ -5557,6 +5683,15 @@ UNIGINE_API ivec4
 		return x * x + y * y + z * z + w * w;
 	}
 
+	UNIGINE_INLINE ivec4 &abs()
+	{
+		x = Math::abs(x);
+		y = Math::abs(y);
+		z = Math::abs(z);
+		w = Math::abs(w);
+		return *this;
+	}
+
 #ifdef USE_SSE2
 	UNIGINE_INLINE __m128i sse() const
 	{
@@ -5698,6 +5833,11 @@ UNIGINE_INLINE ivec4 &lerp(ivec4 &ret, const ivec4 &v0, const ivec4 &v1, int k)
 UNIGINE_INLINE int length2(const ivec4 &v)
 {
 	return v.length2();
+}
+
+UNIGINE_INLINE ivec4 abs(const ivec4 &v)
+{
+	return { abs(v.x), abs(v.y), abs(v.z), abs(v.w) };
 }
 
 UNIGINE_API ivec4 min(const ivec4 &v0, const ivec4 &v1);
@@ -7236,9 +7376,35 @@ UNIGINE_API quat
 		return *this;
 	}
 
+	UNIGINE_INLINE quat &normalizeValid()
+	{
+		float length = x * x + y * y + z * z + w * w;
+		if(length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrt(length);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		w *= ilength;
+		return *this;
+	}
+
 	UNIGINE_INLINE quat &normalizeFast()
 	{
 		float ilength = Math::rsqrtFast(x * x + y * y + z * z + w * w);
+		x *= ilength;
+		y *= ilength;
+		z *= ilength;
+		w *= ilength;
+		return *this;
+	}
+
+	UNIGINE_INLINE quat &normalizeValidFast()
+	{
+		float length = x * x + y * y + z * z + w * w;
+		if (length == 0.0f)
+			return *this;
+		float ilength = Math::rsqrtFast(length);
 		x *= ilength;
 		y *= ilength;
 		z *= ilength;
@@ -7373,6 +7539,12 @@ UNIGINE_INLINE quat normalize(const quat &q)
 {
 	quat ret = q;
 	return ret.normalize();
+}
+
+UNIGINE_INLINE quat normalizeValid(const quat &q)
+{
+	quat ret = q;
+	return ret.normalizeValid();
 }
 
 UNIGINE_INLINE quat &inverse(quat &ret, const quat &q)

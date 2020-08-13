@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -204,6 +204,9 @@ public:
 			keys.appendFast(data[i]->key);
 		}
 	}
+	
+	UNIGINE_INLINE const Key &getKey(int num) const { return data[num]->key; }
+	UNIGINE_INLINE Key &getKey(int num) { return data[num]->key; }
 
 	UNIGINE_INLINE bool remove(const Key &key) { return do_remove(Hasher<Key>::create(key), key); }
 	UNIGINE_INLINE bool remove(const Iterator &it) { return do_remove(it->hash, it->key); }

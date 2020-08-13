@@ -29,13 +29,12 @@
 #include <UnigineWidgets.h>
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
+#include <UnigineComponentSystem.h>
 
 #include "V2E/U_randomGenerator.hpp"
 #include "V2E/C_animal.hpp"
 #include "V2E/C_plant.hpp"
 #include "V2E/C_environment.hpp"
-
-#include "ComponentSystem/ComponentSystem.h"
 
 #include "GraphicalClass/GC_animal.hpp"
 #include "GraphicalClass/GC_plant.hpp"

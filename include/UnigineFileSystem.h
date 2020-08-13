@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -135,7 +135,7 @@ public:
 	static bool setGUID(const char *path, const UGUID & guid);
 	static UGUID getGUID(const char *path);
 	static int getNumModifiers();
-	static const char *getModifier(int num);
+	static String getModifier(int num);
 	static void addModifier(const char *name);
 	static void removeModifier(const char *name);
 	static void clearModifiers();

@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -81,6 +81,16 @@ protected:
 
 public:
 	static int isInitialized(); 
+
+	enum CALLBACK_INDEX
+	{
+		CALLBACK_PRE_WORLD_LOAD,
+		CALLBACK_POST_WORLD_LOAD,
+		CALLBACK_PRE_WORLD_SAVE,
+		CALLBACK_POST_WORLD_SAVE,
+		CALLBACK_PRE_WORLD_CLEAR,
+		CALLBACK_POST_WORLD_CLEAR,
+	};
 	static void setPath(const char *path);
 	static const char *getPath();
 	static void setScriptName(const char *name);
@@ -106,7 +116,8 @@ public:
 	static bool isAutoReloadNodeReferences();
 	static void setUnpackNodeReferences(bool references);
 	static bool isUnpackNodeReferences();
-	static bool loadWorld(const char *name);
+	static bool loadWorld(const char *path);
+	static bool loadWorld(const char *path, bool partial_path);
 	static bool addWorld(const char *name);
 	static void updateSpatial();
 	static bool isNode(int id);
@@ -144,6 +155,9 @@ public:
 	static Ptr<Object> getIntersection(const Math::Vec3 & p0, const Math::Vec3 & p1, int mask, const Vector< Ptr<Node> > &exclude, const Ptr<WorldIntersectionNormal> &intersection);
 	static Ptr<Object> getIntersection(const Math::Vec3 & p0, const Math::Vec3 & p1, int mask, const Vector< Ptr<Node> > &exclude, const Ptr<WorldIntersectionTexCoord> &intersection);
 	static void clearBindings();
+	static void *addCallback(World::CALLBACK_INDEX callback, Unigine::CallbackBase1< const char *> *func);
+	static bool removeCallback(World::CALLBACK_INDEX callback, void *id);
+	static void clearCallbacks(World::CALLBACK_INDEX callback);
 };
 
 class WorldExternBase;

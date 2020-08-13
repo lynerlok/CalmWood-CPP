@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -27,36 +27,6 @@
 
 namespace Unigine
 {
-
-//////////////////////////////////////////////////////////////////////////
-
-class UNIGINE_API WorldLayer : public Node
-{
-public:
-	static int type() { return Node::WORLD_LAYER; }
-	static bool convertible(Node *node) { return (node && node->getType() == type()); }
-
-	static Ptr<WorldLayer> create(const Math::vec3 &size, const char *name);
-	void setPoint(bool point);
-	bool isPoint() const;
-	void setSize(const Math::vec3 &size);
-	Math::vec3 getSize() const;
-	void setOffset(const Math::vec3 &offset);
-	Math::vec3 getOffset() const;
-	void setLoadDistance(float distance);
-	float getLoadDistance() const;
-	void setClearDistance(float distance);
-	float getClearDistance() const;
-	void setNodeName(const char *name);
-	const char *getNodeName() const;
-	void setNodeGroup(int group);
-	int getNodeGroup() const;
-	void setNodeWeight(float weight);
-	float getNodeWeight() const;
-	int getNumNodes() const;
-	Ptr<Node> getNode(int num) const;
-};
-typedef Ptr<WorldLayer> WorldLayerPtr;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -176,30 +146,6 @@ public:
 	bool restoreStateReferences(const Ptr<Stream> &stream);
 };
 typedef Ptr<WorldClutter> WorldClutterPtr;
-
-//////////////////////////////////////////////////////////////////////////
-
-class UNIGINE_API WorldCluster : public Node
-{
-public:
-	static int type() { return Node::WORLD_CLUSTER; }
-	static bool convertible(Node *node) { return (node && node->getType() == type()); }
-
-	static Ptr<WorldCluster> create();
-	int getNumReferences() const;
-	const char *getReferenceName(int num) const;
-	void setVisibleDistance(float distance);
-	float getVisibleDistance() const;
-	void setFadeDistance(float distance);
-	float getFadeDistance() const;
-	int getNumNodes() const;
-	const char *getNodeName(int num) const;
-	Math::mat4 getNodeTransform(int num) const;
-	Ptr<NodeReference> getNodeReference(int num) const;
-	void createNodes(const Vector< Ptr<Node> > &nodes);
-	void clearNodes();
-};
-typedef Ptr<WorldCluster> WorldClusterPtr;
 
 //////////////////////////////////////////////////////////////////////////
 

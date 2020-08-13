@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -755,6 +755,11 @@ public:
 	{
 		temp = str;
 		return Parent::find(temp);
+	}
+	UNIGINE_INLINE auto findFast(const char *str) const
+	{
+		temp = str;
+		return Parent::findFast(temp);
 	}
 
 	UNIGINE_INLINE auto value(const char *str) const

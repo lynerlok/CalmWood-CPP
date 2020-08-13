@@ -29,13 +29,12 @@
 #include <UnigineWidgets.h>
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
+#include <UnigineComponentSystem.h>
 
 #include "V2E/U_randomGenerator.hpp"
 #include "V2E/C_animal.hpp"
 #include "V2E/C_plant.hpp"
 #include "V2E/C_environment.hpp"
-
-#include "ComponentSystem/ComponentSystem.h"
 
 #include "GraphicalClass/GC_animal.hpp"
 #include "GraphicalClass/GC_plant.hpp"
@@ -154,7 +153,7 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
                 temporaryMesh = ObjectMeshSkinned::create ( meshPathConst );
 
-                meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/A_" + animal->getName() + ".anim" ;
+                meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/" + animal->getName() + ".anim" ;
 
                 temporaryMesh->setAnimation ( 0, meshPathStr.c_str() );
 

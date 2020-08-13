@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -239,7 +239,16 @@ public:
 	virtual const char *getSoundApp() const = 0;
 
 	/// Returns Unigine Script defines specified at launch (provided with -extern_define command line argument).
-	virtual const char *getExternDefines() const = 0;
+	virtual const char *getExternDefine() const = 0;
+
+	/// Returns Unigine Engine Version.
+	virtual const char *getVersion() const = 0;
+
+	/// Returns Unigine Engine Build Configuration. Example: "Development-Float"
+	virtual const char *getBuildConfig() const = 0;
+
+	/// return Returns 1 when engine is build with Double support; otherwise, 0.
+	virtual int isDouble() const = 0;
 
 	/// return Returns 1 when engine is quitting; otherwise, 0.
 	virtual int isDone() const = 0;

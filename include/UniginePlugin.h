@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -46,11 +46,6 @@ public:
 	// The engine calls this function on plugin shutdown.
 	// Should return 1 on success, or 0 if an error occurred.
 	virtual int shutdown() { return 1; }
-
-	// Plugin should override this function if it directly uses any OpenGL or DirectX commands.
-	// It is used to reinitialize the graphics context.
-	// The engine calls this function when the video mode is changed or application is restarted (i.e. video_restart is called).
-	virtual void destroyRenderResources() { }
 
 	// The engine calls this function before updating each render frame.
 	virtual void update() { }

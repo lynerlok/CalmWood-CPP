@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -432,6 +432,70 @@ public:
 		*(reinterpret_cast<Type *>(data) + pos) = v;
 	}
 
+	template<typename C, typename A>
+	void append(size_t pos, const Vector<Type, C, A> &v)
+	{
+		assert(pos <= size_t(length) && "Vector::append(): bad position");
+		if (length + v.length > capacity)
+		{
+			capacity = grow_to(length + v.length);
+			char *new_data = alloc(capacity * sizeof(Type));
+			if (data)
+			{
+				move(reinterpret_cast<Type *>(new_data), reinterpret_cast<Type *>(data), Counter(pos));
+				copy(reinterpret_cast<Type *>(new_data) + pos, v.get(), v.length);
+				move(reinterpret_cast<Type *>(new_data) + pos + v.length, reinterpret_cast<Type *>(data) + pos, length - Counter(pos));
+				destruct();
+				dealloc(data);
+			} else
+				copy(reinterpret_cast<Type *>(new_data), v.get(), Counter(v.size()));
+
+			data = new_data;
+			length += v.length;
+			return;
+		}
+
+		for (Counter i = length - 1; i >= Counter(pos); --i)
+			*(reinterpret_cast<Type *>(data) + i + v.length) = std::move(*(reinterpret_cast<Type *>(data) + i));
+
+		copy(reinterpret_cast<Type *>(data) + pos, v.get(), v.length);
+
+		length += v.size();
+	}
+
+	template<typename C, typename A>
+	void append(size_t pos, Vector<Type, C, A> &&v)
+	{
+		assert(pos <= size_t(length) && "Vector::append(): bad position");
+		if (length + v.length > capacity)
+		{
+			capacity = grow_to(length + v.length);
+			char *new_data = alloc(capacity * sizeof(Type));
+			if (data)
+			{
+				move(reinterpret_cast<Type *>(new_data), reinterpret_cast<Type *>(data), Counter(pos));
+				move(reinterpret_cast<Type *>(new_data) + pos, v.get(), v.length);
+				move(reinterpret_cast<Type *>(new_data) + pos + v.length, reinterpret_cast<Type *>(data) + pos, length - Counter(pos));
+				destruct();
+				dealloc(data);
+			} else
+				move(reinterpret_cast<Type *>(new_data), v.get(), v.length);
+
+			data = new_data;
+			length += v.length;
+			v.clear();
+			return;
+		}
+
+		for (Counter i = length - 1; i >= Counter(pos); --i)
+			*(reinterpret_cast<Type *>(data) + i + v.length) = std::move(*(reinterpret_cast<Type *>(data) + i));
+
+		move(reinterpret_cast<Type *>(data) + pos, v.get(), v.length);
+
+		length += v.size();
+		v.clear();
+	}
+
 	void append(size_t pos, Type &&v)
 	{
 		assert(pos <= size_t(length) && "Vector::append(): bad position");
@@ -491,6 +555,10 @@ public:
 
 	UNIGINE_INLINE void insert(size_t pos, const Type &v) { append(pos, v); }
 	UNIGINE_INLINE void insert(size_t pos, Type &&v) { append(pos, std::move(v)); }
+	template<typename C, typename A>
+	UNIGINE_INLINE void insert(size_t pos, const Vector<Type, C, A> &v) { append(pos, v); }
+	template<typename C, typename A>
+	UNIGINE_INLINE void insert(size_t pos, Vector<Type, C, A> &&v) { append(pos, std::move(v)); }
 	template<typename IteratorType>
 	UNIGINE_INLINE void insert(const IteratorTemplate<IteratorType> &it, const Type &v) { append(size_t(it.ptr - get()), v); }
 	template<typename IteratorType>
@@ -551,6 +619,27 @@ public:
 		}
 		return false;
 	}
+	
+	UNIGINE_INLINE bool replaceOne(const Type &old_value, const Type &new_value)
+	{
+		for (Counter i = 0; i < length; ++i)
+		{
+			if (old_value != *(reinterpret_cast<Type *>(data) + i))
+				continue;
+			set(i, new_value);
+			return true;
+		}
+		return false;
+	}
+	
+	UNIGINE_INLINE void replace(const Type &old_value, const Type &new_value)
+	{
+		for (Counter i = 0; i < length; ++i)
+		{
+			if (old_value == *(reinterpret_cast<Type *>(data) + i))
+				set(i, new_value);
+		}
+	}
 
 	UNIGINE_INLINE bool removeOneFast(const Type &v)
 	{
@@ -571,6 +660,17 @@ public:
 			if (v != *(reinterpret_cast<Type *>(data) + i))
 				continue;
 			remove(i);
+		}
+	}
+
+	UNIGINE_INLINE void removeAllFast(const Type &v)
+	{
+		for (Counter i = 0; i < length; ++i)
+		{
+			if (v != *(reinterpret_cast<Type *>(data) + i))
+				continue;
+			removeFast(i);
+			i--;
 		}
 	}
 
@@ -618,6 +718,14 @@ public:
 		assert(index < size_t(length) && "Vector::takeAt: bad index");
 		Type ret = std::move(*(reinterpret_cast<Type *>(data) + index));
 		remove(index);
+		return ret;
+	}
+
+	UNIGINE_INLINE Type takeAtFast(size_t index)
+	{
+		assert(index < size_t(length) && "Vector::takeAtFast: bad index");
+		Type ret = std::move(*(reinterpret_cast<Type *>(data) + index));
+		removeFast(index);
 		return ret;
 	}
 

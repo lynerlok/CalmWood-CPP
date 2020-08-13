@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -23,6 +23,7 @@ namespace Unigine
 
 class Widget;
 class WidgetSprite;
+class WidgetVBox;
 
 
 class UNIGINE_API Gui : public APIInterface
@@ -183,8 +184,11 @@ public:
 	float getToolTipAlpha() const;
 	void setToolTipTime(float time);
 	float getToolTipTime() const;
+	void setToolTipText(const char *text);
 	const char *getToolTipText() const;
+	void setToolTipX(int tooltipx);
 	int getToolTipX() const;
+	void setToolTipY(int tooltipy);
 	int getToolTipY() const;
 	void setToolTip(int x, int y, const char *str);
 	int getToolTipWidth(const char *str) const;
@@ -206,6 +210,7 @@ public:
 	Ptr<Widget> getFocus() const;
 	Ptr<Widget> getOverlappedFocus() const;
 	Ptr<Widget> getPermanentFocus() const;
+	Ptr<WidgetVBox> getVBox() const;
 	void removeFocus();
 	void addChild(const Ptr<Widget> &widget, int flags = -1);
 	void removeChild(const Ptr<Widget> &widget);
@@ -213,7 +218,7 @@ public:
 	int isChild(const Ptr<Widget> &widget) const;
 	int getNumChildren() const;
 	Ptr<Widget> getChild(int num) const;
-	int getActivity() const;
+	bool isActive() const;
 	int getKeyActivity(unsigned int key) const;
 	int setFont(const char *name);
 	int setSkin(const char *name);
@@ -225,6 +230,9 @@ public:
 	int saveDictionary(const char *name, const char *language = 0);
 	int hasTranslation(const char *arg1) const;
 	const char *translate(const char *str);
+	static bool isRenderingBootScreen();
+	static bool isRenderingSplashScreen();
+	static bool isRenderingLoadingScreen();
 };
 typedef Ptr<Gui> GuiPtr;
 

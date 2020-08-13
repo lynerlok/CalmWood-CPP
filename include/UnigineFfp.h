@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -38,7 +38,7 @@ public:
 		MODE_MULTISAMPLE_8,
 		MODE_MULTISAMPLE_16,
 		MODE_SHADOW,
-		MODE_SPLASH,
+		MODE_LOADING_SCREEN,
 		MODE_SOLID,
 		MODE_CUBE,
 		MODE_GRAD,

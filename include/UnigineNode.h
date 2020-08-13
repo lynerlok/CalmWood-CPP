@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -48,10 +48,8 @@ public:
 		NODE_EXTERN,
 		NODE_END = NODE_EXTERN,
 		WORLD_BEGIN,	// worlds
-		WORLD_LAYER = WORLD_BEGIN,
-		WORLD_SPLINE_GRAPH,
+		WORLD_SPLINE_GRAPH = WORLD_BEGIN,
 		WORLD_TRIGGER,
-		WORLD_CLUSTER,
 		WORLD_CLUTTER,
 		WORLD_SWITCHER,
 		WORLD_OCCLUDER,
@@ -292,7 +290,10 @@ public:
 	Math::Mat4 getWorldTransform() const;
 	void setOldWorldTransform(const Math::Mat4 & transform);
 	Math::Mat4 getOldWorldTransform() const;
+	Math::Vec3 getOldWorldPosition() const;
 	Math::Mat4 getIWorldTransform() const;
+	void setTransformWithoutChildren(const Math::Mat4 & transform);
+	void setWorldTransformWithoutChildren(const Math::Mat4 & transform);
 	BoundBox getBoundBox() const;
 	BoundSphere getBoundSphere() const;
 	UNIGINE_BOUND_BOX getWorldBoundBox() const;

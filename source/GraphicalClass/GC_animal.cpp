@@ -8,13 +8,12 @@
 #include <UnigineControls.h>
 #include <UnigineConsole.h>
 #include <UnigineRender.h>
+#include <UnigineComponentSystem.h>
 
 #include "../V2E/U_randomGenerator.hpp"
 #include "../V2E/C_animal.hpp"
 #include "../V2E/C_plant.hpp"
 #include "../V2E/C_environment.hpp"
-
-#include "../ComponentSystem/ComponentSystem.h"
 
 #include "../V2E/C_animal.hpp"
 #include "GC_animal.hpp"

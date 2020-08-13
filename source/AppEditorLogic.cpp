@@ -29,8 +29,7 @@
 #include <UnigineWidgets.h>
 #include <UnigineEngine.h>
 #include <UnigineStreams.h>
-
-#include "ComponentSystem/ComponentSystem.h"
+#include <UnigineComponentSystem.h>
 
 #include "AppEditorLogic.h"
 

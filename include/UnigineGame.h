@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -59,10 +59,10 @@ public:
 	static Ptr<Player> getPlayer();
 	static void getMainPlayers(const Vector< Ptr<Player> > &players);
 	static unsigned int getRandom();
+	static Math::vec4 getRandomColor();
 	static int getRandomInt(int from, int to);
 	static float getRandomFloat(float from, float to);
 	static double getRandomDouble(double from, double to);
-	static Math::vec4 getRandomColor();
 	static float getNoise1(float pos, float size, int frequency);
 	static float getNoise2(const Math::vec2 &pos, const Math::vec2 &size, int frequency);
 	static float getNoise3(const Math::vec3 &pos, const Math::vec3 &size, int frequency);

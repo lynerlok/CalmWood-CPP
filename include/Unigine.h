@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -21,10 +21,12 @@
 #include "UnigineCallback.h"
 #include "UnigineCamera.h"
 #include "UnigineChecksum.h"
+#include "UnigineComponentSystem.h"
 #include "UnigineCompress.h"
 #include "UnigineConfig.h"
 #include "UnigineConsole.h"
 #include "UnigineControls.h"
+#include "UnigineCurve2d.h"
 #include "UnigineDecals.h"
 #include "UnigineDir.h"
 #include "UnigineEditor.h"
@@ -51,6 +53,7 @@
 #include "UnigineInterpreter.h"
 #include "UnigineJson.h"
 #include "UnigineLights.h"
+#include "UnigineLoadingScreen.h"
 #include "UnigineLog.h"
 #include "UnigineLogic.h"
 #include "UnigineMap.h"
@@ -84,7 +87,6 @@
 #include "UnigineShader.h"
 #include "UnigineSort.h"
 #include "UnigineSounds.h"
-#include "UnigineSplash.h"
 #include "UnigineSplineGraph.h"
 #include "UnigineStreams.h"
 #include "UnigineString.h"

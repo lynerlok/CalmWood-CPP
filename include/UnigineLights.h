@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -192,6 +192,8 @@ public:
 	void setBakedDepthTexturePath(const char *path);
 	const char *getBakedDepthTexturePath() const;
 	Ptr<Texture> getBakedDepthTexture() const;
+	Ptr<Texture> getShadowColorTexture() const;
+	Ptr<Texture> getDepthTexture() const;
 	void setShadowScreenSpace(int space);
 	int getShadowScreenSpace() const;
 	void setShadowScreenSpaceNumRays(int rays);
@@ -202,10 +204,22 @@ public:
 	float getShadowScreenSpaceNoiseRay() const;
 	void setShadowScreenSpaceNoiseStep(float step);
 	float getShadowScreenSpaceNoiseStep() const;
-	void setShadowScreenSpaceStepSize(float size);
-	float getShadowScreenSpaceStepSize() const;
-	void setShadowScreenSpaceThreshold(float threshold);
-	float getShadowScreenSpaceThreshold() const;
+	void setShadowScreenSpaceStepSizeFarDistance(float distance);
+	float getShadowScreenSpaceStepSizeFarDistance() const;
+	void setShadowScreenSpaceStepSizeNearDistance(float distance);
+	float getShadowScreenSpaceStepSizeNearDistance() const;
+	void setShadowScreenSpaceStepSizeNear(float val);
+	float getShadowScreenSpaceStepSizeNear() const;
+	void setShadowScreenSpaceStepSizeFar(float val);
+	float getShadowScreenSpaceStepSizeFar() const;
+	void setShadowScreenSpaceThresholdNearDistance(float distance);
+	float getShadowScreenSpaceThresholdNearDistance() const;
+	void setShadowScreenSpaceThresholdFarDistance(float distance);
+	float getShadowScreenSpaceThresholdFarDistance() const;
+	void setShadowScreenSpaceThresholdNear(float val);
+	float getShadowScreenSpaceThresholdNear() const;
+	void setShadowScreenSpaceThresholdFar(float val);
+	float getShadowScreenSpaceThresholdFar() const;
 	void setShadowScreenSpaceSoftness(float softness);
 	float getShadowScreenSpaceSoftness() const;
 	void setShadowScreenSpaceNoiseTranslucent(float translucent);
@@ -261,9 +275,9 @@ public:
 	Math::vec4 getReflectionColor() const;
 	void setReflectionIntensity(float intensity);
 	float getReflectionIntensity() const;
-	void setReflectionVisibilityRoughnessMin(float min);
+	void setReflectionVisibilityRoughnessMin(float val);
 	float getReflectionVisibilityRoughnessMin() const;
-	void setReflectionVisibilityRoughnessMax(float max);
+	void setReflectionVisibilityRoughnessMax(float val);
 	float getReflectionVisibilityRoughnessMax() const;
 	void setReflectionBias(float bias);
 	float getReflectionBias() const;

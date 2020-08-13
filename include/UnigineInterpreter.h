@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -166,6 +166,8 @@ public:
 	Variable(void *interpreter, const TerrainDetailPtr &detail, int append = 0, int manage = 0);
 	Variable(void *interpreter, const TerrainGlobalDetailPtr &detail, int append = 0, int manage = 0);
 	Variable(void *interpreter, const RenderEnvironmentPresetPtr &preset, int append = 0, int manage = 0);
+	Variable(void *interpreter, const ParticleModifierScalarPtr &preset, int append = 0, int manage = 0);
+	Variable(void *interpreter, const ParticleModifierVectorPtr &preset, int append = 0, int manage = 0);
 
 	~Variable();
 
@@ -400,6 +402,14 @@ public:
 	void setRenderEnvironmentPreset(void *interpreter, const RenderEnvironmentPresetPtr &preset, int append = 0, int manage = 0);
 	RenderEnvironmentPresetPtr getRenderEnvironmentPreset(void *interpreter) const;
 	int isRenderEnvironmentPreset(void *interpreter) const;
+
+	void setParticleModifierScalar(void *interpreter, const ParticleModifierScalarPtr &modifier, int append = 0, int manage = 0);
+	ParticleModifierScalarPtr getParticleModifierScalar(void *interpreter) const;
+	int isParticleModifierScalar(void *interpreter) const;
+
+	void setParticleModifierVector(void *interpreter, const ParticleModifierVectorPtr &modifier, int append = 0, int manage = 0);
+	ParticleModifierVectorPtr getParticleModifierVector(void *interpreter) const;
+	int isParticleModifierVector(void *interpreter) const;
 
 	Variable &operator=(const Variable &v);
 	Variable operator*(const Variable &v) const;
@@ -658,6 +668,8 @@ DECLARE_VARIABLE_TO_TYPE(TerrainGlobalLodHeight)
 DECLARE_VARIABLE_TO_TYPE(TerrainGlobalDetail)
 DECLARE_VARIABLE_TO_TYPE(TerrainDetail)
 DECLARE_VARIABLE_TO_TYPE(RenderEnvironmentPreset)
+DECLARE_VARIABLE_TO_TYPE(ParticleModifierScalar)
+DECLARE_VARIABLE_TO_TYPE(ParticleModifierVector)
 
 #undef DECLARE_VARIABLE_TO_TYPE
 
@@ -822,6 +834,8 @@ DECLARE_TYPE_TO_VARIABLE(TerrainGlobalLodHeight)
 DECLARE_TYPE_TO_VARIABLE(TerrainGlobalDetail)
 DECLARE_TYPE_TO_VARIABLE(TerrainDetail)
 DECLARE_TYPE_TO_VARIABLE(RenderEnvironmentPreset)
+DECLARE_TYPE_TO_VARIABLE(ParticleModifierScalar)
+DECLARE_TYPE_TO_VARIABLE(ParticleModifierVector)
 
 #undef DECLARE_TYPE_TO_VARIABLE
 

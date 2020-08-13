@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -31,6 +31,12 @@ protected:
 
 public:
 	static int isInitialized(); 
+	static void setPath(const char *path);
+	static const char *getPath();
+	static void setAutosave(bool autosave);
+	static bool isAutosave();
+	static int load();
+	static int save();
 	static void setEnabled(bool enabled);
 	static bool isEnabled();
 	static void setAlwaysRun(int run);
@@ -195,7 +201,7 @@ public:
 	int saveState(const Ptr<Stream> &stream) const;
 	int restoreState(const Ptr<Stream> &stream);
 	void getStateEvent(int state);
-	int isStateEvent() const;
+	bool isStateEvent() const;
 
 	enum
 	{
@@ -260,7 +266,7 @@ public:
 	int saveState(const Ptr<Stream> &stream) const;
 	int restoreState(const Ptr<Stream> &stream);
 	void getStateEvent(int state);
-	int isStateEvent() const;
+	bool isStateEvent() const;
 
 	enum
 	{

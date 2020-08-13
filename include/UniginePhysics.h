@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -114,22 +114,20 @@ public:
 	static int getNumIterations();
 	static void addUpdateNode(const Ptr<Node> &node);
 	static void addUpdateNodes(const Vector< Ptr<Node> > &nodes);
-	static float getBroadTime();
 	static int getFrame();
-	static float getIntegrateTime();
-	static float getNarrowTime();
 	static int getNumBodies();
 	static int getNumContacts();
 	static int getNumIslands();
 	static int getNumJoints();
+	static float getCollisionTime();
+	static float getIntegrateTime();
 	static float getResponseTime();
 	static float getSimulationTime();
 	static float getTotalTime();
-	static float getUpdateTime();
 	static int saveScene();
 	static int restoreScene(int id);
 	static int removeScene(int id);
-	static int loadSettings(const char *name);
+	static int loadSettings(const char *name, bool clear = false);
 	static int saveSettings(const char *name, int force = 0);
 	static int loadWorld(const Ptr<Xml> &xml);
 	static int saveWorld(const Ptr<Xml> &xml, int force = 0);
@@ -341,6 +339,10 @@ public:
 	Joint::TYPE getType() const;
 	static const char *getTypeName(int type);
 	const char *getTypeName() const;
+	void setNode0(const Ptr<Node> &node0);
+	Ptr<Node> getNode0() const;
+	void setNode1(const Ptr<Node> &node1);
+	Ptr<Node> getNode1() const;
 	void setBody0(const Ptr<Body> &body);
 	Ptr<Body> getBody0() const;
 	void setBody1(const Ptr<Body> &body);
@@ -775,7 +777,12 @@ public:
 	int findJoint(const char *name) const;
 	Ptr<Joint> getJoint(int num) const;
 	int getNumContacts() const;
-	int getContactID(int num) const;
+	unsigned long long getContactID(int num) const;
+	int findContactByID(unsigned long long id) const;
+	bool isContactInternal(int num) const;
+	bool isContactEnter(int num) const;
+	bool isContactLeave(int num) const;
+	bool isContactStay(int num) const;
 	Math::Vec3 getContactPoint(int num) const;
 	Math::vec3 getContactNormal(int num) const;
 	Math::vec3 getContactVelocity(int num) const;
@@ -796,11 +803,19 @@ public:
 	void *addPositionCallback(Unigine::CallbackBase1< Ptr<Body> > *func);
 	bool removePositionCallback(void *id);
 	void clearPositionCallbacks();
-	void *addContactCallback(Unigine::CallbackBase2< Ptr<Body>, int > *func);
-	bool removeContactCallback(void *id);
-	void clearContactCallbacks();
+	void *addContactEnterCallback(Unigine::CallbackBase2< Ptr<Body>, int > *func);
+	bool removeContactEnterCallback(void *id);
+	void clearContactEnterCallbacks();
+	void *addContactLeaveCallback(Unigine::CallbackBase2< Ptr<Body>, int > *func);
+	bool removeContactLeaveCallback(void *id);
+	void clearContactLeaveCallbacks();
+	void *addContactsCallback(Unigine::CallbackBase1< Ptr<Body> > *func);
+	bool removeContactsCallback(void *id);
+	void clearContactsCallbacks();
 	void renderShapes();
 	void renderJoints();
+	void renderExternalContacts();
+	void renderInternalContacts();
 	void renderContacts();
 	void renderVisualizer();
 	Ptr<Body> clone(const Ptr<Object> &object) const;
@@ -831,6 +846,8 @@ public:
 	bool isShapeBased() const;
 	void setFreezable(bool freezable);
 	bool isFreezable() const;
+	void setHighPriorityContacts(bool contacts);
+	bool isHighPriorityContacts() const;
 	void setMass(float mass);
 	float getMass() const;
 	float getIMass() const;
@@ -916,10 +933,10 @@ public:
 	int getCollisionMask() const;
 	void setBroken(bool broken);
 	bool isBroken() const;
-	void setSurfaceProperty(const char *name);
-	const char *getSurfacePropertyName() const;
-	void setMaterial(const char *name);
-	const char *getMaterialName() const;
+	void setSurfaceProperty(const char *property);
+	const char *getSurfaceProperty() const;
+	void setMaterial(const char *material);
+	const char *getMaterial() const;
 	void addForce(const Math::vec3 &force) const;
 	void addTorque(const Math::vec3 &torque) const;
 	void addForce(const Math::vec3 &radius, const Math::vec3 &force) const;
@@ -1015,6 +1032,12 @@ typedef Ptr<BodyWater> BodyWaterPtr;
 class UNIGINE_API BodyParticles : public Body
 {
 public:
+
+	enum ITERATIONS_MODE
+	{
+		ITERATIONS_MODE_OVERRIDE = 0,
+		ITERATIONS_MODE_MULTIPLICATION,
+	};
 	void addParticleForce(int num, const Math::vec3 &force);
 	void addParticleImpulse(int num, const Math::vec3 &impulse);
 	void setAngularRestitution(float restitution);
@@ -1041,6 +1064,8 @@ public:
 	float getMass() const;
 	void setNumIterations(int iterations);
 	int getNumIterations() const;
+	void setIterationsMode(BodyParticles::ITERATIONS_MODE mode);
+	BodyParticles::ITERATIONS_MODE getIterationsMode() const;
 	void setRadius(float radius);
 	float getRadius() const;
 	void setRestitution(float restitution);

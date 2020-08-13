@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -24,6 +24,7 @@
 #endif
 
 #include <xmmintrin.h>
+#include <stdint.h>
 
 namespace Unigine
 {
@@ -166,6 +167,13 @@ public:
 	// Returns the thread priority in range [-3;3].
 	int getPriority() const;
 
+	// Returns a platform specific thread
+	auto getThread() const { return thread; }
+
+	#ifndef _WIN32
+		auto getThreadMutex() const { return mutex; }
+	#endif
+
 	#ifdef _WIN32
 		typedef unsigned long ID;
 	#else
@@ -221,7 +229,7 @@ public:
 		else if (backoff < 22)
 			for (int i = 0; i < 100; ++i) _mm_pause();
 		else
-			Thread::sleep(0);
+			Thread::switchThread();
 		++backoff;
 	}
 private:
@@ -346,7 +354,7 @@ private:
 // with sizeof(T) <= sizeof(int64), for which we have
 // built-in atomic primitives.
 template <typename T>
-class UNIGINE_API Atomic
+class Atomic
 {
 public:
 	Atomic() = default;

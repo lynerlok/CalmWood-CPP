@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -23,6 +23,7 @@
 #include "UnigineShader.h"
 #include "UnigineGUID.h"
 #include "UnigineNode.h"
+#include "UnigineCurve2d.h"
 
 namespace Unigine
 {
@@ -36,7 +37,6 @@ public:
 	{
 		OPTION_BLEND = 0,
 		OPTION_ORDER,
-		OPTION_OFFSET,
 		OPTION_SHADOW_MASK,
 		OPTION_VIEWPORT_MASK,
 		OPTION_TRANSPARENT,
@@ -68,6 +68,7 @@ public:
 	enum
 	{
 		TEXTURE_IMAGE = 0,
+		TEXTURE_CURVE,
 		TEXTURE_GBUFFER_ALBEDO,
 		TEXTURE_GBUFFER_SHADING,
 		TEXTURE_GBUFFER_NORMAL,
@@ -159,8 +160,6 @@ public:
 	int getDepthTest() const;
 	void setOverlap(int overlap);
 	int getOverlap() const;
-	void setOffset(int offset);
-	int getOffset() const;
 	void setOrder(int order);
 	int getOrder() const;
 	const char *getOptionTitle(int option) const;
@@ -301,6 +300,7 @@ public:
 	int findTexture(const char *name) const;
 	bool isTextureHidden(int num) const;
 	bool isTextureOverridden(int num) const;
+	bool isTextureLoaded(int num) const;
 	void resetTexture(int num);
 	bool checkTextureConditions(int num) const;
 	const char *getTextureName(int num) const;
@@ -313,7 +313,7 @@ public:
 	void setTextureFlags(int num, int flags);
 	int getTextureImage(int num, const Ptr<Image> &image) const;
 	int setTextureImage(int num, const Ptr<Image> &image);
-	Ptr<Texture> getTexture(int num) const;
+	Ptr<Texture> getTexture(int num);
 	void setTexture(int num, const Ptr<Texture> &texture);
 	void setTexture(const char *name, const Ptr<Texture> &texture);
 	void setTexturePath(int num, const char *path);
@@ -324,6 +324,8 @@ public:
 	int setProceduralTextureImage(int num, const Ptr<Image> &image);
 	void setProceduralTexture(int num, const Ptr<Texture> &texture);
 	void setImageTextureProcedural(int num, const Ptr<Material> &procedural, int procedural_num);
+	Ptr<TextureCurve> getTextureCurve(int num);
+	Ptr<TextureCurve> getTextureCurveOverride(int num);
 	void setTransparent(int transparent);
 	int getTransparent() const;
 	bool isWater() const;

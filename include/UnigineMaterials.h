@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -30,6 +30,15 @@ protected:
 
 public:
 	static int isInitialized(); 
+
+	enum LOADING_MODE
+	{
+		LOADING_MODE_FAST = 0,
+		LOADING_MODE_FULL_MATERIALS,
+		LOADING_MODE_FULL_MATERIALS_SHADERS,
+	};
+	static void setLoadingMode(Materials::LOADING_MODE mode);
+	static Materials::LOADING_MODE getLoadingMode();
 	static Ptr<Material> loadMaterial(const char *path);
 	static int getNumMaterials();
 	static Ptr<Material> getMaterial(int num);

@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -22,6 +22,7 @@
 #include "UnigineNode.h"
 #include "UnigineTextures.h"
 #include "UnigineTileset.h"
+#include "UnigineCurve2d.h"
 
 namespace Unigine
 {
@@ -415,6 +416,25 @@ public:
 	static int type() { return Node::OBJECT_MESH_SKINNED; }
 	static bool convertible(Node *node) { return (node && node->getType() == type()); }
 
+
+	enum BIND_MODE
+	{
+		BIND_MODE_OVERRIDE = 0,
+		BIND_MODE_ADDITIVE,
+	};
+
+	enum NODE_SPACE
+	{
+		NODE_SPACE_WORLD = 0,
+		NODE_SPACE_LOCAL,
+	};
+
+	enum BONE_SPACE
+	{
+		BONE_SPACE_WORLD = 0,
+		BONE_SPACE_OBJECT,
+		BONE_SPACE_LOCAL,
+	};
 	static Ptr<ObjectMeshSkinned> create(const Ptr<Mesh> &mesh);
 	static Ptr<ObjectMeshSkinned> create(const char *path, bool unique = false);
 	int createMesh(const char *path, bool unique = false);
@@ -521,19 +541,38 @@ public:
 	int getNumBoneChildren(int bone) const;
 	int getBoneChild(int bone, int child) const;
 	Math::mat4 getBoneBindTransform(int bone) const;
-	Math::mat4 getIBoneBindTransform(int bone) const;
+	Math::mat4 getBoneBindITransform(int bone) const;
 	void setBoneTransform(int bone, const Math::mat4 &transform);
-	void setBoneChildrenTransform(int bone, const Math::mat4 &transform);
+	void setBoneTransformWithChildren(int bone, const Math::mat4 &transform);
 	void setBoneTransforms(const int * bones, const Math::mat4 * transforms, int num_bones);
 	Math::mat4 getBoneTransform(int bone) const;
-	Math::mat4 getIBoneTransform(int bone) const;
-	void setWorldBoneTransform(int bone, const Math::Mat4 & transform);
-	void setWorldBoneChildrenTransform(int bone, const Math::Mat4 & transform);
-	Math::Mat4 getWorldBoneTransform(int bone) const;
-	void setLayerBoneTransformEnabled(int layer, int bone, bool enabled);
-	void setLayerBoneTransform(int layer, int bone, const Math::mat4 &transform);
-	Math::mat4 getLayerBoneTransform(int layer, int bone) const;
-	bool isLayerBoneTransform(int layer, int bone) const;
+	Math::mat4 getBoneITransform(int bone) const;
+	void setBoneWorldTransform(int bone, const Math::Mat4 & transform);
+	void setBoneWorldTransformWithChildren(int bone, const Math::Mat4 & transform);
+	Math::Mat4 getBoneWorldTransform(int bone) const;
+	void setBoneLayerTransformEnabled(int layer, int bone, bool enabled);
+	void setBoneLayerTransform(int layer, int bone, const Math::mat4 &transform);
+	Math::mat4 getBoneLayerTransform(int layer, int bone) const;
+	bool isBoneLayerTransform(int layer, int bone) const;
+	Math::mat4 getBoneNotAdditionalBindLocalTransform(int bone) const;
+	Math::mat4 getBoneNotAdditionalBindObjectTransform(int bone) const;
+	Math::Mat4 getBoneNotAdditionalBindWorldTransform(int bone) const;
+	void setBindNode(int bone, const Ptr<Node> &node);
+	void removeBindNode(int bone);
+	Ptr<Node> getBindNode(int bone) const;
+	void setBindNodeSpace(int bone, ObjectMeshSkinned::NODE_SPACE space);
+	ObjectMeshSkinned::NODE_SPACE getBindNodeSpace(int bone) const;
+	void setBindBoneSpace(int bone, ObjectMeshSkinned::BONE_SPACE space);
+	ObjectMeshSkinned::BONE_SPACE getBindBoneSpace(int bone) const;
+	void setBindMode(int bone, ObjectMeshSkinned::BIND_MODE mode);
+	ObjectMeshSkinned::BIND_MODE getBindMode(int bone) const;
+	void setBindNodeOffset(int bone, const Math::Mat4 & offset);
+	Math::Mat4 getBindNodeOffset(int bone) const;
+	void addVisualizeBone(int bone);
+	void removeVisualizeBone(int bone);
+	void clearVisualizeBones();
+	void setVisualizeAllBones(bool bones);
+	bool isVisualizeAllBones() const;
 	int addAnimation(const char *path);
 	int addAnimation(const Ptr<Mesh> &mesh, const char *path = 0);
 	void removeAnimation(int animation);
@@ -948,6 +987,14 @@ public:
 	float getMinFadeHeight() const;
 	void setMaxFadeHeight(float height);
 	float getMaxFadeHeight() const;
+	void setMinVisibleTexelSize(float size);
+	float getMinVisibleTexelSize() const;
+	void setMaxVisibleTexelSize(float size);
+	float getMaxVisibleTexelSize() const;
+	void setMinFadeTexelSize(float size);
+	float getMinFadeTexelSize() const;
+	void setMaxFadeTexelSize(float size);
+	float getMaxFadeTexelSize() const;
 	void setMaskByAlbedo(const Math::vec4 &albedo);
 	Math::vec4 getMaskByAlbedo() const;
 	void setMaskThreshold(float threshold);
@@ -973,6 +1020,8 @@ public:
 	const char *getName() const;
 	void setEnabled(bool enabled);
 	bool isEnabled() const;
+	void setDithering(float dithering);
+	float getDithering() const;
 	int getRenderOrder() const;
 	void swapRenderOrder(const Ptr<TerrainDetailMask> &mask);
 	Ptr<TerrainDetail> addDetail();
@@ -1533,6 +1582,97 @@ public:
 };
 typedef Ptr<ObjectTerrainGlobal> ObjectTerrainGlobalPtr;
 
+
+class UNIGINE_API ParticleModifier : public APIInterface
+{
+public:
+
+	enum TYPE
+	{
+		PARTICLE_MODIFIER_SCALAR = 0,
+		PARTICLE_MODIFIER_VECTOR,
+	};
+
+	enum MODE
+	{
+		MODE_CONSTANT = 0,
+		MODE_RANDOM_BETWEEN_TWO_CONSTANTS,
+		MODE_CURVE,
+		MODE_RANDOM_BETWEEN_TWO_CURVES,
+		NUM_MODES,
+	};
+	bool isSignedValues() const;
+	bool saveState(const Ptr<Stream> &stream) const;
+	bool restoreState(const Ptr<Stream> &stream);
+	bool save(const Ptr<Xml> &xml) const;
+	bool load(const Ptr<Xml> &xml);
+	long long getSystemMemoryUsage() const;
+	ParticleModifier::TYPE getType() const;
+	void setMode(ParticleModifier::MODE mode);
+	ParticleModifier::MODE getMode() const;
+};
+typedef Ptr<ParticleModifier> ParticleModifierPtr;
+
+
+class UNIGINE_API ParticleModifierScalar : public ParticleModifier
+{
+public:
+	static bool convertible(ParticleModifier *obj) { return obj && obj->getType() == ParticleModifier::PARTICLE_MODIFIER_SCALAR; }
+	void setCurveScale(float scale);
+	float getCurveScale() const;
+	void setConstant(float constant);
+	float getConstant() const;
+	void setConstantMin(float val);
+	float getConstantMin() const;
+	void setConstantMax(float val);
+	float getConstantMax() const;
+	void setCurve(const Ptr<Curve2d> &curve);
+	Ptr<Curve2d> getCurve() const;
+	void setCurveMin(const Ptr<Curve2d> &val);
+	Ptr<Curve2d> getCurveMin() const;
+	void setCurveMax(const Ptr<Curve2d> &val);
+	Ptr<Curve2d> getCurveMax() const;
+	float getMaxValue() const;
+	float getMinValue() const;
+};
+typedef Ptr<ParticleModifierScalar> ParticleModifierScalarPtr;
+
+
+class UNIGINE_API ParticleModifierVector : public ParticleModifier
+{
+public:
+	static bool convertible(ParticleModifier *obj) { return obj && obj->getType() == ParticleModifier::PARTICLE_MODIFIER_VECTOR; }
+	void setConstant(const Math::vec3 &constant);
+	Math::vec3 getConstant() const;
+	void setConstantMin(const Math::vec3 &val);
+	Math::vec3 getConstantMin() const;
+	void setConstantMax(const Math::vec3 &val);
+	Math::vec3 getConstantMax() const;
+	void setCurveScale(float scale);
+	float getCurveScale() const;
+	void setCurveX(const Ptr<Curve2d> &curvex);
+	Ptr<Curve2d> getCurveX() const;
+	void setCurveY(const Ptr<Curve2d> &curvey);
+	Ptr<Curve2d> getCurveY() const;
+	void setCurveZ(const Ptr<Curve2d> &curvez);
+	Ptr<Curve2d> getCurveZ() const;
+	void setCurveXMin(const Ptr<Curve2d> &xmin);
+	Ptr<Curve2d> getCurveXMin() const;
+	void setCurveYMin(const Ptr<Curve2d> &ymin);
+	Ptr<Curve2d> getCurveYMin() const;
+	void setCurveZMin(const Ptr<Curve2d> &zmin);
+	Ptr<Curve2d> getCurveZMin() const;
+	void setCurveXMax(const Ptr<Curve2d> &xmax);
+	Ptr<Curve2d> getCurveXMax() const;
+	void setCurveYMax(const Ptr<Curve2d> &ymax);
+	Ptr<Curve2d> getCurveYMax() const;
+	void setCurveZMax(const Ptr<Curve2d> &zmax);
+	Ptr<Curve2d> getCurveZMax() const;
+	Math::vec3 getMaxValue() const;
+	Math::vec3 getMinValue() const;
+};
+typedef Ptr<ParticleModifierVector> ParticleModifierVectorPtr;
+
 //////////////////////////////////////////////////////////////////////////
 
 class UNIGINE_API ObjectParticles : public Object
@@ -1596,16 +1736,8 @@ public:
 	int getPhysicalMask() const;
 	void setPhysicalMass(float mass);
 	float getPhysicalMass() const;
-	void setLengthStretch(float stretch);
-	float getLengthStretch() const;
-	void setLengthFlattening(float flattening);
-	float getLengthFlattening() const;
 	void setLinearDamping(float damping);
 	float getLinearDamping() const;
-	void setAngularDamping(float damping);
-	float getAngularDamping() const;
-	void setGrowthDamping(float damping);
-	float getGrowthDamping() const;
 	void setRestitution(float restitution);
 	float getRestitution() const;
 	void setRoughness(float roughness);
@@ -1630,16 +1762,12 @@ public:
 	bool isEmitterContinuous() const;
 	void setEmitterSequence(int sequence);
 	int getEmitterSequence() const;
-	void setEmitterLimit(int limit);
-	int getEmitterLimit() const;
+	void setEmitterLimitPerSpawn(int spawn);
+	int getEmitterLimitPerSpawn() const;
 	void setEmitterSync(int sync);
 	int getEmitterSync() const;
 	void setEmitterSize(const Math::vec3 &size);
 	Math::vec3 getEmitterSize() const;
-	void setEmitterDirection(const Math::vec3 &direction);
-	Math::vec3 getEmitterDirection() const;
-	void setEmitterSpread(const Math::vec3 &spread);
-	Math::vec3 getEmitterSpread() const;
 	void setEmitterVelocity(const Math::vec3 &velocity);
 	Math::vec3 getEmitterVelocity() const;
 	void addEmitterSpark(const Math::Vec3 & point, const Math::vec3 &normal, const Math::vec3 &velocity);
@@ -1655,23 +1783,16 @@ public:
 	void setLife(float mean, float spread);
 	float getLifeMean() const;
 	float getLifeSpread() const;
-	void setVelocity(float mean, float spread);
-	float getVelocityMean() const;
-	float getVelocitySpread() const;
-	void setAngle(float mean, float spread);
-	float getAngleMean() const;
-	float getAngleSpread() const;
-	void setParticlesRotation(float mean, float spread);
-	float getParticlesRotationMean() const;
-	float getParticlesRotationSpread() const;
-	void setRadius(float mean, float spread);
-	float getRadiusMean() const;
-	float getRadiusSpread() const;
-	void setGrowth(float mean, float spread);
-	float getGrowthMean() const;
-	float getGrowthSpread() const;
-	void setGravity(const Math::vec3 &gravity);
-	Math::vec3 getGravity() const;
+	Ptr<ParticleModifierScalar> getAngleOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getRotationOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getRadiusOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getGrowthOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getLengthStretchOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getLengthFlatteningOverTimeModifier() const;
+	Ptr<ParticleModifierScalar> getVelocityOverTimeModifier() const;
+	Ptr<ParticleModifierVector> getDirectionOverTimeModifier() const;
+	Ptr<ParticleModifierVector> getPositionOverTimeModifier() const;
+	Ptr<ParticleModifierVector> getGravityOverTimeModifier() const;
 	int addForce();
 	void removeForce(int num);
 	void setNumForces(int forces);

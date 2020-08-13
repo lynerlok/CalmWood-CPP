@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -119,7 +119,7 @@ public:
 	UGUID getFileGUID() const;
 	void setEditable(int editable);
 	bool isHierarchyValid() const;
-	int setParent(const Ptr<Property> &property, int save_all_values = 0);
+	int setParent(const Ptr<Property> &property, bool save_all_values = false);
 	Ptr<Property> getParent() const;
 	int getNumChildren() const;
 	Ptr<Property> getChild(int num) const;
@@ -229,8 +229,8 @@ public:
 	double getValueDouble() const;
 	void setValueColor(const Math::vec4 &color);
 	Math::vec4 getValueColor() const;
-	void setValueString(const String & val);
-	String getValueString() const;
+	void setValueString(const char *val);
+	const char *getValueString() const;
 	void setValueVec2(const Math::vec2 &vec2);
 	Math::vec2 getValueVec2() const;
 	void setValueVec3(const Math::vec3 &vec3);

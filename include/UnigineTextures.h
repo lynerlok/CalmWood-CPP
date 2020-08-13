@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -16,6 +16,7 @@
 #pragma once
 
 #include "UnigineImage.h"
+#include "UnigineCurve2d.h"
 
 namespace Unigine
 {
@@ -160,6 +161,7 @@ public:
 	bool getImage(const Ptr<Image> &image) const;
 	void clear();
 	void destroy();
+	bool isValid();
 	int getType() const;
 	const char *getTypeName() const;
 	bool is2DType() const;
@@ -195,6 +197,7 @@ public:
 	bool isAnisotropy() const;
 	bool getMultisample() const;
 	bool createMipmaps();
+	void clearBuffer(const Math::vec4 &color);
 	void clearBuffer();
 	void swap(const Ptr<Texture> &texture);
 	bool copy(const Ptr<Texture> &src);
@@ -300,5 +303,28 @@ public:
 	void unbindAll();
 };
 typedef Ptr<RenderTarget> RenderTargetPtr;
+
+
+class UNIGINE_API TextureCurve : public APIInterface
+{
+public:
+	static Ptr<TextureCurve> create(int num_channels, int resolution, int flags);
+	static Ptr<TextureCurve> create(const Ptr<TextureCurve> &texture_curve);
+	Ptr<Texture> getTexture() const;
+	void releaseTexture();
+	void copy(const Ptr<TextureCurve> &src_texture_curve);
+	Ptr<TextureCurve> clone() const;
+	Ptr<Curve2d> getCurve(int channel) const;
+	void setNumChannels(int channels);
+	int getNumChannels() const;
+	void setResolution(int resolution);
+	int getResolution() const;
+	void setFlags(int flags);
+	int getFlags() const;
+	void *addChangedCallback(Unigine::CallbackBase *func);
+	bool removeChangedCallback(void *id);
+	void clearChangedCallbacks();
+};
+typedef Ptr<TextureCurve> TextureCurvePtr;
 
 } // namespace Unigine

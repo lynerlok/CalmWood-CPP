@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -91,7 +91,8 @@ public:
 	virtual bool isHeadRotationLocked() const = 0;
 	virtual int getMaxTrackedDeviceCount() const = 0;
 	virtual int getControllerStateAxisCount() const = 0;
-	virtual Math::mat4 getDevicePose(int device_num) = 0;
+	virtual UNIGINE_DEPRECATED(Math::mat4 getDevicePose(int device_num)) = 0;
+	virtual Math::mat4 getDeviceTransform(int device_num) = 0;
 	virtual Math::vec3 getDeviceVelocity(int device_num) = 0;
 	virtual Math::vec3 getDeviceAngularVelocity(int device_num) = 0;
 	virtual bool isDeviceConnected(int device_num) = 0;

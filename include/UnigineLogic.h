@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -42,12 +42,6 @@ public:
 	// Returns 1 on success, or 0 if an error occurred.
 	virtual int shutdown() { return 1; }
 
-	// Override this function if application directly uses any OpenGL or DirectX commands.
-	// It is used to reinitialize the graphics context. Engine calls this function when the video mode is changed or application is restarted (i.e. video_restart is called).
-	// Similar to system script's destroyRenderResources function.
-	// Returns 1 on success, or 0 if an error occurred.
-	virtual int destroyRenderResources() { return 1; }
-
 	// Engine calls this function before updating each render frame.
 	// Similar to system script's update function.
 	// Returns 1 on success, or 0 if an error occurred.
@@ -75,12 +69,6 @@ public:
 	// Similar to world script's shutdown function.
 	// Returns 1 on success, or 0 if an error occurred.
 	virtual int shutdown() { return 1; }
-
-	// Override this function if application directly uses any OpenGL or DirectX commands.
-	// It is used to reinitialize the graphics context. Engine calls this function when the video mode is changed or application is restarted (i.e. video_restart is called).
-	// Similar to world script's destroyRenderResources function.
-	// Returns 1 on success, or 0 if an error occurred.
-	virtual int destroyRenderResources() { return 1; }
 
 	// Engine calls this function "size" times before updating each render frame.
 	// size - count of threads
@@ -114,11 +102,6 @@ public:
 	// Returns 1 on success, or 0 if an error occurred.
 	virtual int swap() { return 1; }
 	
-	// Engine calls this function after swap buffers every frame
-	// (at the moment all threads have already finished their work).
-	// Returns 1 on success, or 0 if an error occurred.
-	virtual int postSwap() { return 1; }
-
 	// Override this function if application needs to serialize user data to a file.
 	// Engine calls this function when the world is saving its state (i.e. state_save is called).
 	// Similar to world script's save function.
@@ -148,12 +131,6 @@ public:
 	// Similar to editor script's shutdown function.
 	// Returns 1 on success, or 0 if an error occurred.
 	virtual int shutdown() { return 1; }
-
-	// Override this function if application directly uses any OpenGL or DirectX commands.
-	// It is used to reinitialize the graphics context. Engine calls this function when the video mode is changed or application is restarted (i.e. video_restart is called).
-	// Similar to editor script's destroyRenderResources function.
-	// Returns 1 on success, or 0 if an error occurred.
-	virtual int destroyRenderResources() { return 1; }
 
 	// If editor is loaded, engine calls this function before updating each render frame.
 	// Similar to editor script's update function.

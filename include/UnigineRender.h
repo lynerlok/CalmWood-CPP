@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -51,6 +51,20 @@ public:
 	float getHazeDensity() const;
 	void setHazeMaxDistance(float distance);
 	float getHazeMaxDistance() const;
+	void setHazePhysicalStartHeight(float height);
+	float getHazePhysicalStartHeight() const;
+	void setHazePhysicalHalfVisibilityDistance(float distance);
+	float getHazePhysicalHalfVisibilityDistance() const;
+	void setHazePhysicalHalfFalloffHeight(float height);
+	float getHazePhysicalHalfFalloffHeight() const;
+	void setHazePhysicalAmbientLightIntensity(float intensity);
+	float getHazePhysicalAmbientLightIntensity() const;
+	void setHazePhysicalAmbientColorSaturation(float saturation);
+	float getHazePhysicalAmbientColorSaturation() const;
+	void setHazePhysicalSunLightIntensity(float intensity);
+	float getHazePhysicalSunLightIntensity() const;
+	void setHazePhysicalSunColorSaturation(float saturation);
+	float getHazePhysicalSunColorSaturation() const;
 	void setScatteringBaseLUTName(const char *name);
 	const char *getScatteringBaseLUTName() const;
 	void setScatteringMieLUTName(const char *name);
@@ -116,18 +130,6 @@ public:
 
 	enum
 	{
-		GPU_UNKNOWN = 0,
-		GPU_AMD,
-		GPU_NVIDIA,
-		GPU_INTEL,
-		GPU_ARM,
-		GPU_APPLE,
-		GPU_IMGTEC,
-		GPU_QUALCOMM,
-	};
-
-	enum
-	{
 		QUALITY_LOW = 0,
 		QUALITY_MEDIUM,
 		QUALITY_HIGH,
@@ -159,6 +161,8 @@ public:
 		PASS_SHADOW,
 		PASS_DEPTH_PRE_PASS,
 		PASS_POST,
+		PASS_PROCEDURAL_DECALS,
+		PASS_PROCEDURAL_FIELDS,
 		PASS_CUSTOM_0,
 		PASS_CUSTOM_1,
 		PASS_CUSTOM_2,
@@ -219,6 +223,15 @@ public:
 	enum CALLBACK_INDEX
 	{
 		CALLBACK_BEGIN = 0,
+		CALLBACK_BEGIN_SHADOWS,
+		CALLBACK_BEGIN_WORLD_SHADOW,
+		CALLBACK_END_WORLD_SHADOW,
+		CALLBACK_BEGIN_PROJ_SHADOW,
+		CALLBACK_END_PROJ_SHADOW,
+		CALLBACK_BEGIN_OMNI_SHADOW,
+		CALLBACK_END_OMNI_SHADOW,
+		CALLBACK_END_SHADOWS,
+		CALLBACK_BEGIN_SCREEN,
 		CALLBACK_BEGIN_OPACITY_GBUFFER,
 		CALLBACK_END_OPACITY_GBUFFER,
 		CALLBACK_BEGIN_OPACITY_DECALS,
@@ -279,10 +292,11 @@ public:
 		CALLBACK_END_DEBUG_MATERIALS,
 		CALLBACK_BEGIN_VISUALIZER,
 		CALLBACK_END_VISUALIZER,
+		CALLBACK_END_SCREEN,
 		CALLBACK_END,
 		NUM_CALLBACKS,
 	};
-	static void renderProcedurals(const Vector< Ptr<Material> > &materials);
+	UNIGINE_DEPRECATED(static void renderProcedurals(const Vector< Ptr<Material> > &materials));
 	static int createMipmapsCubeGGX(const Ptr<Image> &image, float quality);
 	static int createShorelineDistanceField(const Ptr<Image> &image, const Ptr<Image> &mask, int shoreline_radius, int blur_radius, int downsample_resolution);
 	static int compressTexture(const Ptr<Texture> &texture, Ptr<Image> &destination, int quality = 1, int new_texture_format = -1, int use_mip_maps = -1);
@@ -385,8 +399,6 @@ public:
 	static int getStreamingDestroyDuration();
 	static void setStreamingTexturesMemoryLimit(int limit);
 	static int getStreamingTexturesMemoryLimit();
-	static void setStreamingTexturesCachePreload(bool preload);
-	static bool isStreamingTexturesCachePreload();
 	static void setStreamingTexturesCacheResolution(int resolution);
 	static int getStreamingTexturesCacheResolution();
 	static void setStreamingMeshesMemoryLimit(int limit);
@@ -395,18 +407,6 @@ public:
 	static int getStreamingParticlesMemoryLimit();
 	static void setShadersPreload(bool preload);
 	static bool isShadersPreload();
-	static void setFPSStabilization(bool stabilization);
-	static bool isFPSStabilization();
-	static void setFPSStabilizationSpeedUP(float fpsstabilizationspeedup);
-	static float getFPSStabilizationSpeedUP();
-	static void setFPSStabilizationSpeedDown(float down);
-	static float getFPSStabilizationSpeedDown();
-	static void setFPSStabilizationMin(int min);
-	static int getFPSStabilizationMin();
-	static void setFPSStabilizationRounding(int rounding);
-	static int getFPSStabilizationRounding();
-	static void setFPSStabilizationOffset(int offset);
-	static int getFPSStabilizationOffset();
 	static void setDistanceScale(float scale);
 	static float getDistanceScale();
 	static void setFieldDistance(float distance);
@@ -650,9 +650,9 @@ public:
 	static float getSSRNoiseRay();
 	static void setSSRNoiseStep(float step);
 	static float getSSRNoiseStep();
-	static void setSSRVisibilityRoughnessMin(float min);
+	static void setSSRVisibilityRoughnessMin(float val);
 	static float getSSRVisibilityRoughnessMin();
-	static void setSSRVisibilityRoughnessMax(float max);
+	static void setSSRVisibilityRoughnessMax(float val);
 	static float getSSRVisibilityRoughnessMax();
 	static void setSSRThreshold(float threshold);
 	static float getSSRThreshold();
@@ -828,18 +828,6 @@ public:
 	static float getCrossThreshold();
 	static void setCrossColor(const Math::vec4 &color);
 	static Math::vec4 getCrossColor();
-	static void setSunShafts(bool shafts);
-	static bool isSunShafts();
-	static void setSunShaftsScale(float scale);
-	static float getSunShaftsScale();
-	static void setSunShaftsLength(float length);
-	static float getSunShaftsLength();
-	static void setSunShaftsAttenuation(float attenuation);
-	static float getSunShaftsAttenuation();
-	static void setSunShaftsThreshold(float threshold);
-	static float getSunShaftsThreshold();
-	static void setSunShaftsColor(const Math::vec4 &color);
-	static Math::vec4 getSunShaftsColor();
 	static void setShadowShafts(bool shafts);
 	static bool isShadowShafts();
 	static void setShadowShaftsExposure(float exposure);
@@ -898,6 +886,13 @@ public:
 	static Math::vec4 getEnvironmentHazeColor();
 	static float getEnvironmentHazeMaxDistance();
 	static float getEnvironmentHazeDensity();
+	static float getEnvironmentHazePhysicalStartHeight();
+	static float getEnvironmentHazePhysicalHalfVisibilityDistance();
+	static float getEnvironmentHazePhysicalHalfFalloffHeight();
+	static float getEnvironmentHazePhysicalAmbientLightIntensity();
+	static float getEnvironmentHazePhysicalAmbientColorSaturation();
+	static float getEnvironmentHazePhysicalSunLightIntensity();
+	static float getEnvironmentHazePhysicalSunColorSaturation();
 	static float getEnvironmentAmbientIntensity();
 	static float getEnvironmentReflectionIntensity();
 	static float getEnvironmentSkyIntensity();
@@ -1059,6 +1054,8 @@ public:
 	static float getLandscapeTerrainCullingBackFace();
 	static void setLandscapeTerrainCullingObliqueFrustum(float frustum);
 	static float getLandscapeTerrainCullingObliqueFrustum();
+	static void setLandscapeTerrainMaskDithering(float dithering);
+	static float getLandscapeTerrainMaskDithering();
 	static void setLandscapeCacheCPUSize(int size);
 	static int getLandscapeCacheCPUSize();
 	static void setLandscapeCacheGPUSize(int size);
@@ -1101,6 +1098,8 @@ public:
 	static int getWaterAnisotropy();
 	static void setCloudsEnabled(bool enabled);
 	static bool isCloudsEnabled();
+	static void setCloudsFixCoverageTiling(bool tiling);
+	static bool isCloudsFixCoverageTiling();
 	static void setCloudsGroundShadows(bool shadows);
 	static bool isCloudsGroundShadows();
 	static void setCloudsShadowShafts(bool shafts);
@@ -1139,6 +1138,10 @@ public:
 	static float getCloudsNoiseLighting();
 	static void setCloudsNoiseStepSkip(float skip);
 	static float getCloudsNoiseStepSkip();
+	static void setCloudsRounded(bool rounded);
+	static bool isCloudsRounded();
+	static void setCloudsRoundedPlanetRadius(float radius);
+	static float getCloudsRoundedPlanetRadius();
 	static void setFieldHeightResolution(int resolution);
 	static int getFieldHeightResolution();
 	static void setFieldPrecision(bool precision);
@@ -1183,6 +1186,8 @@ public:
 	static bool isShowGeodeticPivot();
 	static void setShowLandscapeMask(int mask);
 	static int getShowLandscapeMask();
+	static void setShowLandscapeAlbedo(bool albedo);
+	static bool isShowLandscapeAlbedo();
 	static void setShowLandscapeTerrainVTStreaming(bool streaming);
 	static bool isShowLandscapeTerrainVTStreaming();
 	static void setShowTextures(int textures);
@@ -1226,7 +1231,7 @@ public:
 	static int getNumShadows();
 	static int getNumSurfaces();
 	static int getNumTriangles();
-	static bool loadSettings(const char *file);
+	static bool loadSettings(const char *file, bool clear = false);
 	static bool saveSettings(const char *file);
 	static bool loadWorld(const Ptr<Xml> &xml);
 	static bool saveWorld(const Ptr<Xml> &xml);
@@ -1346,7 +1351,7 @@ public:
 		BIND_ALL = 0,
 		BIND_FRAGMENT,
 	};
-	static void clearStates();
+	static void clearStates(bool clear_all = true);
 	static void clearStructuredBuffers();
 	static void clearStructuredBuffer(const Ptr<StructuredBuffer> &buffer);
 	static void clearTextures();
@@ -1368,13 +1373,18 @@ public:
 	static int getBufferMask(int num);
 	static void setDepthFunc(int func);
 	static int getDepthFunc();
-	static void setStencilFunc(int func, int pass, int ref);
+	static void setStencilFunc(int func);
 	static int getStencilFunc();
+	static void setStencilPass(int pass);
 	static int getStencilPass();
+	static void setStencilRef(int ref);
 	static int getStencilRef();
 	static void setBlendFunc(int src, int dest, int blend_op = 0);
+	static void setBlendSrcFunc(int func);
 	static int getBlendSrcFunc();
+	static void setBlendDestFunc(int func);
 	static int getBlendDestFunc();
+	static void setBlendOperation(int operation);
 	static int getBlendOperation();
 	static void setBlendFuncBuffer(int num, int src, int dest, int blend_op = 0);
 	static int getBlendSrcFuncBuffer(int num);
@@ -1387,7 +1397,9 @@ public:
 	static void setPolygonFill(int fill);
 	static int getPolygonFill();
 	static void setPolygonOffset(float bias, float offset);
+	static void setPolygonBias(float bias);
 	static float getPolygonBias();
+	static void setPolygonSlope(float slope);
 	static float getPolygonSlope();
 	static void setAnisotropy(int anisotropy);
 	static int getAnisotropy();
@@ -1419,6 +1431,78 @@ public:
 		RENDER_STEREO_HORIZONTAL,
 		RENDER_STEREO_VERTICAL,
 	};
+
+	struct CBufferCamera
+	{
+		Math::mat4 camera_projection;
+		Math::mat4 camera_iprojection;
+
+		Math::vec4 oblique_frustum_plane;
+		int is_oblique_frustum;
+
+		Math::mat4 projection;
+		Math::mat4 iprojection;
+
+		Math::mat4 projection_screen;
+		Math::mat4 iprojection_screen;
+
+		Math::mat4 imodelview;
+		Math::mat4 old_imodelview;
+		Math::mat4 old_imodelview_delta;
+
+		Math::mat4 modelview;
+
+		Math::vec3 camera_offset;
+		Math::vec3 camera_position;
+		Math::vec3 camera_direction;
+
+		Math::vec3 projection_row_0;
+		Math::vec3 projection_row_1;
+		Math::vec3 projection_row_2;
+
+		Math::vec4 modelview_projection_x;
+		Math::vec4 modelview_projection_y;
+		Math::vec4 modelview_projection_w;
+
+		Math::vec4 modelview_projection_old_x;
+		Math::vec4 modelview_projection_old_y;
+		Math::vec4 modelview_projection_old_w;
+	};
+
+
+	struct CBufferScattering
+	{
+		Math::vec3 scattering_sun_dir;
+		Math::vec3 scattering_moon_dir;
+
+		float environment_ambient_intensity;
+		float environment_reflection_intensity;
+		float environment_sky_intensity;
+
+		Math::vec4 haze_color;
+		float haze_max_distance;
+		float haze_density;
+
+		float haze_physical_start_height;
+		float haze_physical_density;
+		float haze_physical_falloff;
+		float haze_physical_zero_visibility_height;
+
+		float haze_physical_ambient_light_intensity;
+		float haze_physical_ambient_color_saturation;
+		float haze_physical_sun_light_intensity;
+		float haze_physical_sun_color_saturation;
+
+		Math::vec3 sky_up;
+		float sky_altitude;
+		Math::mat4 sky_transform;
+
+		Math::mat4 sun_rotation;
+		Math::mat4 moon_rotation;
+	};
+
+	static Renderer::CBufferCamera getShaderCBufferCamera();
+	static Renderer::CBufferScattering getShaderCBufferScattering();
 	static bool hasGeodeticPivot();
 	static bool isNode();
 	static bool isReflection();
@@ -1455,13 +1539,13 @@ public:
 	static bool useDynamicReflections();
 	static bool usePostEffects();
 	static bool useOcclusionQueries();
+	static Ptr<Light> getCurrentLight();
 	static void saveState();
 	static void restoreState();
 	static void setBufferMask(Render::PASS pass, const Ptr<Material> &material);
 	static void setDepthFunc(Render::PASS pass, const Ptr<Material> &material);
 	static void setBlendFunc(Render::PASS pass, const Ptr<Material> &material);
 	static void setPolygonCull(Render::PASS pass, const Ptr<Material> &material);
-	static void setPolygonOffset(Render::PASS pass, const Ptr<Material> &material);
 	static void clearShader();
 	static void clearStates();
 	static void setMaterial(Render::PASS pass, const Ptr<Material> &material);

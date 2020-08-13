@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -29,6 +29,18 @@ protected:
 
 public:
 	static int isInitialized(); 
+
+	enum
+	{
+		GPU_UNKNOWN = 0,
+		GPU_AMD,
+		GPU_NVIDIA,
+		GPU_INTEL,
+		GPU_ARM,
+		GPU_APPLE,
+		GPU_IMGTEC,
+		GPU_QUALCOMM,
+	};
 	static const char *getBinaryInfo();
 	static const char *getRevisionInfo();
 	static const char *getSystemInfo();
@@ -49,7 +61,10 @@ public:
 	static bool hasHyperThreading();
 	static int getGPUCount();
 	static const char *getGPUInfo(int video_adapter_num = 0);
+	static int getGPUID(int video_adapter_num = 0);
 	static int getGPUMemory(int video_adapter_num = 0);
+	static int getGPUName(const char *str);
+	static int getGPUName(int video_adapter_num = 0);
 };
 
 } // namespace Unigine

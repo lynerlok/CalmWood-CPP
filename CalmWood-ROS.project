@@ -2,6 +2,7 @@
 	"version": "2",
 	"run_settings": {
 		"application": "custom",
+		"microprofile_enabled": 0,
 		"debug": 0,
 		"architecture": "x64",
 		"app_name": "/CalmWood-ROS_x64d",
@@ -9,6 +10,7 @@
 	},
 	"edit_settings": {
 		"arguments": "",
+		"microprofile_enabled": 0,
 		"debug": "0"
 	},
 	"project_settings": {
@@ -49,14 +51,14 @@
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450730264"
+				"hash": "1597336098730264"
 			},
 			{
 				"file": "bin/ApplicationLauncher_x64d",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450973680"
+				"hash": "1597336098973744"
 			},
 			{
 				"file": "bin/CalmWood-ROS_x64",
@@ -77,133 +79,133 @@
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974504577424"
+				"hash": "15973360994672648"
 			},
 			{
 				"file": "bin/Editor_x64d",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974508343552"
+				"hash": "15973360998480848"
 			},
 			{
 				"file": "bin/libEditorCore_x64.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "159239745029892848"
+				"hash": "159733609930766112"
 			},
 			{
 				"file": "bin/libEditorCore_x64d.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "159239745060194848"
+				"hash": "159733609962215584"
 			},
 			{
 				"file": "bin/libFbxImporter_x64.so",
 				"tags": [
 					"plugins"
 				],
-				"hash": "159239745111192696"
+				"hash": "159733610011225816"
 			},
 			{
 				"file": "bin/libFbxImporter_x64d.so",
 				"tags": [
 					"plugins"
 				],
-				"hash": "159239745113005136"
+				"hash": "159733610013096336"
 			},
 			{
 				"file": "bin/libGLTFImporter_x64.so",
 				"tags": [
 					"plugins"
 				],
-				"hash": "1592397451950624"
+				"hash": "1597336100983264"
 			},
 			{
 				"file": "bin/libGLTFImporter_x64d.so",
 				"tags": [
 					"plugins"
 				],
-				"hash": "15923974512681912"
+				"hash": "15973361002775912"
 			},
 			{
 				"file": "bin/libQt5Concurrent.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "159239745024160"
+				"hash": "159733609824160"
 			},
 			{
 				"file": "bin/libQt5Core.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974506320384"
+				"hash": "15973360986320384"
 			},
 			{
 				"file": "bin/libQt5DBus.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450551864"
+				"hash": "1597336098551864"
 			},
 			{
 				"file": "bin/libQt5Gui.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974506328592"
+				"hash": "15973360986328592"
 			},
 			{
 				"file": "bin/libQt5Network.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974501376664"
+				"hash": "15973360981376664"
 			},
 			{
 				"file": "bin/libQt5Widgets.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974506762504"
+				"hash": "15973360986762504"
 			},
 			{
 				"file": "bin/libQt5XcbQpa.so.5",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974501459648"
+				"hash": "15973360981459648"
 			},
 			{
 				"file": "bin/libUnigine_x64.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450283895400"
+				"hash": "159733609878761984"
 			},
 			{
 				"file": "bin/libUnigine_x64d.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "159239745089585512"
+				"hash": "159733609891732088"
 			},
 			{
 				"file": "bin/libopenal.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "15923974512746208"
+				"hash": "15973361002746208"
 			},
 			{
 				"file": "bin/libpng12.so.0",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450158616"
+				"hash": "1597336099158616"
 			},
 			{
 				"file": "bin/platforms/",
@@ -217,35 +219,35 @@
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450442656"
+				"hash": "1597336098442656"
 			},
 			{
 				"file": "bin/platforms/libqminimal.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450137136"
+				"hash": "1597336098137136"
 			},
 			{
 				"file": "bin/platforms/libqoffscreen.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450159024"
+				"hash": "1597336098159024"
 			},
 			{
 				"file": "bin/platforms/libqvnc.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "1592397450246096"
+				"hash": "1597336098246096"
 			},
 			{
 				"file": "bin/platforms/libqxcb.so",
 				"tags": [
 					"binaries"
 				],
-				"hash": "159239745021632"
+				"hash": "159733609821632"
 			},
 			{
 				"file": "data/",
@@ -3124,14 +3126,14 @@
 				"tags": [
 					"unigine_data"
 				],
-				"hash": "159239746847106147"
+				"hash": "159733611746925537"
 			},
 			{
 				"file": "data/editor2.ung",
 				"tags": [
 					"unigine_data"
 				],
-				"hash": "15923974695034674"
+				"hash": "15973361185030402"
 			},
 			{
 				"file": "data/root_mount.umount",
@@ -3145,7 +3147,7 @@
 				"tags": [
 					"unigine_data"
 				],
-				"hash": "159239746826584"
+				"hash": "159733611726474"
 			},
 			{
 				"file": "data/shader_gl.cache",
@@ -3390,658 +3392,672 @@
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974513255"
+				"hash": "15973360993319"
 			},
 			{
 				"file": "include/UnigineApp.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516449"
+				"hash": "15973360996501"
 			},
 			{
 				"file": "include/UnigineAsyncQueue.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512921"
+				"hash": "15973360992914"
 			},
 			{
 				"file": "include/UnigineBase.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974505236"
+				"hash": "15973360995229"
 			},
 			{
 				"file": "include/UnigineBiMap.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745023033"
+				"hash": "159733609923026"
 			},
 			{
 				"file": "include/UnigineBounds.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745142825"
+				"hash": "159733609942818"
 			},
 			{
 				"file": "include/UnigineCallback.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745132094"
+				"hash": "159733609932087"
 			},
 			{
 				"file": "include/UnigineCamera.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974503418"
+				"hash": "15973360993411"
 			},
 			{
 				"file": "include/UnigineChecksum.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974503119"
+				"hash": "15973360993112"
+			},
+			{
+				"file": "include/UnigineComponentSystem.h",
+				"tags": [
+					"unigine_includes"
+				],
+				"hash": "159733609950736"
 			},
 			{
 				"file": "include/UnigineCompress.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511914"
+				"hash": "15973360991907"
 			},
 			{
 				"file": "include/UnigineConfig.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511692"
+				"hash": "15973360995336"
 			},
 			{
 				"file": "include/UnigineConsole.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974505689"
+				"hash": "15973361005675"
 			},
 			{
 				"file": "include/UnigineControls.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974517444"
+				"hash": "15973361007618"
+			},
+			{
+				"file": "include/UnigineCurve2d.h",
+				"tags": [
+					"unigine_includes"
+				],
+				"hash": "15973360992282"
 			},
 			{
 				"file": "include/UnigineDecals.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974514245"
+				"hash": "15973360994238"
 			},
 			{
 				"file": "include/UnigineDir.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511570"
+				"hash": "15973360991564"
 			},
 			{
 				"file": "include/UnigineEditor.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512687"
+				"hash": "15973360992680"
 			},
 			{
 				"file": "include/UnigineEllipsoid.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512731"
+				"hash": "15973360992724"
 			},
 			{
 				"file": "include/UnigineEngine.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745131373"
+				"hash": "159733609931690"
 			},
 			{
 				"file": "include/UnigineFactory.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511683"
+				"hash": "15973360991675"
 			},
 			{
 				"file": "include/UnigineFfp.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512779"
+				"hash": "15973360992780"
 			},
 			{
 				"file": "include/UnigineFields.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974505706"
+				"hash": "15973360995699"
 			},
 			{
 				"file": "include/UnigineFileSystem.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745110636"
+				"hash": "159733609910624"
 			},
 			{
 				"file": "include/UnigineFunction.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745110939"
+				"hash": "159733609910932"
 			},
 			{
 				"file": "include/UnigineGUID.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512602"
+				"hash": "15973360992595"
 			},
 			{
 				"file": "include/UnigineGame.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974502555"
+				"hash": "15973360992548"
 			},
 			{
 				"file": "include/UnigineGeodetics.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974513485"
+				"hash": "15973360993478"
 			},
 			{
 				"file": "include/UnigineGeodeticsTransformer.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511410"
+				"hash": "15973360991403"
 			},
 			{
 				"file": "include/UnigineGeometry.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745010052"
+				"hash": "159733609910045"
 			},
 			{
 				"file": "include/UnigineGui.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516021"
+				"hash": "15973360996289"
 			},
 			{
 				"file": "include/UnigineHash.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745112026"
+				"hash": "159733609912161"
 			},
 			{
 				"file": "include/UnigineHashMap.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745111416"
+				"hash": "159733609912372"
 			},
 			{
 				"file": "include/UnigineHashSet.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974513958"
+				"hash": "15973360993951"
 			},
 			{
 				"file": "include/UnigineImage.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974519242"
+				"hash": "15973360999235"
 			},
 			{
 				"file": "include/UnigineImport.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745116555"
+				"hash": "159733609916548"
 			},
 			{
 				"file": "include/UnigineInput.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974504757"
+				"hash": "15973360994750"
 			},
 			{
 				"file": "include/UnigineInterface.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "1592397451119025"
+				"hash": "1597336099119018"
 			},
 			{
 				"file": "include/UnigineInterpreter.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745143333"
+				"hash": "159733609944254"
 			},
 			{
 				"file": "include/UnigineJson.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974502199"
+				"hash": "15973360992192"
 			},
 			{
 				"file": "include/UnigineLights.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745017247"
+				"hash": "159733609918015"
+			},
+			{
+				"file": "include/UnigineLoadingScreen.h",
+				"tags": [
+					"unigine_includes"
+				],
+				"hash": "15973360992466"
 			},
 			{
 				"file": "include/UnigineLog.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501258"
+				"hash": "15973360991251"
 			},
 			{
 				"file": "include/UnigineLogic.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974509261"
+				"hash": "15973360997748"
 			},
 			{
 				"file": "include/UnigineMap.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974508876"
+				"hash": "15973360998869"
 			},
 			{
 				"file": "include/UnigineMaterial.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745113281"
+				"hash": "159733610013379"
 			},
 			{
 				"file": "include/UnigineMaterials.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512236"
+				"hash": "15973360992460"
 			},
 			{
 				"file": "include/UnigineMath2d.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512835"
+				"hash": "15973360992828"
 			},
 			{
 				"file": "include/UnigineMathLib.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "1592397451160653"
+				"hash": "1597336099159741"
 			},
 			{
 				"file": "include/UnigineMemory.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511901"
+				"hash": "15973360991894"
 			},
 			{
 				"file": "include/UnigineMesh.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974518494"
+				"hash": "15973360998487"
 			},
 			{
 				"file": "include/UnigineMeshDynamic.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974519001"
+				"hash": "15973360998994"
 			},
 			{
 				"file": "include/UnigineNode.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745112844"
+				"hash": "159733609912981"
 			},
 			{
 				"file": "include/UnigineNodes.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974504710"
+				"hash": "15973360994703"
 			},
 			{
 				"file": "include/UnigineObjects.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745185146"
+				"hash": "159733610089246"
 			},
 			{
 				"file": "include/UniginePackageUng.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501441"
+				"hash": "15973360991440"
 			},
 			{
 				"file": "include/UniginePair.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512987"
+				"hash": "15973360992980"
 			},
 			{
 				"file": "include/UniginePath.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512153"
+				"hash": "15973360992146"
 			},
 			{
 				"file": "include/UniginePathFinding.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516555"
+				"hash": "15973360996548"
 			},
 			{
 				"file": "include/UniginePhysicals.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974515941"
+				"hash": "15973360995934"
 			},
 			{
 				"file": "include/UniginePhysics.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745039445"
+				"hash": "159733609940437"
 			},
 			{
 				"file": "include/UniginePlayers.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745110073"
+				"hash": "159733609910066"
 			},
 			{
 				"file": "include/UniginePlugin.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974513228"
+				"hash": "15973360992905"
 			},
 			{
 				"file": "include/UniginePrimitives.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512622"
+				"hash": "15973360992615"
 			},
 			{
 				"file": "include/UnigineProfiler.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974502141"
+				"hash": "15973360992134"
 			},
 			{
 				"file": "include/UnigineProperties.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745111517"
+				"hash": "159733609911517"
 			},
 			{
 				"file": "include/UniginePtr.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974508540"
+				"hash": "15973361008533"
 			},
 			{
 				"file": "include/UnigineRegExp.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501223"
+				"hash": "15973361001216"
 			},
 			{
 				"file": "include/UnigineRender.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745060838"
+				"hash": "159733610063465"
 			},
 			{
 				"file": "include/UnigineRenderContext.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501524"
+				"hash": "15973360991517"
 			},
 			{
 				"file": "include/UnigineResource.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501604"
+				"hash": "15973360991597"
 			},
 			{
 				"file": "include/UnigineSet.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974504243"
+				"hash": "15973360994236"
 			},
 			{
 				"file": "include/UnigineShader.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745011195"
+				"hash": "159733609911188"
 			},
 			{
 				"file": "include/UnigineSort.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516273"
+				"hash": "15973360996266"
 			},
 			{
 				"file": "include/UnigineSounds.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974517281"
-			},
-			{
-				"file": "include/UnigineSplash.h",
-				"tags": [
-					"unigine_includes"
-				],
-				"hash": "15923974502070"
+				"hash": "15973360997294"
 			},
 			{
 				"file": "include/UnigineSplineGraph.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512816"
+				"hash": "15973360992809"
 			},
 			{
 				"file": "include/UnigineStreams.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974507188"
+				"hash": "15973360997181"
 			},
 			{
 				"file": "include/UnigineString.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745123027"
+				"hash": "159733609923126"
 			},
 			{
 				"file": "include/UnigineSystemInfo.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501562"
+				"hash": "15973360991821"
 			},
 			{
 				"file": "include/UnigineTextures.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745110262"
+				"hash": "159733609911105"
 			},
 			{
 				"file": "include/UnigineThread.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745113028"
+				"hash": "159733609913191"
 			},
 			{
 				"file": "include/UnigineTileset.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512782"
+				"hash": "15973360992775"
 			},
 			{
 				"file": "include/UnigineTilesetFile.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974502078"
+				"hash": "15973360992071"
 			},
 			{
 				"file": "include/UnigineTimer.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974501459"
+				"hash": "15973360991452"
 			},
 			{
 				"file": "include/UnigineTree.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745114281"
+				"hash": "159733609914274"
 			},
 			{
 				"file": "include/UnigineType.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745113552"
+				"hash": "159733609913545"
 			},
 			{
 				"file": "include/UnigineUlon.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512623"
+				"hash": "15973360992616"
 			},
 			{
 				"file": "include/UnigineUserInterface.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974512300"
+				"hash": "15973360992293"
 			},
 			{
 				"file": "include/UnigineUtils.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974511199"
+				"hash": "15973360991192"
 			},
 			{
 				"file": "include/UnigineVector.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745141877"
+				"hash": "159733609945086"
 			},
 			{
 				"file": "include/UnigineViewport.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974514817"
+				"hash": "15973360994816"
 			},
 			{
 				"file": "include/UnigineVisualizer.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516336"
+				"hash": "15973360997976"
 			},
 			{
 				"file": "include/UnigineWidgets.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745147537"
+				"hash": "159733609949837"
 			},
 			{
 				"file": "include/UnigineWorld.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974508826"
+				"hash": "15973360999312"
 			},
 			{
 				"file": "include/UnigineWorlds.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "159239745117075"
+				"hash": "159733609915281"
 			},
 			{
 				"file": "include/UnigineXml.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974517000"
+				"hash": "15973360997053"
 			},
 			{
 				"file": "include/plugins/",
@@ -4055,49 +4071,42 @@
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974514611"
+				"hash": "15973361004604"
 			},
 			{
 				"file": "include/plugins/UnigineAppVive.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974513362"
-			},
-			{
-				"file": "include/plugins/UnigineInterface.h",
-				"tags": [
-					"unigine_includes"
-				],
-				"hash": "15923974514147"
+				"hash": "15973361003435"
 			},
 			{
 				"file": "include/plugins/UnigineSteam.h",
 				"tags": [
 					"unigine_includes"
 				],
-				"hash": "15923974516188"
+				"hash": "15973361006181"
 			},
 			{
 				"file": "launch_debug.sh",
 				"tags": [
 					"launcher_console"
 				],
-				"hash": "1592397469553"
+				"hash": "1597336118553"
 			},
 			{
 				"file": "launch_editor.sh",
 				"tags": [
 					"launcher_console"
 				],
-				"hash": "1592397469493"
+				"hash": "1597336119493"
 			},
 			{
 				"file": "launch_release.sh",
 				"tags": [
 					"launcher_console"
 				],
-				"hash": "1592397469552"
+				"hash": "1597336118552"
 			},
 			{
 				"file": "source/",
@@ -4208,23 +4217,23 @@
 		]
 	},
 	"sdk": {
-		"key": "communitybin2.11.0.2linux",
+		"key": "communitybin2.12.0.1linux",
 		"internal_id": "tier0_bin_linux",
 		"products": [
 			"tier0_bin"
 		],
 		"edition": "community",
-		"version": "2.11.0.2",
-		"internal_version": "46",
+		"version": "2.12.0.1",
+		"internal_version": "47",
 		"base_version": "",
-		"timestamp": "202005211016",
+		"timestamp": "202008060444",
 		"type": "bin",
 		"os": "linux",
-		"path": "/media/linux/Applications/UNIGINE_SDK_Browser/sdks/community_linux_2.11.0.2/",
+		"path": "/media/linux/Applications/UNIGINE_SDK_Browser/sdks/community_linux_2.12.0.1/",
 		"name": "UNIGINE 2 Community",
 		"resource": "sdk",
-		"size": "0",
-		"uncompressed_size": "0",
+		"size": "861107673",
+		"uncompressed_size": "2549253765",
 		"activation_types": [
 			"2"
 		]

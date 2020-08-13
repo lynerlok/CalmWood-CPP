@@ -1,6 +1,6 @@
 /* Copyright (C) 2005-2020, UNIGINE. All rights reserved.
  *
- * This file is a part of the UNIGINE 2.11.0.1 SDK.
+ * This file is a part of the UNIGINE 2 SDK.
  *
  * Your use and / or redistribution of this software in source and / or
  * binary form, with or without modification, is subject to: (i) your
@@ -174,6 +174,7 @@ class UNIGINE_API WidgetVBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_VBOX; }
 	static Ptr<WidgetVBox> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetVBox> create(int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -199,6 +200,7 @@ class UNIGINE_API WidgetHBox : public WidgetVBox
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_HBOX; }
 	static Ptr<WidgetHBox> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetHBox> create(int x = 0, int y = 0);
 };
 typedef Ptr<WidgetHBox> WidgetHBoxPtr;
 
@@ -208,6 +210,7 @@ class UNIGINE_API WidgetVPaned : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_VPANED; }
 	static Ptr<WidgetVPaned> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetVPaned> create();
 	void setValue(int value);
 	int getValue() const;
 	void setFixed(int fixed);
@@ -225,6 +228,7 @@ class UNIGINE_API WidgetHPaned : public WidgetVPaned
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_HPANED; }
 	static Ptr<WidgetHPaned> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetHPaned> create();
 };
 typedef Ptr<WidgetHPaned> WidgetHPanedPtr;
 
@@ -234,6 +238,7 @@ class UNIGINE_API WidgetGridBox : public WidgetVBox
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_GRID_BOX; }
 	static Ptr<WidgetGridBox> create(const Ptr<Gui> &gui, int num = 2, int x = 0, int y = 0);
+	static Ptr<WidgetGridBox> create(int num = 2, int x = 0, int y = 0);
 	void setNumColumns(int columns);
 	int getNumColumns() const;
 	void setColumnRatio(int num, int ratio);
@@ -247,6 +252,7 @@ class UNIGINE_API WidgetGroupBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_GROUP_BOX; }
 	static Ptr<WidgetGroupBox> create(const Ptr<Gui> &gui, const char *str = 0, int x = 0, int y = 0);
+	static Ptr<WidgetGroupBox> create(const char *str = 0, int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -278,6 +284,7 @@ class UNIGINE_API WidgetTabBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_TAB_BOX; }
 	static Ptr<WidgetTabBox> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetTabBox> create(int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -321,6 +328,7 @@ class UNIGINE_API WidgetScrollBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SCROLL_BOX; }
 	static Ptr<WidgetScrollBox> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetScrollBox> create(int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -367,6 +375,7 @@ class UNIGINE_API WidgetLabel : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_LABEL; }
 	static Ptr<WidgetLabel> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetLabel> create(const char *str = 0);
 	void setTextAlign(int align);
 	int getTextAlign() const;
 	void setText(const char *text);
@@ -380,6 +389,7 @@ class UNIGINE_API WidgetSprite : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPRITE; }
 	static Ptr<WidgetSprite> create(const Ptr<Gui> &gui, const char *name = 0);
+	static Ptr<WidgetSprite> create(const char *name = 0);
 	int addLayer();
 	void removeLayer(int layer);
 	int getNumLayers() const;
@@ -443,6 +453,7 @@ class UNIGINE_API WidgetSpriteVideo : public WidgetSprite
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPRITE_VIDEO; }
 	static Ptr<WidgetSpriteVideo> create(const Ptr<Gui> &gui, const char *name = 0, int mode = 1);
+	static Ptr<WidgetSpriteVideo> create(const char *name = 0, int mode = 1);
 	void setLoop(int loop);
 	int getLoop() const;
 	void setYUV(int yuv);
@@ -466,6 +477,7 @@ class UNIGINE_API WidgetSpriteShader : public WidgetSprite
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPRITE_SHADER; }
 	static Ptr<WidgetSpriteShader> create(const Ptr<Gui> &gui, const char *name = 0);
+	static Ptr<WidgetSpriteShader> create(const char *name = 0);
 	void setMaterial(const Ptr<Material> &material);
 	Ptr<Material> getMaterial() const;
 };
@@ -477,6 +489,7 @@ class UNIGINE_API WidgetSpriteViewport : public WidgetSprite
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPRITE_VIEWPORT; }
 	static Ptr<WidgetSpriteViewport> create(const Ptr<Gui> &gui, int width, int height);
+	static Ptr<WidgetSpriteViewport> create(int width, int height);
 	void setCamera(const Ptr<Camera> &camera);
 	Ptr<Camera> getCamera() const;
 	void setAspectCorrection(int correction);
@@ -512,6 +525,7 @@ class UNIGINE_API WidgetSpriteNode : public WidgetSprite
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPRITE_NODE; }
 	static Ptr<WidgetSpriteNode> create(const Ptr<Gui> &gui, int width, int height);
+	static Ptr<WidgetSpriteNode> create(int width, int height);
 	void setCamera(const Ptr<Camera> &camera);
 	Ptr<Camera> getCamera() const;
 	void setAspectCorrection(int correction);
@@ -553,6 +567,7 @@ class UNIGINE_API WidgetCanvas : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_CANVAS; }
 	static Ptr<WidgetCanvas> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetCanvas> create();
 	void setImage(const Ptr<Image> &image);
 	Ptr<Image> getImage() const;
 	void setTexture(const char *texture);
@@ -647,6 +662,7 @@ class UNIGINE_API WidgetIcon : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_ICON; }
 	static Ptr<WidgetIcon> create(const Ptr<Gui> &gui, const char *str = 0, int width = 0, int height = 0);
+	static Ptr<WidgetIcon> create(const char *str = 0, int width = 0, int height = 0);
 	void setToggleable(bool toggleable);
 	bool isToggleable() const;
 	void setToggled(bool toggled);
@@ -668,6 +684,7 @@ class UNIGINE_API WidgetButton : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_BUTTON; }
 	static Ptr<WidgetButton> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetButton> create(const char *str = 0);
 	void setBackground(int background);
 	int getBackground() const;
 	void setToggleable(bool toggleable);
@@ -693,6 +710,7 @@ class UNIGINE_API WidgetCheckBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_CHECK_BOX; }
 	static Ptr<WidgetCheckBox> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetCheckBox> create(const char *str = 0);
 	void setCheckedColor(const Math::vec4 &color);
 	Math::vec4 getCheckedColor() const;
 	void setUncheckedColor(const Math::vec4 &color);
@@ -710,6 +728,7 @@ class UNIGINE_API WidgetComboBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_COMBO_BOX; }
 	static Ptr<WidgetComboBox> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetComboBox> create();
 	void setImage(const Ptr<Image> &image);
 	Ptr<Image> getImage() const;
 	void setMainBackgroundColor(const Math::vec4 &color);
@@ -747,6 +766,7 @@ class UNIGINE_API WidgetMenuBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MENU_BOX; }
 	static Ptr<WidgetMenuBox> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetMenuBox> create(int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -800,6 +820,7 @@ class UNIGINE_API WidgetMenuBar : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MENU_BAR; }
 	static Ptr<WidgetMenuBar> create(const Ptr<Gui> &gui, int x = 0, int y = 0);
+	static Ptr<WidgetMenuBar> create(int x = 0, int y = 0);
 	void setSpace(int x, int y);
 	int getSpaceX() const;
 	int getSpaceY() const;
@@ -829,6 +850,7 @@ class UNIGINE_API WidgetListBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_LIST_BOX; }
 	static Ptr<WidgetListBox> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetListBox> create();
 	void setMultiSelection(bool selection);
 	bool isMultiSelection() const;
 	void setImage(const Ptr<Image> &image);
@@ -870,6 +892,7 @@ class UNIGINE_API WidgetTreeBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_TREE_BOX; }
 	static Ptr<WidgetTreeBox> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetTreeBox> create();
 	void setEditable(bool editable);
 	bool isEditable() const;
 	void setMultiSelection(bool selection);
@@ -926,6 +949,7 @@ class UNIGINE_API WidgetSpacer : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPACER; }
 	static Ptr<WidgetSpacer> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetSpacer> create();
 	void setOrientation(int orientation);
 	int getOrientation() const;
 };
@@ -937,6 +961,7 @@ class UNIGINE_API WidgetSlider : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SLIDER; }
 	static Ptr<WidgetSlider> create(const Ptr<Gui> &gui, int min = 0, int max = 100, int value = 0);
+	static Ptr<WidgetSlider> create(int min = 0, int max = 100, int value = 0);
 	void setBackgroundColor(const Math::vec4 &color);
 	Math::vec4 getBackgroundColor() const;
 	void setButtonColor(const Math::vec4 &color);
@@ -966,6 +991,7 @@ class UNIGINE_API WidgetScroll : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SCROLL; }
 	static Ptr<WidgetScroll> create(const Ptr<Gui> &gui, int object = 100, int frame = 10, int step = 1, int value = 0);
+	static Ptr<WidgetScroll> create(int object = 100, int frame = 10, int step = 1, int value = 0);
 	void setScrollColor(const Math::vec4 &color);
 	Math::vec4 getScrollColor() const;
 	void setOrientation(int orientation);
@@ -987,6 +1013,7 @@ class UNIGINE_API WidgetSpinBox : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_SPIN_BOX; }
 	static Ptr<WidgetSpinBox> create(const Ptr<Gui> &gui, int min = 0, int max = 100, int value = 0);
+	static Ptr<WidgetSpinBox> create(int min = 0, int max = 100, int value = 0);
 	void setButtonColor(const Math::vec4 &color);
 	Math::vec4 getButtonColor() const;
 	void setMinValue(int value);
@@ -1008,6 +1035,7 @@ class UNIGINE_API WidgetEditLine : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_EDIT_LINE; }
 	static Ptr<WidgetEditLine> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetEditLine> create(const char *str = 0);
 	void setBackgroundColor(const Math::vec4 &color);
 	Math::vec4 getBackgroundColor() const;
 	void setSelectionColor(const Math::vec4 &color);
@@ -1041,6 +1069,7 @@ class UNIGINE_API WidgetEditText : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_EDIT_TEXT; }
 	static Ptr<WidgetEditText> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetEditText> create(const char *str = 0);
 	void setEditable(bool editable);
 	bool isEditable() const;
 	void setBackground(int background);
@@ -1076,6 +1105,7 @@ class UNIGINE_API WidgetWindow : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_WINDOW; }
 	static Ptr<WidgetWindow> create(const Ptr<Gui> &gui, const char *str = 0, int x = 0, int y = 0);
+	static Ptr<WidgetWindow> create(const char *str = 0, int x = 0, int y = 0);
 	void setMoveable(bool moveable);
 	bool isMoveable() const;
 	void setSizeable(bool sizeable);
@@ -1121,6 +1151,7 @@ class UNIGINE_API WidgetDialog : public WidgetWindow
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_DIALOG; }
 	static Ptr<WidgetDialog> create(const Ptr<Gui> &gui, const char *str = 0, int x = 0, int y = 0);
+	static Ptr<WidgetDialog> create(const char *str = 0, int x = 0, int y = 0);
 	bool isDone() const;
 	int getResult() const;
 	bool isOkClicked() const;
@@ -1144,6 +1175,7 @@ class UNIGINE_API WidgetDialogMessage : public WidgetDialog
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_DIALOG_MESSAGE; }
 	static Ptr<WidgetDialogMessage> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetDialogMessage> create(const char *str = 0);
 	void setMessageHidden(bool hidden);
 	bool isMessageHidden() const;
 	void setMessageFont(const char *name);
@@ -1161,6 +1193,7 @@ class UNIGINE_API WidgetDialogFile : public WidgetDialog
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_DIALOG_FILE; }
 	static Ptr<WidgetDialogFile> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetDialogFile> create(const char *str = 0);
 	void setPath(const char *path);
 	const char *getPath() const;
 	void setFile(const char *file);
@@ -1178,6 +1211,7 @@ class UNIGINE_API WidgetDialogColor : public WidgetDialog
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_DIALOG_COLOR; }
 	static Ptr<WidgetDialogColor> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetDialogColor> create(const char *str = 0);
 	void setColor(const Math::vec4 &color);
 	Math::vec4 getColor() const;
 	void setWebColor(const char *color);
@@ -1193,6 +1227,7 @@ class UNIGINE_API WidgetDialogImage : public WidgetDialog
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_DIALOG_IMAGE; }
 	static Ptr<WidgetDialogImage> create(const Ptr<Gui> &gui, const char *str = 0);
+	static Ptr<WidgetDialogImage> create(const char *str = 0);
 	void setImage(const Ptr<Image> &image);
 	Ptr<Image> getImage() const;
 	void setTexture(const char *texture);
@@ -1206,6 +1241,7 @@ class UNIGINE_API WidgetManipulator : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MANIPULATOR; }
 	static Ptr<WidgetManipulator> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetManipulator> create();
 	int getFocusedAxis() const;
 	bool isFocusAxis() const;
 	void setRenderGui(const Ptr<Gui> &gui);
@@ -1243,6 +1279,7 @@ class UNIGINE_API WidgetManipulatorTranslator : public WidgetManipulator
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MANIPULATOR_TRANSLATOR; }
 	static Ptr<WidgetManipulatorTranslator> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetManipulatorTranslator> create();
 
 	enum
 	{
@@ -1264,6 +1301,7 @@ class UNIGINE_API WidgetManipulatorRotator : public WidgetManipulator
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MANIPULATOR_ROTATOR; }
 	static Ptr<WidgetManipulatorRotator> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetManipulatorRotator> create();
 
 	enum
 	{
@@ -1283,6 +1321,7 @@ class UNIGINE_API WidgetManipulatorScaler : public WidgetManipulator
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_MANIPULATOR_SCALER; }
 	static Ptr<WidgetManipulatorScaler> create(const Ptr<Gui> &gui);
+	static Ptr<WidgetManipulatorScaler> create();
 
 	enum
 	{
@@ -1303,6 +1342,7 @@ class UNIGINE_API WidgetExtern : public Widget
 public:
 	static bool convertible(Widget *obj) { return obj && obj->getType() == Widget::WIDGET_EXTERN; }
 	static Ptr<WidgetExtern> create(const Ptr<Gui> &gui, int class_id);
+	static Ptr<WidgetExtern> create(int class_id);
 	WidgetExternBase *getWidgetExtern() const;
 	int getClassID() const;
 };
