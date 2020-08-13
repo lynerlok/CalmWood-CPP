@@ -6,6 +6,8 @@
 
 WINDOWS AND LINUX ONLY. Unfortunaly, no unigine sdk is compatible with macOS.
 
+/!\ 2.11 unigine community version only ! See unigine-2.12 for early access to the upgrade !
+
 /!\ data directory is missing to avoid heavy GIT project !
 
 /!\ This is a very early project with no good graphics optimization and only a debug ( development ) version !   
