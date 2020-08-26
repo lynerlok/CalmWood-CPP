@@ -1,24 +1,31 @@
 #ifndef __C_PLANTS_H_INCLUDED__
 #define __C_PLANTS_H_INCLUDED__
 
+class Environment;
+
 class Plant
 {
 public:
-    Plant ( int newId = 0 );
+    Plant ( int newId = 0, std::string newName = "default" );
     ~Plant ();
-    std::string name;
 
     int getID();
+    std::string getName();
 
     int growth ( int targetState );
     int damage();
 
     int setLocation ( std::vector<int> newLocation );
     std::vector <int> getLocation();
+    
+    int dead(Environment * environment);
+    bool isDead();
 
 protected :
     int id=0;
+    std::string name;
 
+    bool death = false;
     std::vector <int> location{0,0,0};
 
 };

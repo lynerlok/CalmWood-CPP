@@ -60,9 +60,6 @@ private:
     vector<Plant *>::iterator agentPlant;
     MeshPtr mesh;
 
-    GAnimal * animal;
-    GPlant * plant;
-
     vector<int> agentLocation = {0,0};
     int direction = 0;
 

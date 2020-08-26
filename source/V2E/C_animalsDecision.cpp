@@ -89,7 +89,7 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
 
                                 choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
 
-                                while ( CellSpecs->at ( choiceProbability ) [0] == 0 && randomTry < 10 ) {
+                                while ( CellSpecs->at ( choiceProbability ) [0] == 0 && randomTry < 4 ) {
                                         choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
                                         ++randomTry;
                                 }

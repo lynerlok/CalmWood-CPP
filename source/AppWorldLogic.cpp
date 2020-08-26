@@ -164,13 +164,13 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
                 temporaryMesh->setLoop ( 1 );
 
-                direction = runRNG ( -180,180 );
+                direction = runRNG( -180, 180 );
 
                 agentLocation = animal->getLocation();
 
                 temporaryMesh->setPosition ( Vec3 ( ( float ) agentLocation[0], ( float ) agentLocation[1], 0.5f ) );
 
-                temporaryMesh->setDirection ( Vec3 ( 0.0f, 0.0f, static_cast<float> ( direction ) ), Vec3 ( 0.0f, 0.0f, 1.0f ) );
+                temporaryMesh->worldRotate(0.0f, 0.0f, static_cast<float> ( direction ));
 
                 ComponentSystem::get()->addComponent<GAnimal> ( temporaryMesh );
 

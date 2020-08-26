@@ -5,10 +5,13 @@
 #include <unordered_map>
 
 #include "C_plant.hpp"
+#include "C_environment.hpp"
 
-Plant::Plant ( int newId )
+Plant::Plant ( int newId, std::string newName )
 {
         id = newId;
+        name = newName;
+        
 };
 
 Plant::~Plant () {};
@@ -16,6 +19,11 @@ Plant::~Plant () {};
 int Plant::getID()
 {
         return id;
+}
+
+std::string Plant::getName()
+{
+    return name;
 }
 
 int Plant::growth ( int targetState )
@@ -42,3 +50,17 @@ std::vector<int> Plant::getLocation()
 {
         return location;
 }
+
+int Plant::dead ( Environment* environment )
+{
+        environment->getCell ( location[0], location[1] )->removePlant ( id, this );
+        death = true;
+
+        return 0;
+}
+
+bool Plant::isDead()
+{
+    return death;
+}
+
