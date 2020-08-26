@@ -57,3 +57,8 @@ data/.runtimes/*
 *.cache
 data/*
 .thumbnails/*
+
+#Ignore upgrade files
+backup/
+*.modified
+migration.log.html
