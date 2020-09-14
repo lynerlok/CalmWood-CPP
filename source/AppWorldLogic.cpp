@@ -9,6 +9,8 @@
  * in any version of this software that you use or redistribute.
  * A copy of the UNIGINE License Agreement is available by contacting
  * UNIGINE. at http://unigine.com/
+ * 
+ * Modified by Axel Polin, 2020, univ_apolin@protonmail.com
  */
 
 #include <unistd.h>

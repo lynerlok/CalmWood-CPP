@@ -9,6 +9,8 @@
  * in any version of this software that you use or redistribute.
  * A copy of the UNIGINE License Agreement is available by contacting
  * UNIGINE. at http://unigine.com/
+ * 
+ * Modified by Axel Polin, 2020, univ_apolin@protonmail.com
  */
 
 #include <unistd.h>
@@ -62,7 +64,7 @@ int main ( int argc, char *argv[] )
         world_logic.systemlogic_ptr = &system_logic;
 
         // init engine
-        Unigine::EnginePtr engine ( UNIGINE_VERSION, argc, argv );
+        EnginePtr engine ( UNIGINE_VERSION, argc, argv );
 
         // enter main loop
         engine->main ( &system_logic, &world_logic, &editor_logic );
