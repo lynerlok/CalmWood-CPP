@@ -42,14 +42,15 @@ To build this project with unigine ( development version or release ) :
 
 7. Modify the project in editor, run build version,... from here
 
-8. Go to other run then update configuration.
+8. Go to other actions, configure like you want then update configuration.
 
 ## CLI USER - LINUX
 
 1. Create build directory
 2. `cd build`
 3. `/usr/bin/cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Debug -S ../source/ <absolute path to source>`
-4. Then make -j<workers>
+4. Then `make -j<workers>`
+5. Now you can run bash script in the main directory
 
 ## IDE USER - Kdevelop example - LINUX ONLY 
 
