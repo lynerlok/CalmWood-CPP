@@ -290,6 +290,10 @@ int Animal::eat ()
         return 0;
 }
 
+int Animal::predation( Animal * target ){
+    return 0;
+}
+
 int Animal::setHiddenState ( bool state )
 {
         hidden = state;

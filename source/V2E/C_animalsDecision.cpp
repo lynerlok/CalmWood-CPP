@@ -26,6 +26,9 @@
 #include "C_animal.hpp"
 #include "C_environment.hpp"
 
+typedef std::unordered_multimap<int, Animal *>::iterator MMAnimalIterator;
+typedef std::unordered_multimap<int, Plant *>::iterator MMPlantIterator;
+
 int Leucorrhinia::decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs )
 {
         int month = environment->getMonth();
@@ -66,6 +69,7 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
         if ( month < 5 && month >= 9 && sex == 1 ) {
                 hidden = true;
                 deadProbability = deadProbability - 30 < 0 ? 0 : deadProbability - 30;
+                
         }
 
         if ( actionProbability < growthProbability )
@@ -147,10 +151,10 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
 
                         if ( spawnAbility ) {
 
-                                choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                                choiceProbability = runRNG ( 0, CellSpecs->size() - 1 );
 
                                 while ( ( CellSpecs->at ( choiceProbability ) [3] == 0 || CellSpecs->at ( choiceProbability ) [0] == 0 ) && randomTry < 10 ) {
-                                        choiceProbability = runRNG ( 0, CellSpecs->size()-1 );
+                                        choiceProbability = runRNG ( 0, CellSpecs->size() - 1 );
                                         ++randomTry;
                                 }
 
@@ -173,6 +177,8 @@ int Leucorrhinia::decision ( Environment * environment, std::vector<std::unorder
 
 int Hyla::decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs )
 {
+    
+    
         return 0;
 }
 
@@ -187,8 +193,9 @@ int Zootoca::decision ( Environment * environment, std::vector<std::unordered_mu
         return 0;
 }
 
-int Vipera::decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs )
+int Vipera::decision ( Environment * environment, std::vector< std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs )
 {
+
         return 0;
 }
 

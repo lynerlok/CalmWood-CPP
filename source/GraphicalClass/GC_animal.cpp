@@ -33,8 +33,9 @@ void GAnimal::update()
 
         if ( animal->isDead() )
                 node.deleteLater();
-
-        move ( ifps );
+        
+        if ( id == 0 )
+            move_insect ( ifps );
 
 }
 
@@ -55,7 +56,7 @@ int GAnimal::run ( Environment* environment )
         return 0;
 }
 
-int GAnimal::move ( float ifps )
+int GAnimal::move_insect ( float ifps )
 {
 
         X = node->getWorldPosition().x;

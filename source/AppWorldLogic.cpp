@@ -94,15 +94,19 @@ int AppWorldLogic::update()
 
         // show game info
         label->setText ( String::format (
-                                 "Number of Leucorrhinia (egg, larvae, adult) : %d, %d, %d\nTemperature : %f\nHygrometry : %f\nAntrhopization rate : %f\nMonth : %d, Year : %d",
+                                 "Number of Leucorrhinia (egg, larvae, adult) : %d, %d, %d\nNumber of Vipera (egg, larvae, adult) : %d, %d, %d\nTemperature : %f\nHygrometry : %f\nAntrhopization rate : %f\nMonth : %d, Year : %d\nAnimalSize : %d",
                                  getAnimalCount ( 0,0 ),
                                  getAnimalCount ( 0,1 ),
                                  getAnimalCount ( 0,2 ),
+                                 getAnimalCount ( 4,0 ),
+                                 getAnimalCount ( 4,1 ),
+                                 getAnimalCount ( 4,2 ),
                                  systemlogic_ptr->environment.getEnvironmentParameters() [0],
                                  systemlogic_ptr->environment.getEnvironmentParameters() [1],
                                  systemlogic_ptr->environment.getEnvironmentParameters() [2],
                                  systemlogic_ptr->environment.getMonth(),
-                                 systemlogic_ptr->environment.getYear()
+                                 systemlogic_ptr->environment.getYear(),
+                                 systemlogic_ptr->animals.size()
                          ).get() );
 
         return 1;
@@ -155,16 +159,20 @@ int AppWorldLogic::createAnimal ( Animal * animal )
                 meshPathConst = meshPathStr.c_str();
 
                 temporaryMesh = ObjectMeshSkinned::create ( meshPathConst );
+                
+                if ( animal->getID() == 0 ) {
+                    
+                    meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/A_" + animal->getName() + ".anim" ;
 
-                meshPathStr = "animals_assets/A_" + animal->getName() + ".fbx/A_" + animal->getName() + ".anim" ;
+                    temporaryMesh->setAnimation ( 0, meshPathStr.c_str() );
 
-                temporaryMesh->setAnimation ( 0, meshPathStr.c_str() );
+                    temporaryMesh->setSpeed ( 60.0f );
 
-                temporaryMesh->setSpeed ( 60.0f );
+                    temporaryMesh->play();
 
-                temporaryMesh->play();
-
-                temporaryMesh->setLoop ( 1 );
+                    temporaryMesh->setLoop ( 1 );
+                    
+                }
 
                 direction = runRNG( -180, 180 );
 
@@ -190,12 +198,12 @@ int AppWorldLogic::createAnimal ( Animal * animal )
 
 int AppWorldLogic::getAnimalCount ( int id, int growthState )
 {
-        int count = -1;
-
-        for ( int animal = 0; animal < systemlogic_ptr->animals.size(); ++animal )
-                if ( systemlogic_ptr->animals[animal]->getID() == id && systemlogic_ptr->animals[animal]->getGrowthState() == growthState )
+        int count = 0;
+        
+        for ( agentAnimal = systemlogic_ptr->animals.begin(); agentAnimal != systemlogic_ptr->animals.end(); ++agentAnimal )
+                if ( ( * agentAnimal )->getID() == id && ( * agentAnimal )->getGrowthState() == growthState )
                         ++count;
-
+                
         return count;
 }
 

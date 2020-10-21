@@ -19,7 +19,7 @@ public :
         PROP_NAME ( "animal" );
         PROP_PARAM ( Int, id, 99 );
 
-        int setAnimal ( Animal *newAnimal );
+        int setAnimal ( Animal * newAnimal );
 
         int run ( Environment * environment );
 
@@ -53,7 +53,7 @@ protected :
         void update();
         void shutdown();
 
-        int move ( float ifps );
+        int move_insect ( float ifps );
 
         int landOff ( float ifps );
 

@@ -69,7 +69,7 @@ int AppSystemLogic::init()
 
         Animal * newAnimal;
         Plant * newPlant;
-
+        
         for ( int specie = 0 ; specie < environment.numberOfSpeciesAnimal; ++specie ) {
 
                 for ( int animal = 0; animal < environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[specie]; ++animal ) {
@@ -104,7 +104,7 @@ int AppSystemLogic::init()
                 }
 
         }
-
+        
         for ( int specie = 0 ; specie < environment.numberOfSpeciesPlant; ++specie ) {
 
                 for ( int plant = 0; plant <= environment.MaxNumberAgentPlant * environment.MaxNumberAgentByTypePlant[specie]; ++plant ) {
@@ -249,14 +249,24 @@ int AppSystemLogic::shutdown()
         cout << "Number of birth ( animals ) : " << spawnCount << endl;
 
         cout << "Number of Leucorrhinia at simulation start : " << environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[0] << endl;
-
+    
+        cout << "Number of Vipera at simulation start : " << environment.MaxNumberAgentAnimal * environment.MaxNumberAgentByTypeAnimal[4] << endl;
+        
         int LeucorrhiniaCount = 0;
+        int ViperaCount = 0;
+        
+//         for ( agentAnimal = animals.begin(); agentAnimal != animals.end() ; ++agentAnimal ) {
+//                 if ( ( * agentAnimal )->getID() == 0 )
+//                         LeucorrhiniaCount++;
+//                 else if ( ( * agentAnimal )->getID() == 4 )
+//                         ViperaCount++;
+//         }
 
-        for ( agentAnimal = animals.begin(); agentAnimal != animals.end() ; ++agentAnimal )
-                if ( ( * agentAnimal )->getID() == 0 )
-                        LeucorrhiniaCount++;
-
-        cout << "Number of Leucorrhinia at the end : " << LeucorrhiniaCount << endl;
+//         cout << "Number of Leucorrhinia at the end : " << LeucorrhiniaCount << endl;
+//         
+//         cout << "Number of Vipera at the end : " << ViperaCount << endl;
+        
+        cout << "Animal size at the end : " << animals.size() << endl;
 
         cout << "Temperature at the end of the simulation : " << environment.getEnvironmentParameters() [0] << endl;
 

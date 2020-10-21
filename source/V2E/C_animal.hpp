@@ -116,6 +116,7 @@ protected :
         int move ( Environment * environment );
         int moveTowards ( Environment * environment, int X, int Y );
         int eat ();
+        int predation( Animal * target );
         int setHiddenState ( bool state );
         int reproduction ( std::unordered_multimap<int, Animal *> * VisibleAnimals, int specie );
         int attack ( Environment * environment, std::unordered_multimap<int, Animal *> * VisibleAnimals, int intruderX, int intruderY, int specie );
@@ -145,7 +146,13 @@ protected :
 class Hyla: public Animal
 {
 public :
-        Hyla ( int id = 1, std::string newName = "hyla" ) :Animal ( id, newName ) {}
+        Hyla ( int id = 1, std::string newName = "hyla",
+               std::vector<unsigned int> lifeCycle = {1,24,1},
+               std::vector<int> probabilities = {80,70,20,0,40,10,0,60},
+               std::vector<int> detectionRadius = {1,1,2},
+               std::vector<int> actionRadius = {1,1,1},
+               bool isBorn = false,
+               int newSpawnNumber = 100 ) :Animal ( id, newName, lifeCycle, probabilities, detectionRadius, actionRadius, isBorn, newSpawnNumber ) {}
         ~Hyla() {};
 protected :
        int decision ( Environment * environment, std::vector<std::unordered_multimap<int, Animal *>> * VisibleAnimals, std::vector<std::unordered_multimap<int, Plant * >> * VisiblePlants, std::vector<std::vector<int>> * CellSpecs );
